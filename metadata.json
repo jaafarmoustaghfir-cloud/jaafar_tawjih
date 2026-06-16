@@ -1,5 +1,5 @@
 {
-  "name": "Jaafar’Stawjih",
+  "name": "Tawjih Avenir",
   "description": "Plateforme moderne d’orientation d’enseignement supérieur pour les Bacheliers marocains. Calculez votre admissibilité post-BAC instantanément.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
