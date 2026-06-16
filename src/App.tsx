@@ -7,7 +7,8 @@ import {
   Search,
   Phone,
   Mail,
-  X
+  X,
+  Instagram
 } from 'lucide-react';
 
 const isConcoursSchool = (schoolId: string) => {
@@ -15,6 +16,7 @@ const isConcoursSchool = (schoolId: string) => {
   return (
     normalized === 'ensa' ||
     normalized === 'ensam' ||
+    normalized === 'ensck' ||
     normalized === 'emi' ||
     normalized === 'ensias' ||
     normalized === 'ehtp' ||
@@ -97,7 +99,7 @@ export default function App() {
     if (!isAccepted) {
       return {
         status: 'DIFFICILE' as const,
-        label: '🔴 DIFFICILE',
+        label: '🔴 DIFFICILE (NON POSSIBLE)',
         bgColor: 'bg-rose-50 border-rose-100',
         textColor: 'text-rose-800'
       };
@@ -111,19 +113,12 @@ export default function App() {
         bgColor: 'bg-emerald-50 border-emerald-100',
         textColor: 'text-emerald-800'
       };
-    } else if (score >= threshold - 1.5) {
-      return {
-        status: 'POSSIBLE' as const,
-        label: '🟡 POSSIBLE',
-        bgColor: 'bg-amber-50 border-amber-100',
-        textColor: 'text-amber-800'
-      };
     } else {
       return {
         status: 'DIFFICILE' as const,
-        label: '🔴 DIFFICILE',
+        label: '🔴 DIFFICILE (NON POSSIBLE)',
         bgColor: 'bg-slate-50 border-slate-200',
-        textColor: 'text-slate-800'
+        textColor: 'text-rose-700 font-bold'
       };
     }
   };
@@ -176,7 +171,6 @@ export default function App() {
       if (selectedStatus !== 'Tous') {
         const eligibility = getSchoolEligibility(school, finalScore, bacType);
         if (selectedStatus === 'ADMIS' && eligibility.status !== 'ADMIS') return false;
-        if (selectedStatus === 'POSSIBLE' && eligibility.status !== 'POSSIBLE') return false;
         if (selectedStatus === 'DIFFICILE' && eligibility.status !== 'DIFFICILE') return false;
       }
 
@@ -251,6 +245,29 @@ export default function App() {
             <p className="text-slate-500 text-xs max-w-sm mx-auto leading-relaxed font-medium">
               Trouvez instantanément votre admissibilité dans les grandes écoles supérieures marocaines selon votre moyenne.
             </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
+              <a 
+                href="https://www.instagram.com/jaafar_tawjih?igsh=a2Qwem1scWE0MjZz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-50 hover:bg-pink-100 text-pink-700 text-[11px] font-bold border border-pink-100 transition duration-150 shadow-sm"
+              >
+                <Instagram className="w-3.5 h-3.5 text-pink-600" />
+                <span>Instagram : @jaafar_tawjih</span>
+              </a>
+              <a 
+                href="https://wa.me/212772908456"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold border border-emerald-100 transition duration-150 shadow-sm"
+              >
+                <svg className="w-3.5 h-3.5 fill-current text-emerald-600" viewBox="0 0 24 24">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.966 14.113 1.01 11.49 1.01c-5.436 0-9.86 4.37-9.864 9.8 0 1.745.474 3.454 1.374 4.952l-1.002 3.66 3.75-.983zm11.215-3.56c-.27-.135-1.602-.79-1.85-.88-.25-.09-.432-.135-.615.135-.183.27-.71.88-.87 1.065-.16.185-.32.207-.59.072-.27-.135-1.143-.421-2.177-1.344-.805-.718-1.349-1.605-1.507-1.875-.16-.27-.015-.417.12-.551.123-.122.27-.315.405-.472.135-.157.18-.27.27-.45.09-.18.045-.337-.022-.472-.067-.135-.615-1.485-.84-2.03-.22-.53-.442-.457-.615-.466-.16-.007-.343-.01-.525-.01-.18 0-.473.067-.72.337-.248.27-.945.922-.945 2.25 0 1.328.967 2.61 1.102 2.79.135.18 1.902 2.904 4.61 4.07.645.278 1.148.441 1.54.566.65.206 1.24.177 1.706.108.52-.077 1.602-.656 1.83-1.258.226-.6.226-1.12.16-1.228-.067-.108-.25-.153-.52-.287z"/>
+                </svg>
+                <span>WhatsApp Assistance</span>
+              </a>
+            </div>
           </div>
         </div>
       </header>
@@ -397,7 +414,7 @@ export default function App() {
                           <span className="font-bold uppercase tracking-wider px-2 py-1 bg-slate-950 rounded border border-slate-800 text-[10px] text-emerald-300">
                             {eligibility.label}
                           </span>
-                          {isConcoursSchool(school.id) && (eligibility.status === 'ADMIS' || eligibility.status === 'POSSIBLE') && (
+                          {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
                             <span className="font-bold uppercase tracking-wider px-2 py-1 bg-blue-950 border border-blue-900 rounded text-[10px] text-blue-300">
                               🎓 ADMIS POUR PASSER LE CONCOURS
                             </span>
@@ -473,7 +490,6 @@ export default function App() {
                     >
                       <option value="Tous">Tous les statuts</option>
                       <option value="ADMIS">🟢 100% ADMIS</option>
-                      <option value="POSSIBLE">🟡 POSSIBLE</option>
                       <option value="DIFFICILE">🔴 DIFFICILE</option>
                     </select>
                   </div>
@@ -506,7 +522,7 @@ export default function App() {
                             <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${eligibility.bgColor} ${eligibility.textColor} border shrink-0`}>
                               {eligibility.label}
                             </span>
-                            {isConcoursSchool(school.id) && (eligibility.status === 'ADMIS' || eligibility.status === 'POSSIBLE') && (
+                            {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
                               <span className="px-2.5 py-1.5 bg-blue-50 text-blue-800 border border-blue-100 rounded-lg text-[10px] font-bold shrink-0">
                                 🎓 ADMIS POUR PASSER LE CONCOURS
                               </span>
@@ -560,7 +576,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
               <a
                 href="https://wa.me/212772908456"
                 target="_blank"
@@ -570,7 +586,17 @@ export default function App() {
                 <svg className="w-4 h-4 fill-current mr-1" viewBox="0 0 24 24">
                   <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.966 14.113 1.01 11.49 1.01c-5.436 0-9.86 4.37-9.864 9.8 0 1.745.474 3.454 1.374 4.952l-1.002 3.66 3.75-.983zm11.215-3.56c-.27-.135-1.602-.79-1.85-.88-.25-.09-.432-.135-.615.135-.183.27-.71.88-.87 1.065-.16.185-.32.207-.59.072-.27-.135-1.143-.421-2.177-1.344-.805-.718-1.349-1.605-1.507-1.875-.16-.27-.015-.417.12-.551.123-.122.27-.315.405-.472.135-.157.18-.27.27-.45.09-.18.045-.337-.022-.472-.067-.135-.615-1.485-.84-2.03-.22-.53-.442-.457-.615-.466-.16-.007-.343-.01-.525-.01-.18 0-.473.067-.72.337-.248.27-.945.922-.945 2.25 0 1.328.967 2.61 1.102 2.79.135.18 1.902 2.904 4.61 4.07.645.278 1.148.441 1.54.566.65.206 1.24.177 1.706.108.52-.077 1.602-.656 1.83-1.258.226-.6.226-1.12.16-1.228-.067-.108-.25-.153-.52-.287z"/>
                 </svg>
-                <span>Appeler sur WhatsApp</span>
+                <span>WhatsApp</span>
+              </a>
+
+              <a
+                href="https://www.instagram.com/jaafar_tawjih?igsh=a2Qwem1scWE0MjZz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-pink-600 via-purple-600 to-orange-500 hover:opacity-95 text-white font-bold text-xs rounded-xl shadow-sm transition duration-150 cursor-pointer"
+              >
+                <Instagram className="w-4 h-4 text-white" />
+                <span>Instagram</span>
               </a>
 
               <a

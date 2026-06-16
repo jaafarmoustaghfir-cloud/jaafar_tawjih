@@ -36,7 +36,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Marrakech, Tanger, Agadir, Oujda, Kenitra, Safi, El Jadida, Al Hoceima, Khouribga, Tetouan, Berrechid',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { SM: 12.0, PC: 13.5, SVT: 15.0, Tech: 13.0, Eco: 99 }
+    thresholds: { SM: 12.0, PC: 14.0, SVT: 15.0, Tech: 14.0, Eco: 99 }
   },
   {
     id: 'ensam',
@@ -44,7 +44,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Meknès, Casablanca',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech', 'SVT'],
-    thresholds: { SM: 12.5, PC: 14.0, Tech: 13.5, SVT: 15.5, Eco: 99 }
+    thresholds: { SM: 12.0, PC: 16.0, Tech: 16.0, SVT: 16.0, Eco: 99 }
   },
   {
     id: 'emi',
@@ -111,6 +111,14 @@ export const SCHOOLS_FR: SchoolFr[] = [
     thresholds: { SM: 15.0, PC: 16.0, Tech: 16.0, SVT: 99, Eco: 99 }
   },
   {
+    id: 'ensck',
+    name: 'ENSCK Chimie (École Nationale Supérieure de Chimie de Kénitra)',
+    city: 'Kénitra',
+    category: 'Ingénierie / Sciences',
+    acceptedBacs: ['SM', 'PC', 'SVT'],
+    thresholds: { SM: 14.50, PC: 16.00, SVT: 17.00, Tech: 99, Eco: 99 }
+  },
+  {
     id: 'fst',
     name: 'FST (Faculté des Sciences et Techniques - Toutes villes)',
     city: 'Fès, Marrakech, Tanger, Mohammedia, Settat, Errachidia, Al Hoceima, Beni Mellal',
@@ -140,7 +148,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Agadir',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 13.5, PC: 14.5, SVT: 15.0, Tech: 99, Eco: 99 }
+    thresholds: { SM: 16.0, PC: 16.0, SVT: 16.0, Tech: 99, Eco: 99 }
   },
   {
     id: 'enam_agri',
@@ -148,7 +156,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Meknès',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 12.0, PC: 12.8, SVT: 13.2, Tech: 99, Eco: 99 }
+    thresholds: { SM: 16.0, PC: 16.0, SVT: 16.0, Tech: 99, Eco: 99 }
   },
   {
     id: 'enfi',
@@ -164,7 +172,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Marrakech, Fès, Tetouan, Agadir, Oujda',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { SM: 13.5, PC: 14.5, SVT: 15.0, Tech: 14.5, Eco: 99 }
+    thresholds: { SM: 14.0, PC: 14.8, SVT: 15.0, Tech: 14.8, Eco: 99 }
   },
 
   // --- COMMERCE / GESTION ---
@@ -174,7 +182,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca, Settat, Rabat, Tanger, Marrakech, Agadir, Oujda, El Jadida, Fès',
     category: 'Commerce / Gestion',
     acceptedBacs: ['Eco', 'SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { Eco: 12.0, SM: 12.0, PC: 13.2, SVT: 13.8, Tech: 13.0 }
+    thresholds: { Eco: 12.0, SM: 12.0, PC: 14.0, SVT: 14.0, Tech: 13.0 }
   },
   {
     id: 'iscae',
@@ -182,7 +190,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca, Rabat',
     category: 'Commerce / Gestion',
     acceptedBacs: ['Eco', 'SM', 'PC', 'Tech', 'SVT'],
-    thresholds: { Eco: 16.5, SM: 16.0, PC: 17.5, Tech: 17.0, SVT: 18.0 }
+    thresholds: { Eco: 17.24, SM: 17.66, PC: 18.59, Tech: 18.44, SVT: 18.14 }
   },
   {
     id: 'fsjes',
