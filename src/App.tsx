@@ -268,7 +268,7 @@ export default function App() {
               Trouvez instantanément votre admissibilité dans les grandes écoles supérieures marocaines selon votre moyenne.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-3">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 pt-3">
               <a 
                 href="https://www.instagram.com/tawjih_avenir?igsh=a2Qwem1scWE0MjZz"
                 target="_blank"
@@ -288,6 +288,17 @@ export default function App() {
                   <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.966 14.113 1.01 11.49 1.01c-5.436 0-9.86 4.37-9.864 9.8 0 1.745.474 3.454 1.374 4.952l-1.002 3.66 3.75-.983zm11.215-3.56c-.27-.135-1.602-.79-1.85-.88-.25-.09-.432-.135-.615.135-.183.27-.71.88-.87 1.065-.16.185-.32.207-.59.072-.27-.135-1.143-.421-2.177-1.344-.805-.718-1.349-1.605-1.507-1.875-.16-.27-.015-.417.12-.551.123-.122.27-.315.405-.472.135-.157.18-.27.27-.45.09-.18.045-.337-.022-.472-.067-.135-.615-1.485-.84-2.03-.22-.53-.442-.457-.615-.466-.16-.007-.343-.01-.525-.01-.18 0-.473.067-.72.337-.248.27-.945.922-.945 2.25 0 1.328.967 2.61 1.102 2.79.135.18 1.902 2.904 4.61 4.07.645.278 1.148.441 1.54.566.65.206 1.24.177 1.706.108.52-.077 1.602-.656 1.83-1.258.226-.6.226-1.12.16-1.228-.067-.108-.25-.153-.52-.287z"/>
                 </svg>
                 <span>WhatsApp Assistance</span>
+              </a>
+              <a 
+                href="https://www.tiktok.com/@jaafar_tawjih?_r=1&_t=ZS-97JYWcP76Hv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-black text-white text-[11px] font-bold border border-slate-800 transition duration-150 shadow-sm"
+              >
+                <svg className="w-3.5 h-3.5 fill-current text-sky-400" viewBox="0 0 24 24">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .84.13V9.5a6.34 6.34 0 0 0-3.15-.3A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V7.82a8.16 8.16 0 0 0 4.77 1.52V5.89a4.8 4.8 0 0 1-1.04-.2z"/>
+                </svg>
+                <span>TikTok</span>
               </a>
             </div>
           </div>
@@ -598,7 +609,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
               <a
                 href="https://wa.me/212772908456"
                 target="_blank"
@@ -622,11 +633,23 @@ export default function App() {
               </a>
 
               <a
+                href="https://www.tiktok.com/@jaafar_tawjih?_r=1&_t=ZS-97JYWcP76Hv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3 px-4 bg-slate-950 hover:bg-black text-white font-bold text-xs rounded-xl shadow-sm transition duration-150 cursor-pointer border border-white/10"
+              >
+                <svg className="w-4 h-4 fill-current mr-1 text-sky-400" viewBox="0 0 24 24">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .84.13V9.5a6.34 6.34 0 0 0-3.15-.3A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V7.82a8.16 8.16 0 0 0 4.77 1.52V5.89a4.8 4.8 0 0 1-1.04-.2z"/>
+                </svg>
+                <span>TikTok</span>
+              </a>
+
+              <a
                 href="mailto:jaafarmoustaghfir@gmail.com"
                 className="flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-sm transition duration-150 cursor-pointer"
               >
                 <Mail className="w-4 h-4 text-emerald-400" />
-                <span>Envoyer un email</span>
+                <span>Email</span>
               </a>
             </div>
           </div>
