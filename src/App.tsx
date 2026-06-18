@@ -35,10 +35,16 @@ const isConcoursSchool = (schoolId: string) => {
     normalized === 'fmp' ||
     normalized === 'fmd' ||
     normalized === 'iscae' ||
+    text_check_isic_isitt_trad(normalized) ||
     normalized === 'ispits' ||
     normalized === 'amdis'
   );
 };
+
+// Helper function to keep list clean
+function text_check_isic_isitt_trad(id: string) {
+  return id === 'isic' || id === 'isitt' || id === 'fahd_traduction';
+}
 
 export default function App() {
   // Initial states with pre-filled values
@@ -310,7 +316,7 @@ export default function App() {
               <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
                 Filière de votre Baccalauréat
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
                 {(Object.keys(BAC_NAMES) as BacType[]).map((type) => {
                   const isSelected = bacType === type;
                   return (

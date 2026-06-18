@@ -1,4 +1,4 @@
-export type BacType = 'SM' | 'PC' | 'SVT' | 'Eco' | 'Tech';
+export type BacType = 'SM' | 'PC' | 'SVT' | 'Eco' | 'Tech' | 'Lettres';
 
 export type SchoolCategory =
   | 'Ingénierie / Sciences'
@@ -25,7 +25,8 @@ export const BAC_NAMES: Record<BacType, string> = {
   PC: 'Sciences Physiques-Chimie (PC)',
   SVT: 'Sciences de la Vie et de la Terre (SVT)',
   Eco: 'Sciences Économiques & Gestion (Eco)',
-  Tech: 'Sciences et Technologies (Tech)'
+  Tech: 'Sciences et Technologies (Tech)',
+  Lettres: 'Lettres & Sciences Humaines (Lettres)'
 };
 
 export const SCHOOLS_FR: SchoolFr[] = [
@@ -36,7 +37,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Marrakech, Tanger, Agadir, Oujda, Kenitra, Safi, El Jadida, Al Hoceima, Khouribga, Tetouan, Berrechid',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { SM: 12.0, PC: 14.0, SVT: 15.0, Tech: 14.0, Eco: 99 }
+    thresholds: { SM: 12.0, PC: 14.0, SVT: 15.0, Tech: 14.0, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ensam',
@@ -44,7 +45,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Meknès, Casablanca',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech', 'SVT'],
-    thresholds: { SM: 12.0, PC: 16.0, Tech: 16.0, SVT: 16.0, Eco: 99 }
+    thresholds: { SM: 12.0, PC: 16.0, Tech: 16.0, SVT: 16.0, Eco: 99, Lettres: 99 }
   },
   {
     id: 'emi',
@@ -52,7 +53,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 15.0, PC: 16.0, Tech: 16.5, SVT: 99, Eco: 99 }
+    thresholds: { SM: 15.0, PC: 16.0, Tech: 16.5, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ensias',
@@ -60,7 +61,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 15.5, PC: 16.5, Tech: 16.8, SVT: 99, Eco: 99 }
+    thresholds: { SM: 15.5, PC: 16.5, Tech: 16.8, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ehtp',
@@ -68,7 +69,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 15.0, PC: 16.0, Tech: 16.0, SVT: 99, Eco: 99 }
+    thresholds: { SM: 15.0, PC: 16.0, Tech: 16.0, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'inpt',
@@ -76,7 +77,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 14.8, PC: 15.8, Tech: 15.5, SVT: 99, Eco: 99 }
+    thresholds: { SM: 14.8, PC: 15.8, Tech: 15.5, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'insea',
@@ -84,7 +85,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech', 'Eco'],
-    thresholds: { SM: 14.5, PC: 15.5, Tech: 15.5, SVT: 99, Eco: 14.0 }
+    thresholds: { SM: 14.5, PC: 15.5, Tech: 15.5, SVT: 99, Eco: 14.0, Lettres: 99 }
   },
   {
     id: 'ensem',
@@ -92,7 +93,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 14.2, PC: 15.2, Tech: 15.0, SVT: 99, Eco: 99 }
+    thresholds: { SM: 14.2, PC: 15.2, Tech: 15.0, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'esith',
@@ -100,7 +101,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco'],
-    thresholds: { SM: 12.0, PC: 12.5, Tech: 12.5, SVT: 13.5, Eco: 13.0 }
+    thresholds: { SM: 12.0, PC: 12.5, Tech: 12.5, SVT: 13.5, Eco: 13.0, Lettres: 99 }
   },
   {
     id: 'ensmr',
@@ -108,7 +109,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 15.0, PC: 16.0, Tech: 16.0, SVT: 99, Eco: 99 }
+    thresholds: { SM: 15.0, PC: 16.0, Tech: 16.0, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ensck',
@@ -116,7 +117,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Kénitra',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 14.50, PC: 16.00, SVT: 17.00, Tech: 99, Eco: 99 }
+    thresholds: { SM: 14.50, PC: 16.00, SVT: 17.00, Tech: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'fst',
@@ -124,15 +125,15 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Fès, Marrakech, Tanger, Mohammedia, Settat, Errachidia, Al Hoceima, Beni Mellal',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { SM: 11.0, PC: 11.8, SVT: 12.5, Tech: 12.0, Eco: 99 }
+    thresholds: { SM: 11.0, PC: 11.8, SVT: 12.5, Tech: 12.0, Eco: 99, Lettres: 99 }
   },
   {
     id: 'est',
     name: 'EST (École Supérieure de Technologie - Toutes villes)',
     city: 'Casablanca, Rabat, Fès, Agadir, Meknès, Oujda, El Jadida, Safi, Salé',
     category: 'Ingénierie / Sciences',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco'],
-    thresholds: { SM: 10.0, PC: 11.0, SVT: 11.5, Tech: 10.8, Eco: 11.2 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco', 'Lettres'],
+    thresholds: { SM: 10.0, PC: 11.0, SVT: 11.5, Tech: 10.8, Eco: 11.2, Lettres: 12.5 }
   },
   {
     id: 'cpge',
@@ -140,7 +141,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Casablanca, Fès, Marrakech, Agadir, Oujda, Meknès, Tanger',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco'],
-    thresholds: { SM: 14.0, PC: 15.5, Tech: 14.8, SVT: 16.5, Eco: 14.5 }
+    thresholds: { SM: 14.0, PC: 15.5, Tech: 14.8, SVT: 16.5, Eco: 14.5, Lettres: 99 }
   },
   {
     id: 'iav',
@@ -148,7 +149,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Agadir',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 16.0, PC: 16.0, SVT: 16.0, Tech: 99, Eco: 99 }
+    thresholds: { SM: 16.0, PC: 16.0, SVT: 16.0, Tech: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'enam_agri',
@@ -156,7 +157,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Meknès',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 16.0, PC: 16.0, SVT: 16.0, Tech: 99, Eco: 99 }
+    thresholds: { SM: 16.0, PC: 16.0, SVT: 16.0, Tech: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'enfi',
@@ -164,7 +165,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Salé',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 13.0, PC: 13.5, SVT: 14.0, Tech: 99, Eco: 99 }
+    thresholds: { SM: 13.0, PC: 13.5, SVT: 14.0, Tech: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ena_archi',
@@ -172,7 +173,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Marrakech, Fès, Tetouan, Agadir, Oujda',
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { SM: 14.0, PC: 14.8, SVT: 15.0, Tech: 14.8, Eco: 99 }
+    thresholds: { SM: 14.0, PC: 14.8, SVT: 15.0, Tech: 14.8, Eco: 99, Lettres: 99 }
   },
 
   // --- COMMERCE / GESTION ---
@@ -181,8 +182,8 @@ export const SCHOOLS_FR: SchoolFr[] = [
     name: 'ENCG (École Nationale de Commerce et de Gestion - Toutes villes)',
     city: 'Casablanca, Settat, Rabat, Tanger, Marrakech, Agadir, Oujda, El Jadida, Fès',
     category: 'Commerce / Gestion',
-    acceptedBacs: ['Eco', 'SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { Eco: 12.0, SM: 12.0, PC: 14.0, SVT: 14.0, Tech: 13.0 }
+    acceptedBacs: ['Eco', 'SM', 'PC', 'SVT', 'Tech', 'Lettres'],
+    thresholds: { Eco: 12.0, SM: 12.0, PC: 14.0, SVT: 14.0, Tech: 13.0, Lettres: 13.5 }
   },
   {
     id: 'iscae',
@@ -190,15 +191,15 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca, Rabat',
     category: 'Commerce / Gestion',
     acceptedBacs: ['Eco', 'SM', 'PC', 'Tech', 'SVT'],
-    thresholds: { Eco: 17.24, SM: 17.66, PC: 18.59, Tech: 18.44, SVT: 18.14 }
+    thresholds: { Eco: 17.24, SM: 17.66, PC: 18.59, Tech: 18.44, SVT: 18.14, Lettres: 99 }
   },
   {
     id: 'fsjes',
     name: 'FSJES (Faculté des Sciences Juridiques, Économiques et Sociales)',
     city: 'Toutes les villes universitaires',
     category: 'Commerce / Gestion',
-    acceptedBacs: ['Eco', 'SM', 'PC', 'Tech', 'SVT'],
-    thresholds: { Eco: 10.0, SM: 10.0, PC: 10.0, Tech: 10.0, SVT: 10.0 }
+    acceptedBacs: ['Eco', 'SM', 'PC', 'Tech', 'SVT', 'Lettres'],
+    thresholds: { Eco: 10.0, SM: 10.0, PC: 10.0, Tech: 10.0, SVT: 10.0, Lettres: 10.0 }
   },
 
   // --- ADMINISTRATION ---
@@ -208,7 +209,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Administration',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco'],
-    thresholds: { SM: 14.0, PC: 14.5, SVT: 15.0, Tech: 14.5, Eco: 14.0 }
+    thresholds: { SM: 14.0, PC: 14.5, SVT: 15.0, Tech: 14.5, Eco: 14.0, Lettres: 99 }
   },
   {
     id: 'era_admin',
@@ -216,7 +217,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Administration',
     acceptedBacs: ['SM', 'PC', 'Eco', 'SVT'],
-    thresholds: { SM: 14.0, PC: 14.5, Eco: 14.0, SVT: 15.0, Tech: 99 }
+    thresholds: { SM: 14.0, PC: 14.5, Eco: 14.0, SVT: 15.0, Tech: 99, Lettres: 99 }
   },
 
   // --- FORMATION / ENSEIGNEMENT ---
@@ -225,16 +226,16 @@ export const SCHOOLS_FR: SchoolFr[] = [
     name: 'ENS (Écoles Normales Supérieures)',
     city: 'Rabat, Casablanca, Fès, Marrakech, Meknès, Tetouan',
     category: 'Formation / Enseignement',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco'],
-    thresholds: { SM: 13.0, PC: 13.5, SVT: 13.8, Tech: 13.5, Eco: 13.5 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco', 'Lettres'],
+    thresholds: { SM: 13.0, PC: 13.5, SVT: 13.8, Tech: 13.5, Eco: 13.5, Lettres: 13.0 }
   },
   {
     id: 'esef',
     name: 'ESEF (Écoles Supérieures de l’Éducation et de la Formation)',
     city: 'Kenitra, Agadir, Oujda, El Jadida, Beni Mellal',
     category: 'Formation / Enseignement',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco'],
-    thresholds: { SM: 12.0, PC: 12.5, SVT: 12.8, Tech: 12.5, Eco: 12.5 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco', 'Lettres'],
+    thresholds: { SM: 12.0, PC: 12.5, SVT: 12.8, Tech: 12.5, Eco: 12.5, Lettres: 12.5 }
   },
 
   // --- SANTE / PARAMÉDICAL ---
@@ -244,7 +245,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Casablanca, Marrakech, Fès, Oujda, Agadir, Tanger, Laâyoune',
     category: 'Santé / Paramédical',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 12.0, PC: 12.0, SVT: 12.0, Tech: 99, Eco: 99 }
+    thresholds: { SM: 12.0, PC: 12.0, SVT: 12.0, Tech: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'fmd',
@@ -252,7 +253,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Casablanca',
     category: 'Santé / Paramédical',
     acceptedBacs: ['SM', 'PC', 'SVT'],
-    thresholds: { SM: 12.0, PC: 12.0, SVT: 12.0, Tech: 99, Eco: 99 }
+    thresholds: { SM: 12.0, PC: 12.0, SVT: 12.0, Tech: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ispits',
@@ -260,7 +261,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat, Casablanca, Fès, Marrakech, Oujda, Agadir, Tanger, Tetouan, Laâyoune',
     category: 'Santé / Paramédical',
     acceptedBacs: ['SVT', 'PC', 'SM'],
-    thresholds: { SVT: 11.0, PC: 11.5, SM: 11.0, Tech: 99, Eco: 99 }
+    thresholds: { SVT: 11.0, PC: 11.5, SM: 11.0, Tech: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'um6ss',
@@ -268,15 +269,15 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca, Rabat',
     category: 'Santé / Paramédical',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { SM: 10.0, PC: 10.0, SVT: 10.0, Tech: 10.5, Eco: 99 }
+    thresholds: { SM: 10.0, PC: 10.0, SVT: 10.0, Tech: 10.5, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ims',
     name: 'IMS (Instituts Médico-Sociaux)',
     city: 'Plusieurs villes d’implantation',
     category: 'Santé / Paramédical',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech'],
-    thresholds: { SM: 10.5, PC: 11.0, SVT: 11.0, Eco: 11.5, Tech: 11.0 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech', 'Lettres'],
+    thresholds: { SM: 10.5, PC: 11.0, SVT: 11.0, Eco: 11.5, Tech: 11.0, Lettres: 11.0 }
   },
 
   // --- MILITAIRE / SÉCURITÉ ---
@@ -286,7 +287,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Marrakech',
     category: 'Militaire / Sécurité',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 15.0, PC: 15.5, Tech: 16.0, SVT: 99, Eco: 99 }
+    thresholds: { SM: 15.0, PC: 15.5, Tech: 16.0, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'ern_nav',
@@ -294,23 +295,23 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Casablanca',
     category: 'Militaire / Sécurité',
     acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 14.5, PC: 15.0, Tech: 15.5, SVT: 99, Eco: 99 }
+    thresholds: { SM: 14.5, PC: 15.0, Tech: 15.5, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'gendarmerie',
     name: 'École Royale de Gendarmerie (Gendarmerie Royale)',
     city: 'Marrakech, Benguerir',
     category: 'Militaire / Sécurité',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech'],
-    thresholds: { SM: 11.0, PC: 11.5, SVT: 12.0, Eco: 12.0, Tech: 12.0 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech', 'Lettres'],
+    thresholds: { SM: 11.0, PC: 11.5, SVT: 12.0, Eco: 12.0, Tech: 12.0, Lettres: 12.0 }
   },
   {
     id: 'police',
     name: 'Institut Royal de Police (DGSN / Sûreté Nationale)',
     city: 'Kenitra',
     category: 'Militaire / Sécurité',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech'],
-    thresholds: { SM: 10.5, PC: 11.0, SVT: 11.5, Eco: 11.5, Tech: 11.5 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech', 'Lettres'],
+    thresholds: { SM: 10.5, PC: 11.0, SVT: 11.5, Eco: 11.5, Tech: 11.5, Lettres: 11.5 }
   },
 
   // --- FORMATION PROFESSIONNELLE ---
@@ -319,58 +320,58 @@ export const SCHOOLS_FR: SchoolFr[] = [
     name: 'OFPPT (ISTA / ISTA NTIC - Formations de Techniciens Spécialisés)',
     city: 'Toutes les villes du Royaume',
     category: 'Formation Professionnelle',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech'],
-    thresholds: { SM: 10.0, PC: 10.0, SVT: 10.0, Eco: 10.0, Tech: 10.0 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech', 'Lettres'],
+    thresholds: { SM: 10.0, PC: 10.0, SVT: 10.0, Eco: 10.0, Tech: 10.0, Lettres: 10.0 }
   },
   {
     id: 'bts',
     name: 'BTS Maroc (Brevet de Technicien Supérieur)',
     city: 'Centres publics à travers le Maroc',
     category: 'Formation Professionnelle',
-    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco'],
-    thresholds: { SM: 12.0, PC: 12.5, Tech: 12.0, SVT: 13.0, Eco: 12.5 }
+    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco', 'Lettres'],
+    thresholds: { SM: 12.0, PC: 12.5, Tech: 12.0, SVT: 13.0, Eco: 12.5, Lettres: 12.5 }
   },
   {
     id: 'est_dut',
     name: 'EST DUT / BUT (Diplôme Universitaire de Technologie - EST)',
     city: 'Casablanca, Rabat, Salé, Fès, Meknès, Oujda, Agadir, Safi',
     category: 'Formation Professionnelle',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco'],
-    thresholds: { SM: 10.0, PC: 11.5, SVT: 12.0, Tech: 11.0, Eco: 11.5 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco', 'Lettres'],
+    thresholds: { SM: 10.0, PC: 11.5, SVT: 12.0, Tech: 11.0, Eco: 11.5, Lettres: 12.0 }
   },
 
   // --- UNIVERSITÉS PRIVÉES / INTERNATIONALES ---
   {
     id: 'um6p',
-    name: 'UM6P (Université Mohammed VI Polytechnique)',
+    name: 'UM6P (Université Mohammed VI Polytechnique - FGSES)',
     city: 'Benguerir, Rabat',
     category: 'Universités Privées',
-    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco'],
-    thresholds: { SM: 13.0, PC: 14.0, Tech: 13.5, SVT: 14.5, Eco: 13.5 }
+    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco', 'Lettres'],
+    thresholds: { SM: 13.0, PC: 14.0, Tech: 13.5, SVT: 14.5, Eco: 13.5, Lettres: 13.5 }
   },
   {
     id: 'uir',
     name: 'UIR (Université Internationale de Rabat)',
     city: 'Rabat',
     category: 'Universités Privées',
-    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco'],
-    thresholds: { SM: 11.5, PC: 12.0, Tech: 12.0, SVT: 12.5, Eco: 12.0 }
+    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco', 'Lettres'],
+    thresholds: { SM: 11.5, PC: 12.0, Tech: 12.0, SVT: 12.5, Eco: 12.0, Lettres: 11.5 }
   },
   {
     id: 'alakhawayn',
     name: 'Al Akhawayn University',
     city: 'Ifrane',
     category: 'Universités Privées',
-    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco'],
-    thresholds: { SM: 11.0, PC: 12.0, Tech: 12.0, SVT: 12.5, Eco: 12.0 }
+    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco', 'Lettres'],
+    thresholds: { SM: 11.0, PC: 12.0, Tech: 12.0, SVT: 12.5, Eco: 12.0, Lettres: 11.5 }
   },
   {
     id: 'mundiapolis',
     name: 'Université Mundiapolis',
     city: 'Casablanca',
     category: 'Universités Privées',
-    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco'],
-    thresholds: { SM: 10.0, PC: 10.0, Tech: 10.0, SVT: 10.0, Eco: 10.0 }
+    acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco', 'Lettres'],
+    thresholds: { SM: 10.0, PC: 10.0, Tech: 10.0, SVT: 10.0, Eco: 10.0, Lettres: 10.0 }
   },
   {
     id: 'uiass',
@@ -378,7 +379,7 @@ export const SCHOOLS_FR: SchoolFr[] = [
     city: 'Rabat',
     category: 'Universités Privées',
     acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
-    thresholds: { SM: 10.5, PC: 10.5, SVT: 10.5, Tech: 10.5, Eco: 99 }
+    thresholds: { SM: 10.5, PC: 10.5, SVT: 10.5, Tech: 10.5, Eco: 99, Lettres: 99 }
   },
 
   // --- SPECIAL CONCOURS SCHOOL ---
@@ -387,7 +388,49 @@ export const SCHOOLS_FR: SchoolFr[] = [
     name: 'AMDIS (École de Préparation Spécifique aux Concours Grandes Écoles)',
     city: 'Casablanca, Rabat',
     category: 'Spécial Concours',
-    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco'],
-    thresholds: { SM: 10.0, PC: 10.0, SVT: 10.0, Tech: 10.0, Eco: 10.0 }
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech', 'Eco', 'Lettres'],
+    thresholds: { SM: 10.0, PC: 10.0, SVT: 10.0, Tech: 10.0, Eco: 10.0, Lettres: 10.0 }
+  },
+
+  // --- NEW SPECIFIC SCHOOLS FOR BAC LETTRES & HUMANITIES ---
+  {
+    id: 'flsh',
+    name: 'FLSH (Faculté des Lettres et des Sciences Humaines)',
+    city: 'Rabat, Casablanca, Fès, Marrakech, Oujda, Meknès, El Jadida, Kenitra',
+    category: 'Formation / Enseignement',
+    acceptedBacs: ['Lettres', 'Eco', 'SM', 'PC', 'SVT'],
+    thresholds: { SM: 10.0, PC: 10.0, SVT: 10.0, Eco: 10.0, Tech: 99, Lettres: 10.0 }
+  },
+  {
+    id: 'isic',
+    name: 'ISIC (Institut Supérieur de l’Information et de la Communication - Journalisme)',
+    city: 'Rabat',
+    category: 'Administration',
+    acceptedBacs: ['Lettres', 'Eco', 'SM', 'PC', 'SVT', 'Tech'],
+    thresholds: { SM: 13.0, PC: 13.0, SVT: 13.0, Eco: 13.0, Tech: 13.0, Lettres: 13.0 }
+  },
+  {
+    id: 'isitt',
+    name: 'ISITT (Institut Supérieur International du Tourisme de Tanger)',
+    city: 'Tanger',
+    category: 'Commerce / Gestion',
+    acceptedBacs: ['Lettres', 'Eco', 'SM', 'PC', 'SVT', 'Tech'],
+    thresholds: { SM: 11.0, PC: 11.0, SVT: 11.0, Eco: 11.0, Tech: 11.0, Lettres: 12.0 }
+  },
+  {
+    id: 'fahd_traduction',
+    name: 'École Supérieure Roi Fahd de Traduction (Traduction & Interprétariat)',
+    city: 'Tanger',
+    category: 'Formation / Enseignement',
+    acceptedBacs: ['Lettres', 'Eco', 'SM', 'PC', 'SVT'],
+    thresholds: { SM: 12.5, PC: 12.5, SVT: 12.5, Eco: 12.5, Tech: 99, Lettres: 13.0 }
+  },
+  {
+    id: 'fse',
+    name: 'FSE (Faculté des Sciences de l’Éducation)',
+    city: 'Rabat',
+    category: 'Formation / Enseignement',
+    acceptedBacs: ['Lettres', 'Eco', 'SM', 'PC', 'SVT'],
+    thresholds: { SM: 12.0, PC: 12.0, SVT: 12.0, Eco: 12.0, Tech: 99, Lettres: 12.5 }
   }
 ];
