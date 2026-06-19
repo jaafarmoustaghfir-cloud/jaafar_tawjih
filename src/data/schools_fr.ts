@@ -48,22 +48,6 @@ export const SCHOOLS_FR: SchoolFr[] = [
     thresholds: { SM: 12.0, PC: 16.0, Tech: 16.0, SVT: 16.0, Eco: 99, Lettres: 99 }
   },
   {
-    id: 'emi',
-    name: 'EMI (École Mohammadia d’Ingénieurs)',
-    city: 'Rabat',
-    category: 'Ingénierie / Sciences',
-    acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 15.0, PC: 16.0, Tech: 16.5, SVT: 99, Eco: 99, Lettres: 99 }
-  },
-  {
-    id: 'ensias',
-    name: 'ENSIAS (École Nationale Supérieure d’Informatique et d’Analyse des Systèmes)',
-    city: 'Rabat',
-    category: 'Ingénierie / Sciences',
-    acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 15.5, PC: 16.5, Tech: 16.8, SVT: 99, Eco: 99, Lettres: 99 }
-  },
-  {
     id: 'ehtp',
     name: 'EHTP (École Hassania des Travaux Publics)',
     city: 'Casablanca',
@@ -78,22 +62,6 @@ export const SCHOOLS_FR: SchoolFr[] = [
     category: 'Ingénierie / Sciences',
     acceptedBacs: ['SM', 'PC', 'Tech'],
     thresholds: { SM: 14.8, PC: 15.8, Tech: 15.5, SVT: 99, Eco: 99, Lettres: 99 }
-  },
-  {
-    id: 'insea',
-    name: 'INSEA (Institut National de Statistique et d’Économie Appliquée)',
-    city: 'Rabat',
-    category: 'Ingénierie / Sciences',
-    acceptedBacs: ['SM', 'PC', 'Tech', 'Eco'],
-    thresholds: { SM: 14.5, PC: 15.5, Tech: 15.5, SVT: 99, Eco: 14.0, Lettres: 99 }
-  },
-  {
-    id: 'ensem',
-    name: 'ENSEM (École Nationale Supérieure d’Électricité et de Mécanique)',
-    city: 'Casablanca',
-    category: 'Ingénierie / Sciences',
-    acceptedBacs: ['SM', 'PC', 'Tech'],
-    thresholds: { SM: 14.2, PC: 15.2, Tech: 15.0, SVT: 99, Eco: 99, Lettres: 99 }
   },
   {
     id: 'esith',
@@ -330,6 +298,14 @@ export const SCHOOLS_FR: SchoolFr[] = [
     category: 'Formation Professionnelle',
     acceptedBacs: ['SM', 'PC', 'Tech', 'SVT', 'Eco', 'Lettres'],
     thresholds: { SM: 12.0, PC: 12.5, Tech: 12.0, SVT: 13.0, Eco: 12.5, Lettres: 12.5 }
+  },
+  {
+    id: 'ifmeree',
+    name: 'IFMEREE (Institut de Formation aux Métiers des Énergies Renouvelables et de l’Efficacité Énergétique - Tanger, Oujda, Ouarzazate)',
+    city: 'Tanger, Oujda, Ouarzazate',
+    category: 'Formation Professionnelle',
+    acceptedBacs: ['SM', 'PC', 'SVT', 'Tech'],
+    thresholds: { SM: 10.0, PC: 10.5, SVT: 11.0, Tech: 10.2, Eco: 99, Lettres: 99 }
   },
   {
     id: 'est_dut',

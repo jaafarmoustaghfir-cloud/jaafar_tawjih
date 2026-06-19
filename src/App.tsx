@@ -17,27 +17,16 @@ const isConcoursSchool = (schoolId: string) => {
     normalized === 'ensa' ||
     normalized === 'ensam' ||
     normalized === 'ensck' ||
-    normalized === 'emi' ||
-    normalized === 'ensias' ||
-    normalized === 'ehtp' ||
-    normalized === 'inpt' ||
-    normalized === 'insea' ||
-    normalized === 'ensmr' ||
-    normalized === 'cpge' ||
-    normalized === 'iav' ||
-    normalized === 'enam_agri' ||
-    normalized === 'ena_archi' ||
-    normalized === 'ena_admin' ||
-    normalized === 'era_admin' ||
-    normalized === 'era_air' ||
-    normalized === 'ens' ||
-    normalized === 'esef' ||
+    normalized === 'encg' ||
     normalized === 'fmp' ||
     normalized === 'fmd' ||
-    normalized === 'iscae' ||
-    text_check_isic_isitt_trad(normalized) ||
     normalized === 'ispits' ||
-    normalized === 'amdis'
+    normalized === 'ena_archi' ||
+    normalized === 'ens' ||
+    normalized === 'esef' ||
+    normalized === 'iscae' ||
+    normalized === 'ifmeree' ||
+    text_check_isic_isitt_trad(normalized)
   );
 };
 
@@ -440,7 +429,19 @@ export default function App() {
                           <span className="text-emerald-400 font-mono font-bold">N°{idx + 1}</span>
                           <div>
                             <p className="font-bold text-sm text-white">{school.name}</p>
-                            <p className="text-[10px] text-slate-400 font-medium">{school.category} • {school.city}</p>
+                            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10.5px] text-slate-400 font-medium mt-0.5">
+                              <span>{school.category}</span>
+                              <span className="text-slate-600">•</span>
+                              <span>{school.city}</span>
+                              {school.acceptedBacs.includes(bacType) && (
+                                <>
+                                  <span className="text-slate-600">•</span>
+                                  <span className="text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-mono">
+                                    Seuil: {school.thresholds[bacType]}/20
+                                  </span>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-1.5 shrink-0">
@@ -449,7 +450,7 @@ export default function App() {
                           </span>
                           {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
                             <span className="font-bold uppercase tracking-wider px-2 py-1 bg-blue-950 border border-blue-900 rounded text-[10px] text-blue-300">
-                              🎓 ADMIS POUR PASSER LE CONCOURS
+                              🎓 ADMIS À PASSER LE CONCOURS
                             </span>
                           )}
                         </div>
@@ -545,9 +546,26 @@ export default function App() {
                           <p className="font-bold text-slate-900">
                             {school.name}
                           </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">
-                            {school.category} • {school.city}
-                          </p>
+                          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-slate-400 mt-0.5 font-medium">
+                            <span>{school.category}</span>
+                            <span className="text-slate-300">•</span>
+                            <span>{school.city}</span>
+                            {school.acceptedBacs.includes(bacType) ? (
+                              <>
+                                <span className="text-slate-300">•</span>
+                                <span className="text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100/80 font-mono text-[10px]">
+                                  Seuil indicatif: {school.thresholds[bacType]}/20
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-slate-300">•</span>
+                                <span className="text-rose-600 font-bold bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100/80 text-[10px]">
+                                  Bac non compatible
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
                         <div className="shrink-0 flex flex-wrap items-center gap-1.5">
                           <span className="text-slate-400 font-light hidden sm:inline">—</span>
@@ -556,8 +574,8 @@ export default function App() {
                               {eligibility.label}
                             </span>
                             {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
-                              <span className="px-2.5 py-1.5 bg-blue-50 text-blue-800 border border-blue-100 rounded-lg text-[10px] font-bold shrink-0">
-                                🎓 ADMIS POUR PASSER LE CONCOURS
+                              <span className="px-2.5 py-1.5 bg-blue-50 text-blue-800 border border-blue-100 rounded-lg text-[10px] font-bold shrink-0 font-sans">
+                                🎓 ADMIS À PASSER LE CONCOURS
                               </span>
                             )}
                           </div>
