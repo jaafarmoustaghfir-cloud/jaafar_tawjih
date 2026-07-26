@@ -1,0 +1,965 @@
+{
+  "exam_info": {
+    "title": "Concours d'Accès aux Facultés de Médecine, de Pharmacie et de Médecine Dentaire",
+    "annee_universitaire": "2025-2026",
+    "date": "19 juillet 2025",
+    "duree": "2 heures",
+    "version": "Version française",
+    "sections": [
+      { "nom": "Sciences de la Vie", "de": 1, "a": 14, "coefficient": 1 },
+      { "nom": "Physique", "de": 15, "a": 28, "coefficient": 1 },
+      { "nom": "Chimie", "de": 29, "a": 42, "coefficient": 1 },
+      { "nom": "Mathématiques", "de": 43, "a": 56, "coefficient": 1 }
+    ],
+    "consignes": [
+      "Chaque question comporte 5 propositions (A, B, C, D et E), une seule proposition est juste.",
+      "Toute réponse fausse vaut 0 à la question."
+    ]
+  },
+  "questions": [
+    {
+      "id": 1,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "À propos de la glycolyse :",
+      "options": {
+        "A": "Elle produit l'acide pyruvique, l'acétyl-CoA et l'ATP.",
+        "B": "Elle se déroule dans la mitochondrie et produit 36 ATP.",
+        "C": "Elle consomme 2 ATP et produit 4 ATP, avec un gain énergétique net de 2 ATP.",
+        "D": "Elle produit du dioxyde de carbone, l'acide pyruvique et le NADH, H+.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 2,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Concernant la chaîne respiratoire :",
+      "options": {
+        "A": "La chaîne respiratoire se déroule dans l'espace intermembranaire.",
+        "B": "La chaîne respiratoire prélève des électrons sur le dioxygène.",
+        "C": "L'énergie du flux des protons H+ permet la phosphorylation de l'ADP.",
+        "D": "Le transfert des électrons provenant d'un FADH2 aboutit à la production de 3ATP.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "contient des indices/exposants chimiques (FADH2, H+) — utiliser du HTML/LaTeX pour un affichage propre"
+      }
+    },
+    {
+      "id": 3,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "Au cours de la contraction musculaire il y a :",
+      "options": {
+        "A": "Fixation de la tropomyosine sur la myosine, ce qui déclenche la contraction musculaire.",
+        "B": "Hydrolyse de l'ATP pour libérer les ions calcium stockés dans le réticulum sarcoplasmique.",
+        "C": "Fixation de l'ATP sur la myosine pour permettre la liaison des têtes de myosine à l'actine.",
+        "D": "Fixation des ions calcium sur la troponine pour entraîner la translocation de la tropomyosine.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 4,
+      "section": "Sciences de la Vie",
+      "points": 1.5,
+      "question": "Le complexe indispensable à la reconnaissance de l'antigène par les lymphocytes T cytotoxiques (LTc) est :",
+      "options": {
+        "A": "Le CMH-II",
+        "B": "Le CMH-I",
+        "C": "Les Immunoglobulines.",
+        "D": "Les cytokines",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "B",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 5,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "Lors d'une blessure cutanée infectée par des bactéries, plusieurs mécanismes se déclenchent dans le cadre de la réponse immunitaire non spécifique. Un des mécanismes suivants n'appartient pas à cette réponse :",
+      "options": {
+        "A": "La libération de l'histamine par les mastocytes provoquant une vasodilatation locale.",
+        "B": "La phagocytose des bactéries par les macrophages présents dans les tissus.",
+        "C": "La sécrétion de l'interleukine par les macrophages pour activer les lymphocytes LT4 et LTB.",
+        "D": "L'intervention rapide des polynucléaires neutrophiles au niveau du tissu lésé.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 6,
+      "section": "Sciences de la Vie",
+      "points": 1.5,
+      "question": "En cas de thymectomie (ablation du thymus), l'organisme ne peut plus produire :",
+      "options": {
+        "A": "Les cellules immunitaires.",
+        "B": "Les globules rouges.",
+        "C": "Les lymphocytes T (LT)",
+        "D": "Les lymphocytes B (LB)",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 7,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "À propos de l'ARN polymérase chez les cellules humaines :",
+      "options": {
+        "A": "Elle permet de former un brin d'ADN à partir d'un brin d'ARN.",
+        "B": "Elle agit au niveau des ribosomes.",
+        "C": "Elle se fixe uniquement sur le début de chaque chromosome.",
+        "D": "Elle produit un ARN messager à partir d'un brin d'ADN.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 8,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Concernant la trisomie 21 (syndrome de Down) :",
+      "options": {
+        "A": "Elle est causée par une mutation dans le gène CFTR.",
+        "B": "Elle résulte d'un manque du chromosome 21.",
+        "C": "Elle se transmet selon un mode autosomique récessif.",
+        "D": "Elle est due à une anomalie mitochondriale.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "E",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 9,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Le caryotype standard permet :",
+      "options": {
+        "A": "De détecter des anomalies du nombre de chromosomes.",
+        "B": "De repérer des mutations ponctuelles dans l'ADN.",
+        "C": "D'observer directement les gènes sur les chromosomes.",
+        "D": "D'analyser uniquement les protéines présentes dans les cellules fœtales.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "A",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 10,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "L'étude de la génétique humaine est difficile, notamment parce que :",
+      "options": {
+        "A": "On peut réaliser des croisements dirigés sur plusieurs générations.",
+        "B": "L'Homme possède seulement deux chromosomes.",
+        "C": "La durée de génération est courte et la fécondité limitée.",
+        "D": "Le nombre de gènes est plus faible que chez les plantes.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "E",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 11,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "Lorsqu'on observe dans un arbre généalogique que seuls les garçons sont malades, cela peut indiquer :",
+      "options": {
+        "A": "Une maladie causée par une mutation dans l'ADN des mitochondries.",
+        "B": "Une maladie transmise par un gène dominant situé sur un chromosome non sexuel.",
+        "C": "Une maladie que seuls les pères peuvent transmettre à leurs enfants.",
+        "D": "Une maladie transmise par un gène récessif situé sur le chromosome X.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 12,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Une mutation génique peut :",
+      "options": {
+        "A": "Modifier uniquement le nombre de chromosomes dans la cellule.",
+        "B": "Modifier la séquence des nucléotides de l'ADN.",
+        "C": "Se produire uniquement dans les cellules reproductrices.",
+        "D": "Ne concerner que les caractères morphologiques.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "B",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 13,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Parmi les propositions suivantes, laquelle correspond à un type de mutation ponctuelle ?",
+      "options": {
+        "A": "L'inversion d'un segment chromosomique.",
+        "B": "La substitution d'un nucléotide par un autre.",
+        "C": "Le déplacement d'un chromosome entier.",
+        "D": "La duplication d'un gène sur un chromosome.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "B",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 14,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "La mucoviscidose est une maladie génétique qui :",
+      "options": {
+        "A": "Résulte des différentes mutations d'un gène du Chromosome 7.",
+        "B": "Se transmet uniquement par les chromosomes sexuels.",
+        "C": "Est toujours présente dès la naissance.",
+        "D": "Se caractérise par un mucus trop fluide.",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "A",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 15,
+      "section": "Physique",
+      "points": 1,
+      "context": "Pendule élastique horizontal : ressort de masse négligeable, raideur K, spires non jointives. Solide (S) de masse m=200g attaché à l'extrémité libre. On néglige les frottements ; le centre d'inertie G coïncide à l'équilibre avec l'origine de l'axe (Ox). On écarte (S) de sa position d'équilibre vers le sens négatif et on le lâche sans vitesse initiale à t=0. La Figure 2 donne x(t). Donnée : π²=10.",
+      "question": "L'équation différentielle que vérifie x est :",
+      "options": {
+        "A": "ẋ + (K/m)x = 0",
+        "B": "ẍ + (m/K)x = 0",
+        "C": "ẍ - (K/m)x = 0",
+        "D": "ẍ + (K/m)x = 0",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "D",
+      "special_format": {
+        "needed": true,
+        "reason": "nécessite Figure 1 (schéma du ressort horizontal) et Figure 2 (graphe x(t)) — insérer les 2 images ; équation avec dérivées secondes (LaTeX conseillé)",
+        "assets_needed": ["figure1_ressort_horizontal", "figure2_graphe_x_t"]
+      }
+    },
+    {
+      "id": 16,
+      "section": "Physique",
+      "points": 2,
+      "context": "Même énoncé que Q15 (pendule élastique horizontal).",
+      "question": "La solution de l'équation différentielle x(t) s'écrit :",
+      "options": {
+        "A": "1,5.10⁻² cos(4πt+π/3)",
+        "B": "3.10⁻² cos(8πt+π/2)",
+        "C": "3.10⁻² cos(4πt+π)",
+        "D": "0,3.10⁻² cos(4πt-π)",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "nécessite Figure 2 (graphe x(t)) pour lire amplitude/période/phase",
+        "assets_needed": ["figure2_graphe_x_t"]
+      }
+    },
+    {
+      "id": 17,
+      "section": "Physique",
+      "points": 1,
+      "context": "Même énoncé que Q15 (pendule élastique horizontal).",
+      "question": "La valeur de la raideur K est :",
+      "options": {
+        "A": "32 N.m⁻¹",
+        "B": "30 N.m⁻¹",
+        "C": "42 N.m⁻¹",
+        "D": "20 N.m⁻¹",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "A",
+      "special_format": {
+        "needed": true,
+        "reason": "nécessite Figure 2 (graphe x(t)) pour déterminer la période",
+        "assets_needed": ["figure2_graphe_x_t"]
+      }
+    },
+    {
+      "id": 18,
+      "section": "Physique",
+      "points": 1,
+      "context": "Même énoncé que Q15 (pendule élastique horizontal).",
+      "question": "La valeur de la vitesse du pendule en position d'équilibre est :",
+      "options": {
+        "A": "0,376 m.s⁻¹",
+        "B": "0,481 m.s⁻¹",
+        "C": "0 m.s⁻¹",
+        "D": "0,038 m.s⁻¹",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "A",
+      "special_format": {
+        "needed": true,
+        "reason": "nécessite Figure 2 (graphe x(t))",
+        "assets_needed": ["figure2_graphe_x_t"]
+      }
+    },
+    {
+      "id": 19,
+      "section": "Physique",
+      "points": 1,
+      "context": "Électricité : circuit (Figure 1) avec générateur idéal de f.é.m. E, bobine idéale d'inductance L (résistance négligeable), conducteur ohmique R=20Ω, interrupteur K. À t=0 on ferme K. La Figure 2 donne dUR/dt en fonction de UR.",
+      "question": "L'équation différentielle que vérifie UR est :",
+      "options": {
+        "A": "dUR/dt = RE/L + (L/R)UR",
+        "B": "dUR/dt = RE/L - (R/L)UR",
+        "C": "dUR/dt = E/L - (R/L)UR",
+        "D": "dUR/dt = E/L - (L/R)UR",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "B",
+      "special_format": {
+        "needed": true,
+        "reason": "nécessite Figure 1 (schéma du circuit RL) et Figure 2 (graphe dUR/dt = f(UR)) ; formules avec fractions (LaTeX conseillé)",
+        "assets_needed": ["figure1_circuit_RL", "figure2_graphe_dUR_dt"]
+      }
+    },
+    {
+      "id": 20,
+      "section": "Physique",
+      "points": 2,
+      "context": "Même énoncé que Q19 (circuit RL).",
+      "question": "Les valeurs de l'inductance L et de la force électromotrice E sont :",
+      "options": {
+        "A": "L=1H ; E=6V",
+        "B": "L=0,5H ; E=5V",
+        "C": "L=1H ; E=5V",
+        "D": "L=0,1H ; E=10V",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "nécessite Figure 2 (graphe dUR/dt = f(UR)) pour lire pente et ordonnée à l'origine",
+        "assets_needed": ["figure2_graphe_dUR_dt"]
+      }
+    },
+    {
+      "id": 21,
+      "section": "Physique",
+      "points": 1,
+      "context": "Même énoncé que Q19 (circuit RL).",
+      "question": "La valeur de l'intensité du courant (Ip) en régime permanent est :",
+      "options": {
+        "A": "Ip=0,35 A",
+        "B": "Ip=0,5 A",
+        "C": "Ip=0,25 A",
+        "D": "Ip=0,05 A",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 22,
+      "section": "Physique",
+      "points": 1,
+      "context": "Même énoncé que Q19 (circuit RL).",
+      "question": "La valeur de l'énergie magnétique (Em) emmagasinée dans la bobine en régime permanent est :",
+      "options": {
+        "A": "Em=31,25 mJ",
+        "B": "Em=6,25 KJ",
+        "C": "Em=31,25 J",
+        "D": "Em=6,25 mJ",
+        "E": "Aucune des propositions n'est correcte"
+      },
+      "correct_answer": "A",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 23,
+      "section": "Physique",
+      "points": 1.5,
+      "context": "Radioactivité : une source radioactive d'iode 123 a une activité de 5GBq. Sa demi-vie physique t½=13h et sa constante radioactive λ=5.10⁻²h⁻¹. Données : Ln2=0,69 et Ln3=1.",
+      "question": "Le temps nécessaire pour que cette activité initiale soit réduite au tiers est :",
+      "options": {
+        "A": "2h",
+        "B": "20h",
+        "C": "5h",
+        "D": "50h",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "B",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 24,
+      "section": "Physique",
+      "points": 1,
+      "context": "Pour effectuer une scintigraphie thyroïdienne, on injecte à un patient 100 µCi d'iode 123. Données : nombre d'Avogadro N=6,02.10²³ ; 1Ci=37.10⁹Bq ; 125/127≈1 ; 25/6≈4,2.",
+      "question": "L'activité d'iode 123 injectée exprimée en MBq est :",
+      "options": {
+        "A": "3,7",
+        "B": "37",
+        "C": "370",
+        "D": "1/37",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "A",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 25,
+      "section": "Physique",
+      "points": 1.5,
+      "context": "Le calcul donne un nombre d'atomes d'iode 123 injectés N=250.10⁹. La ration iodée quotidienne normale en iode 127 est R=125 µg/j.",
+      "question": "Le nombre d'atomes d'iode 123 injectés représente une fraction q de R égale à :",
+      "options": {
+        "A": "42.10⁸",
+        "B": "42.10⁹",
+        "C": "42.10⁻⁹",
+        "D": "42.10⁻⁸",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 26,
+      "section": "Physique",
+      "points": 2.5,
+      "context": "Dans les explorations de la thyroïde, on dispose d'une source radioactive constituée d'un mélange de 2 radioéléments : Iode 124 et Iode 125, d'activités initiales A et B égales, de demi-vies physiques respectives T1=4 jours et T2=60 jours. Données : Log10(2)=0,3 ; 6/14≈0,43.",
+      "question": "Le temps, en jours, au bout duquel l'activité de l'un des radioéléments sera inférieure à 0,1% de celle de l'autre est :",
+      "options": {
+        "A": "4300",
+        "B": "430",
+        "C": "43",
+        "D": "4,3",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 27,
+      "section": "Physique",
+      "points": 1.5,
+      "context": "Ondes électromagnétiques : une source de lumière émet dans le vide une radiation de longueur d'onde λ=600nm. Donnée : célérité de la lumière dans le vide c=3.10⁸ m/s.",
+      "question": "La fréquence f de cette radiation dans le vide est :",
+      "options": {
+        "A": "5.10¹⁴Hz",
+        "B": "5.10¹⁴KHz",
+        "C": "5.10¹⁴MHz",
+        "D": "5.10¹⁴GHz",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "A",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 28,
+      "section": "Physique",
+      "points": 2,
+      "context": "La radiation émise traverse un milieu transparent d'indice n. Un opérateur affirme que la longueur d'onde est alors de 400nm.",
+      "question": "L'indice n du milieu est égal à :",
+      "options": {
+        "A": "0,66",
+        "B": "1",
+        "C": "1,33",
+        "D": "1,5",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 29,
+      "section": "Chimie",
+      "points": 1,
+      "question": "La vitesse d'une transformation chimique est définie comme :",
+      "options": {
+        "A": "Le rapport entre la masse du produit formé et le temps écoulé",
+        "B": "La somme des concentrations des réactifs",
+        "C": "La variation de température durant la réaction",
+        "D": "Le rapport entre la variation de la quantité de matière et le temps écoulé",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 30,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Une augmentation de température lors d'une réaction chimique lente a pour effet :",
+      "options": {
+        "A": "De rendre la réaction exothermique",
+        "B": "De modifier l'équation chimique",
+        "C": "D'annuler la constante d'équilibre",
+        "D": "D'augmenter la vitesse de la réaction",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 31,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Le rôle principal d'un catalyseur est :",
+      "options": {
+        "A": "De modifier les concentrations à l'équilibre",
+        "B": "De transformer un produit en réactif",
+        "C": "D'accélérer une réaction sans être consommé",
+        "D": "D'augmenter la valeur de la constante d'équilibre",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 32,
+      "section": "Chimie",
+      "points": 2,
+      "question": "Une transformation est dite non totale lorsque :",
+      "options": {
+        "A": "La réaction est très rapide",
+        "B": "Tous les produits sont convertis en réactifs",
+        "C": "Les réactifs et produits coexistent à l'équilibre",
+        "D": "La température ne varie pas",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 33,
+      "section": "Chimie",
+      "points": 2,
+      "question": "Une constante d'équilibre K élevée signifie que :",
+      "options": {
+        "A": "La réaction est lente",
+        "B": "La réaction favorise les produits à l'équilibre",
+        "C": "Les réactifs sont en grande quantité",
+        "D": "Le système est irréversible",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "B",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 34,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Le déplacement de l'équilibre chimique d'un système soumis à une perturbation est prédit par :",
+      "options": {
+        "A": "La loi de Newton",
+        "B": "Le principe de Le Chatelier",
+        "C": "La règle du moment cinétique",
+        "D": "La loi de l'électroneutralité",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "B",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 35,
+      "section": "Chimie",
+      "points": 2,
+      "question": "Une réaction chimique exothermique évolue spontanément dans le sens direct si :",
+      "options": {
+        "A": "ΔH°=0",
+        "B": "ΔS°<0",
+        "C": "ΔH°<0 ET ΔS°>0",
+        "D": "ΔH°>0 ET ΔS°<0",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "symboles ΔH° et ΔS° avec exposants — vérifier le rendu des caractères spéciaux"
+      }
+    },
+    {
+      "id": 36,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Soit un équilibre chimique dans une solution S. On rajoute l'un des produits.",
+      "options": {
+        "A": "Pas de déplacement d'équilibre",
+        "B": "L'équilibre se déplace vers la droite",
+        "C": "L'équilibre se déplace vers la gauche",
+        "D": "Le déplacement de l'équilibre ne dépend pas des concentrations des produits",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "C",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 37,
+      "section": "Chimie",
+      "points": 1.5,
+      "context": "On considère deux solutions aqueuses à 25°C, Ke=10⁻¹⁴ : une solution de méthylamine CH3NH2 (S1) de pH 11,3 et de concentration C1=10⁻² mol.L⁻¹ ; une solution d'acide méthanoïque HCOOH (S2) de concentration C2=10⁻² mol.L⁻¹ ; pKA2(HCOOH/HCOO⁻)≈3,74. Données : 10⁻²·⁷=2.10⁻³ et log4=0,6.",
+      "question": "Parmi ces propositions, laquelle est juste ?",
+      "options": {
+        "A": "Une base selon Bronsted est une solution susceptible de céder un proton H+",
+        "B": "Une base faible selon Bronsted est une solution susceptible de céder un proton H+",
+        "C": "Une solution aqueuse est basique si [H3O+]>[HO-]",
+        "D": "La méthylamine CH3NH2 est une base forte",
+        "E": "La méthylamine CH3NH2 est une base faible"
+      },
+      "correct_answer": "E",
+      "special_format": {
+        "needed": true,
+        "reason": "formules chimiques avec indices/exposants (CH3NH2, H3O+, HO-, pKA)"
+      }
+    },
+    {
+      "id": 38,
+      "section": "Chimie",
+      "points": 1.5,
+      "context": "Même énoncé que Q37 (couple méthylamine / acide méthanoïque).",
+      "question": "Concernant le couple : Acide / CH3NH2, laquelle de ces propositions est juste ?",
+      "options": {
+        "A": "pKA1 = log KA1",
+        "B": "KA1 = (C1+[HO⁻]éq)·[H3O+]éq / [HO⁻]éq",
+        "C": "KA1 = (C1.10⁻ᵖᴴ+Ke) / [HO⁻]",
+        "D": "pKA1 > pKA2",
+        "E": "pKA1 < pKA2"
+      },
+      "correct_answer": "D",
+      "special_format": {
+        "needed": true,
+        "reason": "options B et C sont des formules mathématiques (fractions) — nécessite affichage sous forme de tableau/LaTeX comme dans l'énoncé original, pas du texte simple",
+        "assets_needed": ["formule_KA1_option_B", "formule_KA1_option_C"]
+      }
+    },
+    {
+      "id": 39,
+      "section": "Chimie",
+      "points": 1.5,
+      "context": "On mélange un volume V1=10mL de la solution S1 et un volume V2=30mL de la solution S2 (réaction considérée totale).",
+      "question": "Laquelle de ces propositions est juste ?",
+      "options": {
+        "A": "CH3NH2 + HCOOH → CH3NH2⁺ + HCOO⁻",
+        "B": "CH3NH2 + HCOOH → CH3NH2⁺ + HCOOH⁻",
+        "C": "HCOOH + CH3NH2⁺ → CH3NH2 + HCOOH⁻",
+        "D": "[HCOO⁻] = C2V2 / (V1+V2)",
+        "E": "Aucune des propositions ci-dessus n'est correcte."
+      },
+      "correct_answer": "E",
+      "special_format": {
+        "needed": true,
+        "reason": "équations chimiques avec indices/charges et une fraction (option D) — affichage formaté nécessaire"
+      }
+    },
+    {
+      "id": 40,
+      "section": "Chimie",
+      "points": 1.5,
+      "context": "On mélange à t=0 un volume VA=30mL d'une solution aqueuse de peroxodisulfate de sodium (Na2S2O8) avec un volume VB=40mL d'une solution aqueuse d'iodure de potassium (KI). Les deux solutions ont la même concentration CA=CB=2.10⁻¹ mol.L⁻¹.",
+      "question": "L'équation de la réaction qui aura lieu est :",
+      "options": {
+        "A": "2I⁻(aq) + S2O8²⁻(aq) → 2SO4²⁻(aq) + I2(aq)",
+        "B": "2Na⁺(aq) + 2I⁻(aq) → 2Na(s) + 2I2(aq)",
+        "C": "2K⁺(aq) + S2O8²⁻(aq) → 2SO4²⁻(aq) + 2K(s)",
+        "D": "S2O8²⁻(aq) + I2(aq) → 2I⁻(aq) + 2SO4²⁻(aq)",
+        "E": "Aucune des affirmations ci-dessus n'est correcte."
+      },
+      "correct_answer": "A",
+      "special_format": {
+        "needed": true,
+        "reason": "équations chimiques avec indices, charges et états physiques (aq)/(s) — nécessite mise en forme correcte"
+      }
+    },
+    {
+      "id": 41,
+      "section": "Chimie",
+      "points": 1.5,
+      "context": "Même énoncé que Q40 (peroxodisulfate + iodure de potassium).",
+      "question": "Le réactif limitant est :",
+      "options": {
+        "A": "Na⁺(aq)",
+        "B": "S2O8²⁻(aq)",
+        "C": "I⁻(aq)",
+        "D": "I2(aq)",
+        "E": "K⁺(aq)"
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "notations ioniques avec charges et indices"
+      }
+    },
+    {
+      "id": 42,
+      "section": "Chimie",
+      "points": 1.5,
+      "context": "Même énoncé que Q40 (peroxodisulfate + iodure de potassium).",
+      "question": "Soit les temps de suivi de la réaction t0, t1, t2, t∞ et V0, V1, V2, V∞ les vitesses de réaction correspondantes, la proposition juste est :",
+      "options": {
+        "A": "V0 > V1",
+        "B": "V0 < V1",
+        "C": "V2 > V1",
+        "D": "V2 < V∞",
+        "E": "V0 < V∞"
+      },
+      "correct_answer": "A",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 43,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Soit I = ∫₀^π |cos x| dx. Quelle est la valeur de I ?",
+      "options": {
+        "A": "0",
+        "B": "1",
+        "C": "2",
+        "D": "π",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "intégrale — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 44,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Quelle est la valeur de l'intégrale définie suivante : J = ∫₀¹ (1-x²)/(1+x²)² dx",
+      "options": {
+        "A": "1/2",
+        "B": "π/4",
+        "C": "1/4",
+        "D": "0",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "A",
+      "special_format": {
+        "needed": true,
+        "reason": "intégrale avec fraction — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 45,
+      "section": "Mathématiques",
+      "points": 3,
+      "question": "Soit la suite (Un) définie par U1=1 et pour tout n≥1, U(n+1)=√(2+Un). Quelle est la limite de la suite (Un) ?",
+      "options": {
+        "A": "√2",
+        "B": "1+√2",
+        "C": "la suite est divergente",
+        "D": "2",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "D",
+      "special_format": {
+        "needed": true,
+        "reason": "formule récursive avec racine carrée — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 46,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Soient a et b deux nombres complexes tels que a≠b et |a|=1. Quelle est la valeur de |(a-b)/(1-ā·b)| ?",
+      "options": {
+        "A": "0",
+        "B": "1",
+        "C": "2",
+        "D": "√2",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "B",
+      "special_format": {
+        "needed": true,
+        "reason": "nombres complexes conjugués et valeur absolue — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 47,
+      "section": "Mathématiques",
+      "points": 3,
+      "question": "Soit C = 1+cos(π/5)+cos(2π/5)+...+cos(9π/5) et S = sin(π/5)+sin(2π/5)+...+sin(9π/5). Quelle est la valeur de z=C+iS ?",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "-1",
+        "D": "0",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "D",
+      "special_format": {
+        "needed": true,
+        "reason": "sommes trigonométriques avec points de suspension — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 48,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "On définit la fonction f(x) = (√(1+x)-1)/x si x≠0, et a si x=0. Pour quelle valeur de a la fonction f est-elle continue en x=0 ?",
+      "options": {
+        "A": "0",
+        "B": "1/2",
+        "C": "1",
+        "D": "-1",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "B",
+      "special_format": {
+        "needed": true,
+        "reason": "fonction définie par morceaux avec racine carrée — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 49,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Soit la fonction f(x)=sin x+cos x. Quelle est la valeur maximale de f(x) sur R ?",
+      "options": {
+        "A": "1",
+        "B": "√2+1",
+        "C": "2",
+        "D": "√2",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "D",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 50,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Résoudre dans R l'équation : e^(2x-1) / √(e^(2x+1)) = e^(-x). Quelle est la bonne réponse ?",
+      "options": {
+        "A": "x=1",
+        "B": "x=0",
+        "C": "x=3/2",
+        "D": "x=-1",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "équation exponentielle avec racine carrée en dénominateur — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 51,
+      "section": "Mathématiques",
+      "points": 2,
+      "context": "Une urne U contient 9 boules : 5 boules rouges numérotées de 1 à 5 et 4 boules noires numérotées de 1 à 4. Les boules sont indiscernables au toucher. On tire simultanément deux boules. A : « les deux boules tirées sont de même couleur » ; B : « les deux boules tirées portent un numéro pair ».",
+      "question": "Calculer P_A(B) (probabilité de B sachant A) ?",
+      "options": {
+        "A": "1/18",
+        "B": "17/18",
+        "C": "2/9",
+        "D": "1/5",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "D",
+      "special_format": {
+        "needed": true,
+        "reason": "notation de probabilité conditionnelle P_A(B) avec indice — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 52,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "On lance deux dés équilibrés à 6 faces. Quelle est la probabilité d'obtenir au moins un 6 ?",
+      "options": {
+        "A": "1/6",
+        "B": "11/36",
+        "C": "5/36",
+        "D": "25/36",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "B",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 53,
+      "section": "Mathématiques",
+      "points": 1,
+      "context": "Points : A(1,1,-2), B(0,5,5), C(6,-3,-5), D(1,2,0). On cherche s'il existe des réels x et y tels que AD = x·AB + y·AC (vecteur AD combinaison linéaire de AB et AC).",
+      "question": "Le vecteur AD appartient-il au plan vectoriel engendré par AB et AC ?",
+      "options": {
+        "A": "Oui, pour x=1/4, y=1/8",
+        "B": "Oui, pour x=5/16, y=1/16",
+        "C": "Oui, pour x=1/2, y=1/2",
+        "D": "Non, car le vecteur AD n'est pas une combinaison linéaire de AB et AC",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "B",
+      "special_format": {
+        "needed": true,
+        "reason": "notation vectorielle (flèches sur AD, AB, AC) et coordonnées 3D — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 54,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Soient les vecteurs u(1,2,-1), v(3,6,-3), w(0,1,1). Quelle est la valeur de (u∧v)·w (produit mixte) ?",
+      "options": {
+        "A": "0",
+        "B": "3",
+        "C": "-1",
+        "D": "2",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "A",
+      "special_format": {
+        "needed": true,
+        "reason": "produit vectoriel et produit scalaire (notation ∧ et ·) — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 55,
+      "section": "Mathématiques",
+      "points": 2,
+      "question": "La fonction f(x)=ln(x+1)/(x+e^x) admet au point O(0,0) une tangente d'équation :",
+      "options": {
+        "A": "y=x",
+        "B": "y=x+1",
+        "C": "y=-2x",
+        "D": "y=x-1",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "A",
+      "special_format": {
+        "needed": true,
+        "reason": "fonction avec logarithme et exponentielle en fraction — nécessite rendu LaTeX/MathJax"
+      }
+    },
+    {
+      "id": 56,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "On considère le nombre complexe z=(1+i)^20. Quelle est la partie imaginaire de z ?",
+      "options": {
+        "A": "2^10",
+        "B": "-2^10",
+        "C": "0",
+        "D": "√2",
+        "E": "Aucune des réponses n'est juste"
+      },
+      "correct_answer": "C",
+      "special_format": {
+        "needed": true,
+        "reason": "nombre complexe avec puissance — nécessite rendu LaTeX/MathJax pour l'exposant"
+      }
+    }
+  ]
+}

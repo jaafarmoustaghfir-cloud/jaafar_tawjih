@@ -1,6 +1,6 @@
 {
   "name": "Tawjih Avenir",
-  "description": "Plateforme moderne d’orientation d’enseignement supérieur pour les Bacheliers marocains. Calculez votre admissibilité post-BAC instantanément.",
+  "description": "Plateforme moderne d’orientation et de préparation au Concours de Médecine 2025. QCM interactifs avec chronomètre 2h, correction KaTeX et calculateur d'admissibilité post-BAC.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

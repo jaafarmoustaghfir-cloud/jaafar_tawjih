@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { SchoolFr, BAC_NAMES, SCHOOLS_FR, BacType, SchoolCategory } from './data/schools_fr';
+import MedecineQuizApp from './components/MedecineQuizApp';
 import {
   GraduationCap,
   Calculator,
@@ -8,7 +9,9 @@ import {
   Phone,
   Mail,
   X,
-  Instagram
+  Instagram,
+  Award,
+  BookOpen
 } from 'lucide-react';
 
 const isConcoursSchool = (schoolId: string) => {
@@ -36,6 +39,9 @@ function text_check_isic_isitt_trad(id: string) {
 }
 
 export default function App() {
+  // Main view tab state (Default to QUIZ as requested by user)
+  const [activeTab, setActiveTab] = useState<'QUIZ' | 'CALCULATOR'>('QUIZ');
+
   // Initial states with pre-filled values
   const [bacType, setBacType] = useState<BacType>('PC');
   const [nationalGrade, setNationalGrade] = useState<string>('14.75');
@@ -292,10 +298,47 @@ export default function App() {
             </div>
           </div>
         </div>
+
+        {/* TOP MAIN NAVIGATION BAR */}
+        <div className="max-w-4xl mx-auto px-4 mt-6">
+          <div className="bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 shadow-xl flex items-center justify-center gap-2">
+            <button
+              onClick={() => setActiveTab('QUIZ')}
+              className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
+                activeTab === 'QUIZ'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 ring-1 ring-cyan-400'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Award className="w-4 h-4 text-cyan-300" />
+              <span>QCM Concours Médecine 2025</span>
+              <span className="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30 font-mono hidden sm:inline">
+                56 QCM
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('CALCULATOR')}
+              className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
+                activeTab === 'CALCULATOR'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 shadow-lg shadow-amber-500/25 ring-1 ring-amber-300'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Calculator className="w-4 h-4 text-amber-400" />
+              <span>Calculateur de Seuil</span>
+            </button>
+          </div>
+        </div>
       </header>
 
-      {/* CORE FRAMEWORK */}
-      <main className="max-w-3xl mx-auto px-4 mt-8 space-y-8">
+      {/* RENDER ACTIVE TAB */}
+      {activeTab === 'QUIZ' ? (
+        <MedecineQuizApp />
+      ) : (
+        <>
+          {/* CORE FRAMEWORK */}
+          <main className="max-w-3xl mx-auto px-4 mt-8 space-y-8">
 
         {/* INPUT PANEL CARD */}
         <section id="calcule-card" className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -776,6 +819,8 @@ export default function App() {
         <p>🇲🇦 Tawjih Avenir — Guide d’orientation marocain.</p>
         <p>Les désignations appartiennent exclusivement aux établissements concernés.</p>
       </footer>
+        </>
+      )}
     </div>
   );
 }
