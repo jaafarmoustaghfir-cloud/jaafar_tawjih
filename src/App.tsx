@@ -1,6 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { SchoolFr, BAC_NAMES, SCHOOLS_FR, BacType, SchoolCategory } from './data/schools_fr';
 import MedecineQuizApp from './components/MedecineQuizApp';
+import AboutView from './components/AboutView';
+import PrivacyView from './components/PrivacyView';
+import LegalView from './components/LegalView';
+import ContactView from './components/ContactView';
 import {
   GraduationCap,
   Calculator,
@@ -11,7 +15,9 @@ import {
   X,
   Instagram,
   Award,
-  BookOpen
+  BookOpen,
+  Info,
+  ShieldAlert
 } from 'lucide-react';
 
 const isConcoursSchool = (schoolId: string) => {
@@ -38,9 +44,11 @@ function text_check_isic_isitt_trad(id: string) {
   return id === 'isic' || id === 'isitt' || id === 'fahd_traduction';
 }
 
+type TabType = 'QUIZ' | 'CALCULATOR' | 'ABOUT' | 'PRIVACY' | 'LEGAL' | 'CONTACT';
+
 export default function App() {
   // Main view tab state (Default to QUIZ as requested by user)
-  const [activeTab, setActiveTab] = useState<'QUIZ' | 'CALCULATOR'>('QUIZ');
+  const [activeTab, setActiveTab] = useState<TabType>('QUIZ');
 
   // Initial states with pre-filled values
   const [bacType, setBacType] = useState<BacType>('PC');
@@ -91,16 +99,13 @@ export default function App() {
   };
 
   // 2. Compute status helper for each school
-  // Statuses must be exactly:
-  // 🟢 100% ADMIS
-  // 🟡 POSSIBLE
-  // 🔴 DIFFICILE
+  // Prudent estimation labels for AdSense compliance
   const getSchoolEligibility = (school: SchoolFr, score: number, type: BacType) => {
     const isAccepted = school.acceptedBacs.includes(type);
     if (!isAccepted) {
       return {
         status: 'DIFFICILE' as const,
-        label: '🔴 DIFFICILE (NON POSSIBLE)',
+        label: '🔴 NON ADMISSIBLE (FILIÈRE)',
         bgColor: 'bg-rose-50 border-rose-100',
         textColor: 'text-rose-800'
       };
@@ -110,14 +115,14 @@ export default function App() {
     if (score >= threshold) {
       return {
         status: 'ADMIS' as const,
-        label: '🟢 100% ADMIS',
+        label: '🟢 ADMISSIBILITÉ ESTIMÉE',
         bgColor: 'bg-emerald-50 border-emerald-100',
         textColor: 'text-emerald-800'
       };
     } else {
       return {
         status: 'DIFFICILE' as const,
-        label: '🔴 DIFFICILE (NON POSSIBLE)',
+        label: '🔴 NON ADMISSIBLE (SOUS LE SEUIL)',
         bgColor: 'bg-slate-50 border-slate-200',
         textColor: 'text-rose-700 font-bold'
       };
@@ -256,11 +261,11 @@ export default function App() {
             </div>
             
             <h1 id="app-title" className="text-3xl sm:text-4.5xl font-black tracking-tight text-slate-900 font-sans">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-indigo-900 to-amber-600">Tawjih Avenir</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-indigo-900 to-amber-600">JAAFAR TAWJIH</span>
             </h1>
             
             <p className="text-slate-600 text-xs sm:text-xs max-w-sm mx-auto leading-relaxed font-semibold">
-              Trouvez instantanément votre admissibilité dans les grandes écoles supérieures marocaines selon votre moyenne.
+              Estimation d'admissibilité dans les grandes écoles supérieures marocaines et entraînement au Concours de Médecine.
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 pt-3">
@@ -301,10 +306,10 @@ export default function App() {
 
         {/* TOP MAIN NAVIGATION BAR */}
         <div className="max-w-4xl mx-auto px-4 mt-6">
-          <div className="bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 shadow-xl flex items-center justify-center gap-2">
+          <div className="bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 shadow-xl flex flex-wrap items-center justify-center gap-1.5">
             <button
-              onClick={() => setActiveTab('QUIZ')}
-              className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
+              onClick={() => { setActiveTab('QUIZ'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
                 activeTab === 'QUIZ'
                   ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 ring-1 ring-cyan-400'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -318,8 +323,8 @@ export default function App() {
             </button>
 
             <button
-              onClick={() => setActiveTab('CALCULATOR')}
-              className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
+              onClick={() => { setActiveTab('CALCULATOR'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
                 activeTab === 'CALCULATOR'
                   ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 shadow-lg shadow-amber-500/25 ring-1 ring-amber-300'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -328,17 +333,98 @@ export default function App() {
               <Calculator className="w-4 h-4 text-amber-400" />
               <span>Calculateur de Seuil</span>
             </button>
+
+            <button
+              onClick={() => { setActiveTab('ABOUT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`px-3.5 py-2.5 rounded-xl font-semibold text-xs transition duration-200 cursor-pointer ${
+                activeTab === 'ABOUT'
+                  ? 'bg-slate-800 text-amber-400 font-bold border border-amber-400/30'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <span>À propos</span>
+            </button>
+
+            <button
+              onClick={() => { setActiveTab('CONTACT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`px-3.5 py-2.5 rounded-xl font-semibold text-xs transition duration-200 cursor-pointer ${
+                activeTab === 'CONTACT'
+                  ? 'bg-slate-800 text-amber-400 font-bold border border-amber-400/30'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <span>Contact</span>
+            </button>
           </div>
         </div>
       </header>
 
       {/* RENDER ACTIVE TAB */}
-      {activeTab === 'QUIZ' ? (
-        <MedecineQuizApp />
-      ) : (
+      {activeTab === 'QUIZ' && <MedecineQuizApp />}
+
+      {activeTab === 'ABOUT' && (
+        <main className="max-w-3xl mx-auto px-4 mt-8">
+          <AboutView />
+        </main>
+      )}
+
+      {activeTab === 'PRIVACY' && (
+        <main className="max-w-3xl mx-auto px-4 mt-8">
+          <PrivacyView />
+        </main>
+      )}
+
+      {activeTab === 'LEGAL' && (
+        <main className="max-w-3xl mx-auto px-4 mt-8">
+          <LegalView />
+        </main>
+      )}
+
+      {activeTab === 'CONTACT' && (
+        <main className="max-w-3xl mx-auto px-4 mt-8">
+          <ContactView />
+        </main>
+      )}
+
+      {activeTab === 'CALCULATOR' && (
         <>
           {/* CORE FRAMEWORK */}
           <main className="max-w-3xl mx-auto px-4 mt-8 space-y-8">
+
+        {/* INFORMATIONAL SECTION: HOW IT WORKS */}
+        <section id="how-it-works" className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-sm space-y-3">
+          <h3 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <Info className="w-4 h-4 text-blue-800" />
+            Comment fonctionne JAAFAR TAWJIH ?
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+              <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">1</span>
+              <p className="font-bold text-slate-800">Entrez vos informations</p>
+              <p className="text-slate-500 text-[11px]">Saisissez votre filière de Baccalauréat ainsi que vos notes de l'Examen National et Régional.</p>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+              <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">2</span>
+              <p className="font-bold text-slate-800">Consultez les formations</p>
+              <p className="text-slate-500 text-[11px]">Découvrez les établissements et les filières correspondant aux données de seuils disponibles.</p>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+              <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">3</span>
+              <p className="font-bold text-slate-800">Vérifiez les conditions</p>
+              <p className="text-slate-500 text-[11px]">Consultez toujours les annonces officielles des écoles avant toute inscription définitive.</p>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-slate-100 flex items-start gap-2 text-xs text-slate-600">
+            <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <p>
+              <strong>JAAFAR TAWJIH</strong> fournit des informations et des estimations indicatives. L'admission finale dépend toujours de l'établissement concerné.
+            </p>
+          </div>
+        </section>
 
         {/* INPUT PANEL CARD */}
         <section id="calcule-card" className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -452,11 +538,29 @@ export default function App() {
               </div>
             </div>
 
+            {/* MANDATORY DISCLAIMER BOX */}
+            <div className="p-4 bg-amber-50/90 border border-amber-200 rounded-2xl text-xs text-amber-900 space-y-1.5 shadow-xs">
+              <p className="font-bold text-amber-800 flex items-center gap-1.5">
+                <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+                ⚠️ Résultat indicatif :
+              </p>
+              <p className="leading-relaxed">
+                Cette estimation ne garantit pas l'admission. Les critères, seuils et capacités d'accueil peuvent varier chaque année. Vérifiez toujours les informations auprès de l'établissement concerné.
+              </p>
+              <p className="text-[11px] text-amber-800 pt-1 font-medium">
+                <strong>Seuil indicatif :</strong> Les seuils présentés sont indicatifs et peuvent varier d'une année à l'autre selon le nombre de candidats, les places disponibles et les critères de sélection.
+              </p>
+              <div className="flex flex-wrap items-center justify-between text-[10px] text-amber-800/80 pt-1 border-t border-amber-200/50">
+                <span>Source officielle : Notices et publications indicatives des établissements.</span>
+                <span>Informations susceptibles d'être mises à jour.</span>
+              </div>
+            </div>
+
             {/* BONUS FEATURE: BEST OPTIONS COMPILATION */}
             <section id="best-options" className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
               <div className="flex items-center space-x-2">
                 <Sparkles className="w-4 h-4 text-emerald-400" />
-                <h3 className="font-bold text-sm tracking-wide uppercase">👉 Meilleures options pour toi</h3>
+                <h3 className="font-bold text-sm tracking-wide uppercase">👉 Meilleures options estimées pour toi</h3>
               </div>
               
               <div className="grid grid-cols-1 gap-2">
@@ -480,7 +584,7 @@ export default function App() {
                                 <>
                                   <span className="text-slate-600">•</span>
                                   <span className="text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-mono">
-                                    Seuil: {school.thresholds[bacType]}/20
+                                    Seuil indicatif: {school.thresholds[bacType]}/20
                                   </span>
                                 </>
                               )}
@@ -493,7 +597,7 @@ export default function App() {
                           </span>
                           {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
                             <span className="font-bold uppercase tracking-wider px-2 py-1 bg-blue-950 border border-blue-900 rounded text-[10px] text-blue-300">
-                              🎓 ADMIS À PASSER LE CONCOURS
+                              🎓 ADMISSIBILITÉ ESTIMÉE AU CONCOURS
                             </span>
                           )}
                         </div>
@@ -510,7 +614,7 @@ export default function App() {
             <section className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h3 className="font-extrabold text-lg text-slate-900 tracking-tight">
-                  🏫 Éligibilité par Établissement
+                  🏫 Éligibilité Estimée par Établissement
                 </h3>
                 <span className="text-xs text-slate-400 font-mono">
                   {filteredSchools.length} écoles répertoriées
@@ -566,15 +670,14 @@ export default function App() {
                       className="w-full px-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none text-slate-700 font-semibold cursor-pointer"
                     >
                       <option value="Tous">Tous les statuts</option>
-                      <option value="ADMIS">🟢 100% ADMIS</option>
-                      <option value="DIFFICILE">🔴 DIFFICILE</option>
+                      <option value="ADMIS">🟢 Admissibilité estimée</option>
+                      <option value="DIFFICILE">🔴 Non admissible (selon seuil)</option>
                     </select>
                   </div>
                 </div>
               </div>
 
               {/* LIST OF TARGET SCHOOLS WITH STRICT FORMATTING RULE */}
-              {/* Show ONLY Status, NO explanations, NO paragraphs. Format ONLY: School Name — Status */}
               <div className="space-y-2">
                 {filteredSchools.length > 0 ? (
                   filteredSchools.map((school) => {
@@ -618,7 +721,7 @@ export default function App() {
                             </span>
                             {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
                               <span className="px-2.5 py-1.5 bg-blue-50 text-blue-800 border border-blue-100 rounded-lg text-[10px] font-bold shrink-0 font-sans">
-                                🎓 ADMIS À PASSER LE CONCOURS
+                                🎓 ADMISSIBILITÉ ESTIMÉE AU CONCOURS
                               </span>
                             )}
                           </div>
@@ -815,9 +918,43 @@ export default function App() {
       </main>
 
       {/* FOOTER FOOTPRINT */}
-      <footer className="max-w-3xl mx-auto px-4 mt-12 py-6 border-t border-slate-200 text-center text-[10px] text-slate-400 font-medium space-y-1">
-        <p>🇲🇦 Tawjih Avenir — Guide d’orientation marocain.</p>
-        <p>Les désignations appartiennent exclusivement aux établissements concernés.</p>
+      <footer className="max-w-3xl mx-auto px-4 mt-12 py-8 border-t border-slate-200 text-center text-xs text-slate-500 font-medium space-y-3">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-slate-600">
+          <button
+            onClick={() => { setActiveTab('ABOUT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="hover:text-blue-900 transition cursor-pointer"
+          >
+            À propos
+          </button>
+          <span className="text-slate-300">•</span>
+          <button
+            onClick={() => { setActiveTab('PRIVACY'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="hover:text-blue-900 transition cursor-pointer"
+          >
+            Politique de confidentialité
+          </button>
+          <span className="text-slate-300">•</span>
+          <button
+            onClick={() => { setActiveTab('LEGAL'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="hover:text-blue-900 transition cursor-pointer"
+          >
+            Mentions légales
+          </button>
+          <span className="text-slate-300">•</span>
+          <button
+            onClick={() => { setActiveTab('CONTACT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="hover:text-blue-900 transition cursor-pointer"
+          >
+            Contact
+          </button>
+        </div>
+
+        <p className="text-[11px] text-slate-400">
+          🇲🇦 <strong>JAAFAR TAWJIH</strong> — Plateforme indépendante d’orientation universitaire et scolaire au Maroc.
+        </p>
+        <p className="text-[10px] text-slate-400">
+          Les marques et dénominations citées appartiennent à leurs propriétaires respectifs. Seuil indicatif sous réserve des publications officielles.
+        </p>
       </footer>
         </>
       )}
