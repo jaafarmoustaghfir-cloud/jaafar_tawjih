@@ -265,7 +265,7 @@ export default function App() {
             </h1>
             
             <p className="text-slate-600 text-xs sm:text-xs max-w-sm mx-auto leading-relaxed font-semibold">
-              Estimation d'admissibilité dans les grandes écoles supérieures marocaines et entraînement au Concours de Médecine.
+              Estimation d'admissibilité dans les grandes écoles supérieures marocaines et entraînement aux Concours (ENSA 2024 &amp; Médecine 2025).
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 pt-3">
@@ -316,9 +316,9 @@ export default function App() {
               }`}
             >
               <Award className="w-4 h-4 text-cyan-300" />
-              <span>QCM Concours Médecine 2025</span>
+              <span>QCM Concours (ENSA &amp; Médecine)</span>
               <span className="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30 font-mono hidden sm:inline">
-                56 QCM
+                Nouveau : ENSA 2024
               </span>
             </button>
 

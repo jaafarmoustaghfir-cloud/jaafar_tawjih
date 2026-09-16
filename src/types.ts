@@ -60,9 +60,11 @@ export interface Question {
   points: number;
   context?: string;
   question: string;
-  options: Record<QuestionOptionKey, string>;
-  correct_answer: QuestionOptionKey;
-  special_format: SpecialFormat;
+  options: Partial<Record<QuestionOptionKey, string>>;
+  correct_answer: QuestionOptionKey | null;
+  explication?: string;
+  note?: string;
+  special_format?: SpecialFormat;
 }
 
 export interface ExamDataset {

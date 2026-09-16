@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import examDataRaw from '../data/medecine_2025_exam.json';
+import medecineExamRaw from '../data/medecine_2025_exam.json';
+import ensaExamRaw from '../data/ensa_2024_exam.json';
 import {
   ExamDataset,
   Question,
@@ -24,11 +25,17 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 
-const examData = examDataRaw as ExamDataset;
+const EXAMS: Record<'MEDECINE_2025' | 'ENSA_2024', ExamDataset> = {
+  MEDECINE_2025: medecineExamRaw as ExamDataset,
+  ENSA_2024: ensaExamRaw as unknown as ExamDataset,
+};
 
 export const MedecineQuizApp: React.FC = () => {
-  const [questions] = useState<Question[]>(examData.questions);
-  const [examInfo] = useState(examData.exam_info);
+  const [selectedExamKey, setSelectedExamKey] = useState<'MEDECINE_2025' | 'ENSA_2024'>('ENSA_2024');
+
+  const currentDataset = EXAMS[selectedExamKey];
+  const questions = currentDataset.questions;
+  const examInfo = currentDataset.exam_info;
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
@@ -36,6 +43,16 @@ export const MedecineQuizApp: React.FC = () => {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [viewMode, setViewMode] = useState<'QUIZ' | 'SUMMARY'>('QUIZ');
   const [hasStarted, setHasStarted] = useState<boolean>(false);
+
+  const handleSwitchExam = (key: 'MEDECINE_2025' | 'ENSA_2024') => {
+    setSelectedExamKey(key);
+    setUserAnswers({});
+    setIsSubmitted(false);
+    setQuizResult(null);
+    setCurrentIndex(0);
+    setViewMode('QUIZ');
+    setHasStarted(false);
+  };
 
   // Total possible points
   const totalPointsPossible = questions.reduce((sum, q) => sum + q.points, 0);
@@ -165,9 +182,42 @@ export const MedecineQuizApp: React.FC = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         
+        {/* Exam Selection Pills & Intro */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mb-6">
+          <button
+            onClick={() => handleSwitchExam('ENSA_2024')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer ${
+              selectedExamKey === 'ENSA_2024'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-lg shadow-emerald-500/25 ring-2 ring-emerald-400 font-extrabold'
+                : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
+            }`}
+          >
+            <GraduationCap className="w-4 h-4" />
+            <span>Concours ENSA 2024</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950/60 font-mono">
+              40 QCM
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleSwitchExam('MEDECINE_2025')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer ${
+              selectedExamKey === 'MEDECINE_2025'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 ring-2 ring-cyan-400 font-extrabold'
+                : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
+            }`}
+          >
+            <Award className="w-4 h-4" />
+            <span>Concours Médecine 2025</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950/60 font-mono">
+              56 QCM
+            </span>
+          </button>
+        </div>
+
         {/* Intro Screen before starting exam if not started */}
         {!hasStarted && !isSubmitted && (
-          <div className="max-w-3xl mx-auto my-8 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl text-slate-100 text-center animate-fadeIn">
+          <div className="max-w-3xl mx-auto my-4 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl text-slate-100 text-center animate-fadeIn">
             <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-0.5 shadow-xl shadow-cyan-500/20 flex items-center justify-center">
               <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
                 <GraduationCap className="w-10 h-10 text-cyan-400" />
@@ -175,7 +225,7 @@ export const MedecineQuizApp: React.FC = () => {
             </div>
 
             <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono font-bold uppercase tracking-wider inline-block mb-3">
-              Concours de Médecine {examInfo.annee_universitaire}
+              {examInfo.title} — Session {examInfo.annee_universitaire}
             </span>
 
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">
@@ -183,19 +233,19 @@ export const MedecineQuizApp: React.FC = () => {
             </h1>
 
             <p className="text-sm text-slate-300 max-w-xl mx-auto leading-relaxed mb-6">
-              Testez vos connaissances en conditions réelles avec l'épreuve officielle de 56 QCM réparties en 4 matières.
+              Testez vos connaissances en conditions réelles d'examen avec l'épreuve officielle de {questions.length} questions réparties en {examInfo.sections.length} matières.
             </p>
 
             {/* Exam Specifications */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8 text-left">
               <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
                 <div className="text-[11px] text-slate-400 font-medium">Nombre de QCM</div>
-                <div className="text-base font-bold text-white font-mono mt-0.5">56 Questions</div>
+                <div className="text-base font-bold text-white font-mono mt-0.5">{questions.length} Questions</div>
               </div>
 
               <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
                 <div className="text-[11px] text-slate-400 font-medium">Durée officielle</div>
-                <div className="text-base font-bold text-cyan-400 font-mono mt-0.5">2 Heures</div>
+                <div className="text-base font-bold text-cyan-400 font-mono mt-0.5">{examInfo.duree}</div>
               </div>
 
               <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
@@ -206,8 +256,8 @@ export const MedecineQuizApp: React.FC = () => {
               </div>
 
               <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                <div className="text-[11px] text-slate-400 font-medium">Pondération</div>
-                <div className="text-base font-bold text-amber-400 font-mono mt-0.5">1 pt à 3 pts / Q</div>
+                <div className="text-[11px] text-slate-400 font-medium">Matières</div>
+                <div className="text-base font-bold text-amber-400 font-mono mt-0.5">{examInfo.sections.length} Sections</div>
               </div>
             </div>
 
@@ -229,7 +279,7 @@ export const MedecineQuizApp: React.FC = () => {
               onClick={() => setHasStarted(true)}
               className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-600 hover:to-emerald-600 text-slate-950 font-black text-sm uppercase tracking-wider shadow-xl shadow-cyan-500/20 transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 mx-auto"
             >
-              <span>Commencer le Test Maintenant</span>
+              <span>Commencer le Test ({examInfo.title})</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

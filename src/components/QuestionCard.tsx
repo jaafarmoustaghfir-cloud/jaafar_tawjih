@@ -136,10 +136,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </h2>
       </div>
 
-      {/* Options List (A to E) */}
+      {/* Options List */}
       <div className="space-y-3 mb-6">
         {optionKeys.map((key) => {
           const optionText = question.options[key];
+          if (!optionText) return null;
           const isOptionSelected = selectedOption === key;
           const isThisCorrectAnswer = isSubmitted && key === question.correct_answer;
           const isThisSelectedWrong = isSubmitted && isOptionSelected && !isThisCorrectAnswer;
@@ -206,6 +207,26 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           );
         })}
       </div>
+
+      {/* Post-Submit Explanation or Note */}
+      {isSubmitted && (question.explication || question.note) && (
+        <div className="mb-6 p-4 rounded-xl bg-slate-950 border border-cyan-500/30 text-xs leading-relaxed text-slate-300 space-y-2">
+          {question.note && (
+            <div className="flex items-center gap-1.5 text-amber-400 font-bold">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Note du concours : {question.note}</span>
+            </div>
+          )}
+          {question.explication && (
+            <div>
+              <span className="font-bold text-cyan-400 uppercase tracking-wider block mb-1 text-[11px]">
+                Méthode & Explication :
+              </span>
+              <p className="text-slate-300">{question.explication}</p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Navigation Buttons (Prev / Next) */}
       <div className="flex items-center justify-between pt-4 border-t border-slate-800">

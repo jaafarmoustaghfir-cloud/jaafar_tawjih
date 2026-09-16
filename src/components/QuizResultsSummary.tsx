@@ -243,7 +243,7 @@ export const QuizResultsSummary: React.FC<QuizResultsSummaryProps> = ({
           <div>
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-emerald-400" />
-              <span>Correction Détaillée des 56 Questions</span>
+              <span>Correction Détaillée des {questions.length} Questions</span>
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
               Revoyez chaque question avec la bonne réponse surlignée et vos points attribués.
@@ -342,9 +342,13 @@ export const QuizResultsSummary: React.FC<QuizResultsSummaryProps> = ({
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                     <div>
                       <span className="font-bold text-emerald-400 block text-[11px] uppercase">
-                        Bonne réponse : Proposition {q.correct_answer}
+                        {q.correct_answer
+                          ? `Bonne réponse : Proposition ${q.correct_answer}`
+                          : 'Réponse à vérifier (non fournie dans le corrigé)'}
                       </span>
-                      <MathText text={q.options[q.correct_answer]} />
+                      {q.correct_answer && q.options[q.correct_answer] && (
+                        <MathText text={q.options[q.correct_answer]!} />
+                      )}
                     </div>
                   </div>
 
@@ -372,10 +376,26 @@ export const QuizResultsSummary: React.FC<QuizResultsSummaryProps> = ({
                           ? `Votre choix : Proposition ${userPick}`
                           : 'Aucune réponse sélectionnée'}
                       </span>
-                      {userPick && <MathText text={q.options[userPick]} />}
+                      {userPick && q.options[userPick] && <MathText text={q.options[userPick]!} />}
                     </div>
                   </div>
                 </div>
+
+                {/* Explication & Notes */}
+                {(q.explication || q.note) && (
+                  <div className="mt-2.5 pt-2.5 border-t border-slate-800/80 text-[11px] text-slate-300 space-y-1">
+                    {q.note && (
+                      <p className="text-amber-400 font-medium">
+                        <strong>Note :</strong> {q.note}
+                      </p>
+                    )}
+                    {q.explication && (
+                      <p className="text-slate-400">
+                        <strong className="text-cyan-400 font-semibold">Méthode :</strong> {q.explication}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}

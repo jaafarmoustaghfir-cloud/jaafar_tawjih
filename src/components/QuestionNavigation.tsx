@@ -34,7 +34,7 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
       <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-800">
         <div className="flex items-center gap-2">
           <LayoutGrid className="w-4 h-4 text-cyan-400" />
-          <h3 className="text-sm font-bold text-white">Grille des 56 Questions</h3>
+          <h3 className="text-sm font-bold text-white">Grille des {questions.length} Questions</h3>
         </div>
 
         <button
@@ -58,7 +58,7 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
                   : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
               }`}
             >
-              Toutes (56)
+              Toutes ({questions.length})
             </button>
 
             {sections.map((sec) => {

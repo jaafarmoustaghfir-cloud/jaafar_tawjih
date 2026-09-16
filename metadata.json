@@ -1,6 +1,6 @@
 {
   "name": "Tawjih Avenir",
-  "description": "Plateforme moderne d’orientation et de préparation au Concours de Médecine 2025. QCM interactifs avec chronomètre 2h, correction KaTeX et calculateur d'admissibilité post-BAC.",
+  "description": "Plateforme moderne d’orientation et de préparation aux Concours ENSA 2024 et Médecine 2025. QCM interactifs avec chronomètre, formules KaTeX, correction détaillée et calculateur d'admissibilité post-BAC.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
