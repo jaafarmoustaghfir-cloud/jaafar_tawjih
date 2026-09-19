@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import medecineExamRaw from '../data/medecine_2025_exam.json';
 import ensaExamRaw from '../data/ensa_2024_exam.json';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import {
   ExamDataset,
   Question,
@@ -23,6 +25,7 @@ import {
   GraduationCap,
   ArrowRight,
   ShieldAlert,
+  UserCheck,
 } from 'lucide-react';
 
 const EXAMS: Record<'MEDECINE_2025' | 'ENSA_2024', ExamDataset> = {
@@ -43,6 +46,37 @@ export const MedecineQuizApp: React.FC = () => {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [viewMode, setViewMode] = useState<'QUIZ' | 'SUMMARY'>('QUIZ');
   const [hasStarted, setHasStarted] = useState<boolean>(false);
+
+  // User name tracking state for public visitors
+  const [userName, setUserName] = useState<string>('');
+  const [showNameModal, setShowNameModal] = useState<boolean>(false);
+  const [tempNameInput, setTempNameInput] = useState<string>('');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('jaafar_tawjih_user_name');
+    if (saved && saved.trim() !== '') {
+      setUserName(saved.trim());
+    }
+  }, []);
+
+  const handleStartExamClick = () => {
+    const saved = localStorage.getItem('jaafar_tawjih_user_name');
+    if (!saved || saved.trim() === '') {
+      setShowNameModal(true);
+    } else {
+      setUserName(saved);
+      setHasStarted(true);
+    }
+  };
+
+  const handleConfirmName = (e: React.FormEvent) => {
+    e.preventDefault();
+    const finalName = tempNameInput.trim() || 'تلميذ زائر';
+    localStorage.setItem('jaafar_tawjih_user_name', finalName);
+    setUserName(finalName);
+    setShowNameModal(false);
+    setHasStarted(true);
+  };
 
   const handleSwitchExam = (key: 'MEDECINE_2025' | 'ENSA_2024') => {
     setSelectedExamKey(key);
@@ -122,12 +156,40 @@ export const MedecineQuizApp: React.FC = () => {
     };
   };
 
-  const handleSubmitExam = () => {
+  const handleSubmitExam = async () => {
     const res = calculateResults();
     setQuizResult(res);
     setIsSubmitted(true);
     setViewMode('SUMMARY');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Save session automatically to Firestore collection "sessions_qcm"
+    try {
+      const currentUserName = userName || localStorage.getItem('jaafar_tawjih_user_name') || 'تلميذ زائر';
+      
+      const sessionReponses = questions.map((q) => {
+        const userChoice = userAnswers[q.id];
+        const isCorrect = userChoice ? userChoice === q.correct_answer : false;
+        return {
+          question_id: q.id,
+          reponse_donnee: userChoice || 'NON_REPONDU',
+          correcte: isCorrect,
+          points_obtenus: isCorrect ? q.points : 0,
+        };
+      });
+
+      await addDoc(collection(db, 'sessions_qcm'), {
+        nom_utilisateur: currentUserName,
+        concours: selectedExamKey === 'ENSA_2024' ? 'ENSA' : 'Médecine',
+        annee: selectedExamKey === 'ENSA_2024' ? '2024' : '2025',
+        score_total: res.totalPointsObtained,
+        reponses: sessionReponses,
+        date: serverTimestamp(),
+      });
+      console.log('Session QCM enregistrée avec succès dans Firestore !');
+    } catch (err) {
+      console.error('Erreur enregistrement session Firestore:', err);
+    }
   };
 
   const handleResetExam = () => {
@@ -276,12 +338,48 @@ export const MedecineQuizApp: React.FC = () => {
             </div>
 
             <button
-              onClick={() => setHasStarted(true)}
+              onClick={handleStartExamClick}
               className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-600 hover:to-emerald-600 text-slate-950 font-black text-sm uppercase tracking-wider shadow-xl shadow-cyan-500/20 transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 mx-auto"
             >
               <span>Commencer le Test ({examInfo.title})</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+          </div>
+        )}
+
+        {/* Modal for asking student name before first QCM */}
+        {showNameModal && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-slate-900 border border-slate-800 max-w-sm w-full rounded-3xl p-6 shadow-2xl space-y-4 text-right animate-fadeIn">
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto">
+                  <UserCheck className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-black text-white">مرحباً بك في الاختبار</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  أدخل اسمك الكامل لتسجيل نتيجتك في لائحة المتفوقين (Classement). سيتم حفظ الاسم تلقائياً في جهازك.
+                </p>
+              </div>
+
+              <form onSubmit={handleConfirmName} className="space-y-3">
+                <input
+                  type="text"
+                  value={tempNameInput}
+                  onChange={(e) => setTempNameInput(e.target.value)}
+                  placeholder="مثال: يوسف العلمي"
+                  autoFocus
+                  required
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 outline-none text-right"
+                />
+
+                <button
+                  type="submit"
+                  className="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-xl transition cursor-pointer"
+                >
+                  بدء الاختبار الآن
+                </button>
+              </form>
+            </div>
           </div>
         )}
 

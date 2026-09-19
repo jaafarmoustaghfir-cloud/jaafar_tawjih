@@ -1,0 +1,11 @@
+# Netlify Configuration for jaafartawjih.netlify.app
+
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+# Single Page App rewrite for client-side routing and /admin
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

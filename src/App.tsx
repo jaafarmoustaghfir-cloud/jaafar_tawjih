@@ -1,10 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SchoolFr, BAC_NAMES, SCHOOLS_FR, BacType, SchoolCategory } from './data/schools_fr';
 import MedecineQuizApp from './components/MedecineQuizApp';
 import AboutView from './components/AboutView';
 import PrivacyView from './components/PrivacyView';
 import LegalView from './components/LegalView';
 import ContactView from './components/ContactView';
+import { AdminPortal } from './components/AdminPortal';
+import { db } from './firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import {
   GraduationCap,
   Calculator,
@@ -44,17 +47,78 @@ function text_check_isic_isitt_trad(id: string) {
   return id === 'isic' || id === 'isitt' || id === 'fahd_traduction';
 }
 
-type TabType = 'QUIZ' | 'CALCULATOR' | 'ABOUT' | 'PRIVACY' | 'LEGAL' | 'CONTACT';
+type TabType = 'QUIZ' | 'CALCULATOR' | 'ABOUT' | 'PRIVACY' | 'LEGAL' | 'CONTACT' | 'ADMIN';
 
 export default function App() {
-  // Main view tab state (Default to QUIZ as requested by user)
-  const [activeTab, setActiveTab] = useState<TabType>('QUIZ');
+  // Check if current URL path or hash points to /admin
+  const isAdminRoute = typeof window !== 'undefined' && (
+    window.location.pathname === '/admin' || 
+    window.location.pathname.startsWith('/admin') ||
+    window.location.hash === '#/admin' ||
+    window.location.hash === '#admin'
+  );
+
+  // Main view tab state (Default to QUIZ or ADMIN if accessed directly)
+  const [activeTab, setActiveTab] = useState<TabType>(isAdminRoute ? 'ADMIN' : 'QUIZ');
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (
+        window.location.pathname === '/admin' || 
+        window.location.pathname.startsWith('/admin') ||
+        window.location.hash === '#/admin' ||
+        window.location.hash === '#admin'
+      ) {
+        setActiveTab('ADMIN');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Initial states with pre-filled values
   const [bacType, setBacType] = useState<BacType>('PC');
   const [nationalGrade, setNationalGrade] = useState<string>('14.75');
   const [regionalGrade, setRegionalGrade] = useState<string>('15.50');
   const [hasChecked, setHasChecked] = useState<boolean>(true);
+
+  // Live schools from Firestore ecoles collection
+  const [liveSchools, setLiveSchools] = useState<SchoolFr[]>(SCHOOLS_FR);
+
+  useEffect(() => {
+    const fetchFirestoreSchools = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'ecoles'));
+        if (!snap.empty) {
+          const fetched: SchoolFr[] = [];
+          snap.forEach((d) => {
+            const data = d.data();
+            const seuil = typeof data.seuil_preselection === 'number' ? data.seuil_preselection : 14.0;
+            fetched.push({
+              id: d.id,
+              name: data.nom || 'École Supérieure',
+              city: 'Maroc',
+              category: 'Ingénierie / Sciences',
+              acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech', 'Lettres'],
+              thresholds: {
+                SM: seuil,
+                PC: seuil,
+                SVT: seuil,
+                Tech: seuil,
+                Eco: seuil,
+                Lettres: seuil,
+              },
+            });
+          });
+          // Merge with predefined list
+          setLiveSchools([...fetched, ...SCHOOLS_FR]);
+        }
+      } catch (e) {
+        console.error('Erreur lecture Firestore ecoles:', e);
+      }
+    };
+    fetchFirestoreSchools();
+  }, []);
 
   // Filters state
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -133,7 +197,7 @@ export default function App() {
   const bestOptions = useMemo(() => {
     if (finalScore <= 0) return [];
 
-    const scoredSchools = SCHOOLS_FR.map(school => {
+    const scoredSchools = liveSchools.map(school => {
       const isAccepted = school.acceptedBacs.includes(bacType);
       const threshold = isAccepted ? school.thresholds[bacType] : 99;
       const eligibility = getSchoolEligibility(school, finalScore, bacType);
@@ -157,11 +221,11 @@ export default function App() {
       })
       .slice(0, 3)
       .map(item => item.school);
-  }, [finalScore, bacType]);
+  }, [finalScore, bacType, liveSchools]);
 
   // 4. Combined Filtering logic for all schools
   const filteredSchools = useMemo(() => {
-    return SCHOOLS_FR.filter(school => {
+    return liveSchools.filter(school => {
       // Search
       const textToSearch = `${school.name} ${school.city} ${school.category}`.toLowerCase();
       if (searchQuery && !textToSearch.includes(searchQuery.toLowerCase())) {
@@ -182,7 +246,7 @@ export default function App() {
 
       return true;
     });
-  }, [searchQuery, selectedCategory, selectedStatus, finalScore, bacType]);
+  }, [searchQuery, selectedCategory, selectedStatus, finalScore, bacType, liveSchools]);
 
   // Unique list of categories present
   const categoriesList: SchoolCategory[] = [
@@ -196,6 +260,10 @@ export default function App() {
     'Universités Privées',
     'Spécial Concours'
   ];
+
+  if (activeTab === 'ADMIN') {
+    return <AdminPortal />;
+  }
 
   return (
     <div 

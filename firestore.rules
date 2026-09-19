@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Function to check if the user is authenticated as Admin
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // 1. Collection "ecoles": Public read, Admin-only write (add, edit, delete)
+    match /ecoles/{ecoleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 2. Collection "qcm": Public read, Admin-only write
+    match /qcm/{qcmId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 3. Collection "sessions_qcm":
+    // Any public visitor can save (create) their QCM score and answers.
+    // Reading, modifying, and deleting user sessions is strictly reserved for Admin.
+    match /sessions_qcm/{sessionId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
