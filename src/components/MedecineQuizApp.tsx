@@ -3,6 +3,7 @@ import medecineExamRaw from '../data/medecine_2025_exam.json';
 import ensaExamRaw from '../data/ensa_2024_exam.json';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from '../firebaseErrors';
 import {
   ExamDataset,
   Question,
@@ -187,8 +188,8 @@ export const MedecineQuizApp: React.FC = () => {
         date: serverTimestamp(),
       });
       console.log('Session QCM enregistrée avec succès dans Firestore !');
-    } catch (err) {
-      console.error('Erreur enregistrement session Firestore:', err);
+    } catch (err: any) {
+      handleFirestoreError(err, OperationType.CREATE, 'sessions_qcm');
     }
   };
 

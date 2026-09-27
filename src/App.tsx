@@ -8,6 +8,7 @@ import ContactView from './components/ContactView';
 import { AdminPortal } from './components/AdminPortal';
 import { db } from './firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from './firebaseErrors';
 import {
   GraduationCap,
   Calculator,
@@ -51,29 +52,36 @@ type TabType = 'QUIZ' | 'CALCULATOR' | 'ABOUT' | 'PRIVACY' | 'LEGAL' | 'CONTACT'
 
 export default function App() {
   // Check if current URL path or hash points to /admin
-  const isAdminRoute = typeof window !== 'undefined' && (
-    window.location.pathname === '/admin' || 
-    window.location.pathname.startsWith('/admin') ||
-    window.location.hash === '#/admin' ||
-    window.location.hash === '#admin'
-  );
+  const checkIsAdminPath = () => {
+    if (typeof window === 'undefined') return false;
+    const cleanPath = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+    const cleanHash = window.location.hash.toLowerCase().replace(/\/+$/, '');
+    return (
+      cleanPath === '/admin' ||
+      cleanPath.startsWith('/admin/') ||
+      cleanHash === '#admin' ||
+      cleanHash === '#/admin'
+    );
+  };
 
   // Main view tab state (Default to QUIZ or ADMIN if accessed directly)
-  const [activeTab, setActiveTab] = useState<TabType>(isAdminRoute ? 'ADMIN' : 'QUIZ');
+  const [activeTab, setActiveTab] = useState<TabType>(() => (checkIsAdminPath() ? 'ADMIN' : 'QUIZ'));
 
   useEffect(() => {
-    const handlePopState = () => {
-      if (
-        window.location.pathname === '/admin' || 
-        window.location.pathname.startsWith('/admin') ||
-        window.location.hash === '#/admin' ||
-        window.location.hash === '#admin'
-      ) {
+    const handleLocationChange = () => {
+      if (checkIsAdminPath()) {
         setActiveTab('ADMIN');
+      } else {
+        setActiveTab((prev) => (prev === 'ADMIN' ? 'QUIZ' : prev));
       }
     };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
 
   // Initial states with pre-filled values
@@ -113,8 +121,10 @@ export default function App() {
           // Merge with predefined list
           setLiveSchools([...fetched, ...SCHOOLS_FR]);
         }
-      } catch (e) {
-        console.error('Erreur lecture Firestore ecoles:', e);
+      } catch (e: any) {
+        handleFirestoreError(e, OperationType.LIST, 'ecoles');
+        // Graceful fallback: maintain offline/default schools catalog
+        setLiveSchools(SCHOOLS_FR);
       }
     };
     fetchFirestoreSchools();
@@ -262,7 +272,16 @@ export default function App() {
   ];
 
   if (activeTab === 'ADMIN') {
-    return <AdminPortal />;
+    return (
+      <AdminPortal
+        onNavigateHome={() => {
+          if (typeof window !== 'undefined') {
+            window.history.pushState({}, '', '/');
+          }
+          setActiveTab('QUIZ');
+        }}
+      />
+    );
   }
 
   return (

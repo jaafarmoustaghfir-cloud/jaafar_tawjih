@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "Ecole": {
+      "title": "Ecole",
+      "description": "Données des écoles supérieures et leurs seuils de présélection",
+      "type": "object",
+      "properties": {
+        "nom": {
+          "type": "string",
+          "description": "Nom de l'école ou institut",
+          "maxLength": 150
+        },
+        "filiere_requise": {
+          "type": "string",
+          "description": "Série ou filière requise (ex: PC, SM, SVT)",
+          "maxLength": 100
+        },
+        "seuil_preselection": {
+          "type": "number",
+          "description": "Seuil de présélection sur 20"
+        },
+        "annee": {
+          "type": "string",
+          "description": "Année du seuil (ex: 2024)",
+          "maxLength": 10
+        },
+        "formule": {
+          "type": "string",
+          "description": "Formule de calcul (ex: 75_25, 100_nat)",
+          "maxLength": 50
+        }
+      },
+      "required": ["nom", "seuil_preselection"]
+    },
+    "Qcm": {
+      "title": "Qcm",
+      "description": "Banque de questions de QCM pour les concours",
+      "type": "object",
+      "properties": {
+        "concours": {
+          "type": "string",
+          "description": "Nom du concours (ex: ENSA, Médecine)",
+          "maxLength": 100
+        },
+        "annee": {
+          "type": "string",
+          "description": "Année de l'épreuve",
+          "maxLength": 10
+        },
+        "matiere": {
+          "type": "string",
+          "description": "Matière de l'épreuve",
+          "maxLength": 100
+        },
+        "questions": {
+          "type": "array",
+          "description": "Liste ordonnée des questions avec choix et corrections"
+        }
+      },
+      "required": ["concours", "annee", "questions"]
+    },
+    "SessionQcm": {
+      "title": "SessionQcm",
+      "description": "Résultats et suivi d'un candidat à un QCM",
+      "type": "object",
+      "properties": {
+        "nom_utilisateur": {
+          "type": "string",
+          "description": "Nom ou pseudo du candidat",
+          "maxLength": 100
+        },
+        "concours": {
+          "type": "string",
+          "description": "Concours passé",
+          "maxLength": 100
+        },
+        "annee": {
+          "type": "string",
+          "description": "Année de l'épreuve passée",
+          "maxLength": 10
+        },
+        "score_total": {
+          "type": "number",
+          "description": "Score total obtenu"
+        },
+        "reponses": {
+          "type": "array",
+          "description": "Détails des réponses soumises"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date de passage du test"
+        }
+      },
+      "required": ["nom_utilisateur", "concours", "score_total"]
+    }
+  },
+  "firestore": {
+    "/ecoles/{ecoleId}": {
+      "schema": "Ecole",
+      "description": "Collection publique des écoles et seuils"
+    },
+    "/qcm/{qcmId}": {
+      "schema": "Qcm",
+      "description": "Collection des QCM et questions de concours"
+    },
+    "/sessions_qcm/{sessionId}": {
+      "schema": "SessionQcm",
+      "description": "Collection de suivi des sessions de test utilisateurs"
+    }
+  }
+}

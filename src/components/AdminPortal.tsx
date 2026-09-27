@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  auth, 
   db 
 } from '../firebase';
-import { 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged,
-  User
-} from 'firebase/auth';
+import { handleFirestoreError, OperationType } from '../firebaseErrors';
+import medecineExamRaw from '../data/medecine_2025_exam.json';
+import ensaExamRaw from '../data/ensa_2024_exam.json';
 import { 
   collection, 
   getDocs, 
@@ -34,7 +30,10 @@ import {
   ArrowRight,
   Filter,
   RefreshCw,
-  Search
+  Search,
+  BookOpen,
+  FileQuestion,
+  Layers
 } from 'lucide-react';
 
 interface EcoleDoc {
@@ -63,9 +62,40 @@ interface SessionQcmDoc {
   reponses: QuestionSessionItem[];
 }
 
-export const AdminPortal: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
+interface QcmQuestionItem {
+  id: number;
+  enonce: string;
+  options: {
+    A: string;
+    B: string;
+    C: string;
+    D: string;
+    E?: string;
+  };
+  reponse: string;
+  explication?: string;
+}
+
+interface QcmDoc {
+  id?: string;
+  concours: string;
+  annee: string;
+  matiere: string;
+  questions: QcmQuestionItem[];
+}
+
+interface AdminPortalProps {
+  onNavigateHome?: () => void;
+}
+
+export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
+  // Local admin authentication state (persisted across page reloads via localStorage)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('jaafar_admin_auth') === 'true';
+    }
+    return false;
+  });
 
   // Login form state
   const [usernameInput, setUsernameInput] = useState<string>('jaafar');
@@ -74,7 +104,24 @@ export const AdminPortal: React.FC = () => {
   const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
 
   // Navigation tabs
-  const [activeAdminTab, setActiveAdminTab] = useState<'ECOLES' | 'USERS' | 'ERRORS'>('ECOLES');
+  const [activeAdminTab, setActiveAdminTab] = useState<'ECOLES' | 'USERS' | 'ERRORS' | 'QCM'>('ECOLES');
+
+  // QCM state
+  const [qcmList, setQcmList] = useState<QcmDoc[]>([]);
+  const [loadingQcm, setLoadingQcm] = useState<boolean>(false);
+  const [selectedQcmForView, setSelectedQcmForView] = useState<QcmDoc | null>(null);
+  const [isSeedingQcm, setIsSeedingQcm] = useState<boolean>(false);
+  const [qcmConcoursInput, setQcmConcoursInput] = useState<string>('Médecine');
+  const [qcmAnneeInput, setQcmAnneeInput] = useState<string>('2025');
+  const [qcmMatiereInput, setQcmMatiereInput] = useState<string>('Sciences de la Vie');
+  const [qcmEnonceInput, setQcmEnonceInput] = useState<string>('');
+  const [qcmOptA, setQcmOptA] = useState<string>('');
+  const [qcmOptB, setQcmOptB] = useState<string>('');
+  const [qcmOptC, setQcmOptC] = useState<string>('');
+  const [qcmOptD, setQcmOptD] = useState<string>('');
+  const [qcmOptE, setQcmOptE] = useState<string>('');
+  const [qcmReponseInput, setQcmReponseInput] = useState<string>('A');
+  const [qcmExplicationInput, setQcmExplicationInput] = useState<string>('');
 
   // Ecoles state
   const [ecoles, setEcoles] = useState<EcoleDoc[]>([]);
@@ -92,19 +139,16 @@ export const AdminPortal: React.FC = () => {
   const [filterConcours, setFilterConcours] = useState<string>('ALL');
   const [filterAnnee, setFilterAnnee] = useState<string>('ALL');
   const [selectedSessionForModal, setSelectedSessionForModal] = useState<SessionQcmDoc | null>(null);
+  const [rulesNotice, setRulesNotice] = useState<string | null>(null);
 
-  // Listen to Auth State
+  // Load Firestore data when authenticated
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoadingAuth(false);
-      if (user) {
-        fetchEcoles();
-        fetchSessions();
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+    if (isAuthenticated) {
+      fetchEcoles();
+      fetchSessions();
+      fetchQcm();
+    }
+  }, [isAuthenticated]);
 
   // Fetch Ecoles from Firestore
   const fetchEcoles = async () => {
@@ -116,8 +160,12 @@ export const AdminPortal: React.FC = () => {
         list.push({ id: d.id, ...(d.data() as Omit<EcoleDoc, 'id'>) });
       });
       setEcoles(list);
+      setRulesNotice(null);
     } catch (err: any) {
-      console.error('Erreur chargement ecoles:', err);
+      handleFirestoreError(err, OperationType.LIST, 'ecoles');
+      if (err?.message?.includes('permission') || err?.code === 'permission-denied') {
+        setRulesNotice("تنبيه أمان Firestore: قاعدة البيانات تمنع الوصول. المرجو التأكد من نشر القواعد الموجودة في ملف firestore.rules عبر Firebase Console > Firestore Database > Rules.");
+      }
     } finally {
       setLoadingEcoles(false);
     }
@@ -136,41 +184,194 @@ export const AdminPortal: React.FC = () => {
       list.sort((a, b) => (b.score_total || 0) - (a.score_total || 0));
       setSessions(list);
     } catch (err: any) {
-      console.error('Erreur chargement sessions:', err);
+      handleFirestoreError(err, OperationType.LIST, 'sessions_qcm');
+      if (err?.message?.includes('permission') || err?.code === 'permission-denied') {
+        setRulesNotice("تنبيه أمان Firestore: قاعدة البيانات تمنع الوصول. المرجو التأكد من نشر القواعد الموجودة في ملف firestore.rules عبر Firebase Console > Firestore Database > Rules.");
+      }
     } finally {
       setLoadingSessions(false);
     }
   };
 
-  // Login handler with username "jaafar" and password "2008"
-  const handleLogin = async (e: React.FormEvent) => {
+  // Fetch QCM packs from Firestore
+  const fetchQcm = async () => {
+    setLoadingQcm(true);
+    try {
+      const snap = await getDocs(collection(db, 'qcm'));
+      const list: QcmDoc[] = [];
+      snap.forEach((d) => {
+        list.push({ id: d.id, ...(d.data() as Omit<QcmDoc, 'id'>) });
+      });
+      setQcmList(list);
+    } catch (err: any) {
+      handleFirestoreError(err, OperationType.LIST, 'qcm');
+      if (err?.message?.includes('permission') || err?.code === 'permission-denied') {
+        setRulesNotice("تنبيه أمان Firestore: قاعدة البيانات تمنع الوصول. المرجو التأكد من نشر القواعد الموجودة في ملف firestore.rules.");
+      }
+    } finally {
+      setLoadingQcm(false);
+    }
+  };
+
+  // Seed default exams into Firestore collection qcm
+  const handleSeedDefaultQcm = async () => {
+    if (!confirm('هل تريد استيراد بنك أسئلة المباريات (Médecine 2025 & ENSA 2024) إلى Firestore مباشرة؟')) return;
+    setIsSeedingQcm(true);
+    try {
+      // 1. Seed Medecine 2025 by section
+      const medSections: Record<string, QcmQuestionItem[]> = {};
+      medecineExamRaw.questions.forEach((q) => {
+        if (!medSections[q.section]) medSections[q.section] = [];
+        medSections[q.section].push({
+          id: q.id,
+          enonce: q.question,
+          options: {
+            A: q.options?.A || '',
+            B: q.options?.B || '',
+            C: q.options?.C || '',
+            D: q.options?.D || '',
+            E: q.options?.E || '',
+          },
+          reponse: q.correct_answer || 'A',
+          explication: (q as any).explication || '',
+        });
+      });
+
+      for (const [secName, qList] of Object.entries(medSections)) {
+        await addDoc(collection(db, 'qcm'), {
+          concours: 'Médecine',
+          annee: '2025',
+          matiere: secName,
+          questions: qList,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // 2. Seed ENSA 2024 by section
+      const ensaSections: Record<string, QcmQuestionItem[]> = {};
+      ensaExamRaw.questions.forEach((q: any) => {
+        if (!ensaSections[q.section]) ensaSections[q.section] = [];
+        ensaSections[q.section].push({
+          id: q.id,
+          enonce: q.question,
+          options: {
+            A: q.options?.A || '',
+            B: q.options?.B || '',
+            C: q.options?.C || '',
+            D: q.options?.D || '',
+            E: q.options?.E || '',
+          },
+          reponse: q.correct_answer || 'A',
+          explication: (q as any).explication || '',
+        });
+      });
+
+      for (const [secName, qList] of Object.entries(ensaSections)) {
+        await addDoc(collection(db, 'qcm'), {
+          concours: 'ENSA',
+          annee: '2024',
+          matiere: secName,
+          questions: qList,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      alert('تم استيراد بنك الأسئلة بنجاح إلى Firestore!');
+      fetchQcm();
+    } catch (err: any) {
+      alert(`خطأ أثناء رفع الأسئلة: ${err.message}`);
+    } finally {
+      setIsSeedingQcm(false);
+    }
+  };
+
+  // Delete QCM pack
+  const handleDeleteQcm = async (id?: string) => {
+    if (!id) return;
+    if (confirm('هل أنت متأكد من حذف هذه المجموعة من الأسئلة من Firestore؟')) {
+      try {
+        await deleteDoc(doc(db, 'qcm', id));
+        fetchQcm();
+      } catch (err: any) {
+        alert(`Erreur: ${err.message}`);
+      }
+    }
+  };
+
+  // Add custom question/pack to Firestore
+  const handleCreateQcmQuestion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!qcmEnonceInput || !qcmOptA || !qcmOptB) {
+      alert('يرجى ملء نص السؤال والخيارين A و B على الأقل.');
+      return;
+    }
+
+    try {
+      const newQuestion: QcmQuestionItem = {
+        id: Date.now(),
+        enonce: qcmEnonceInput,
+        options: {
+          A: qcmOptA,
+          B: qcmOptB,
+          C: qcmOptC,
+          D: qcmOptD,
+          ...(qcmOptE ? { E: qcmOptE } : {}),
+        },
+        reponse: qcmReponseInput,
+        explication: qcmExplicationInput,
+      };
+
+      await addDoc(collection(db, 'qcm'), {
+        concours: qcmConcoursInput,
+        annee: qcmAnneeInput,
+        matiere: qcmMatiereInput,
+        questions: [newQuestion],
+        createdAt: serverTimestamp(),
+      });
+
+      setQcmEnonceInput('');
+      setQcmOptA('');
+      setQcmOptB('');
+      setQcmOptC('');
+      setQcmOptD('');
+      setQcmOptE('');
+      setQcmExplicationInput('');
+      alert('تمت إضافة السؤال بنجاح إلى collection "qcm" في Firestore!');
+      fetchQcm();
+    } catch (err: any) {
+      alert(`خطأ في الإضافة: ${err.message}`);
+    }
+  };
+
+  // Login handler: purely local verification with username "jaafar" and password "2008"
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
     setIsSubmittingAuth(true);
 
-    try {
-      // If user typed "jaafar", map to firebase account email "jaafar@jaafartawjih.com"
-      const normalizedEmail = 
-        usernameInput.trim().toLowerCase() === 'jaafar' 
-          ? 'jaafar@jaafartawjih.com' 
-          : usernameInput.includes('@') ? usernameInput.trim() : `${usernameInput.trim()}@jaafartawjih.com`;
+    const user = usernameInput.trim();
+    const pass = passwordInput.trim();
 
-      await signInWithEmailAndPassword(auth, normalizedEmail, passwordInput);
-    } catch (err: any) {
-      console.error('Auth error:', err);
-      setAuthError(
-        err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'
-          ? "اسم المستخدم أو كود الدخول غير صحيح. تأكد من إدخال jaafar / 2008 وتفعيل الحساب في Firebase Auth."
-          : `خطأ في الدخول: ${err.message}`
-      );
-    } finally {
+    if (user === 'jaafar' && pass === '2008') {
+      setIsAuthenticated(true);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('jaafar_admin_auth', 'true');
+      }
       setIsSubmittingAuth(false);
+    } else {
+      setIsSubmittingAuth(false);
+      setAuthError('اسم المستخدم أو كلمة المرور غير صحيحة. يرجى التأكد من إدخال jaafar و 2008.');
     }
   };
 
   // Logout handler
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('jaafar_admin_auth');
+    }
+    setPasswordInput('');
+    setAuthError(null);
   };
 
   // Save or Update Ecole
@@ -276,17 +477,8 @@ export const AdminPortal: React.FC = () => {
     return items;
   }, [sessions]);
 
-  if (loadingAuth) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-white">
-        <RefreshCw className="w-8 h-8 text-cyan-400 animate-spin mb-3" />
-        <p className="text-slate-400 font-mono text-sm">Vérification de la session admin...</p>
-      </div>
-    );
-  }
-
-  // --- LOGIN SCREEN ---
-  if (!currentUser) {
+  // --- LOGIN SCREEN (Local verification jaafar / 2008) ---
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 selection:bg-cyan-500 selection:text-black">
         <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
@@ -357,7 +549,7 @@ export const AdminPortal: React.FC = () => {
 
           <div className="mt-8 pt-6 border-t border-slate-800/80 text-center">
             <p className="text-[11px] text-slate-500 font-mono">
-              محمي بنظام Firebase Authentication وقواعد أمان Firestore.
+              بوابة الإدارة المركزية — jaafartawjih.netlify.app
             </p>
           </div>
         </div>
@@ -391,6 +583,12 @@ export const AdminPortal: React.FC = () => {
           <div className="flex items-center gap-3">
             <a
               href="/"
+              onClick={(e) => {
+                if (onNavigateHome) {
+                  e.preventDefault();
+                  onNavigateHome();
+                }
+              }}
               className="text-xs font-semibold text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition"
             >
               الذهاب للموقع العمومي
@@ -408,6 +606,21 @@ export const AdminPortal: React.FC = () => {
 
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Firestore Security Rules Alert Banner */}
+        {rulesNotice && (
+          <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-amber-300 text-xs leading-relaxed">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 text-amber-400 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold mb-1">تنبيه صلاحيات Firebase Firestore:</p>
+              <p>{rulesNotice}</p>
+              <div className="mt-2 text-[11px] text-amber-200/80 font-mono bg-amber-950/40 p-2.5 rounded-lg border border-amber-500/20">
+                القواعد جاهزة في ملف <strong>firestore.rules</strong>: انسخ المحتوى والصقه في 
+                Firebase Console &gt; Build &gt; Firestore Database &gt; Rules ثم اضغط <strong>Publish</strong>.
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Navigation Tabs */}
         <div className="flex flex-wrap items-center gap-2 mb-8 border-b border-slate-800 pb-4">
@@ -453,6 +666,21 @@ export const AdminPortal: React.FC = () => {
             <span>تحليل الأخطاء والأسئلة الأصعب</span>
             <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950/40 font-mono">
               {questionAnalytics.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveAdminTab('QCM')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+              activeAdminTab === 'QCM'
+                ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20'
+                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>بنك أسئلة المباريات (qcm)</span>
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950/40 font-mono">
+              {qcmList.length}
             </span>
           </button>
         </div>
@@ -775,6 +1003,274 @@ export const AdminPortal: React.FC = () => {
           </div>
         )}
 
+        {/* TAB 4: QCM QUESTIONS MANAGEMENT */}
+        {activeAdminTab === 'QCM' && (
+          <div className="space-y-6">
+            {/* Quick Seed Action Banner */}
+            <div className="bg-gradient-to-r from-cyan-950/40 via-slate-900 to-indigo-950/40 border border-cyan-500/30 rounded-3xl p-6 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                  <BookOpen className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">إدارة وتوسيع بنك الأسئلة (Collection: qcm)</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    يمكنك إضافة أسئلة جديدة أو استيراد نماذج المباريات الجاهزة مباشرة إلى قاعدة بيانات Firestore.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={handleSeedDefaultQcm}
+                  disabled={isSeedingQcm}
+                  className="px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-slate-950 font-bold rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+                >
+                  {isSeedingQcm ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Layers className="w-4 h-4" />
+                  )}
+                  <span>استيراد نماذج المباريات إلى Firestore</span>
+                </button>
+
+                <button
+                  onClick={fetchQcm}
+                  className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white"
+                  title="تحديث"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Form Column: Add QCM Question */}
+              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 h-fit shadow-xl">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-4">
+                  <Plus className="w-4 h-4 text-cyan-400" />
+                  <span>إضافة سؤال جديد إلى Firestore</span>
+                </h3>
+
+                <form onSubmit={handleCreateQcmQuestion} className="space-y-3.5 text-xs">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-semibold text-slate-300 mb-1">المباراة (Concours)</label>
+                      <input
+                        type="text"
+                        value={qcmConcoursInput}
+                        onChange={(e) => setQcmConcoursInput(e.target.value)}
+                        placeholder="Médecine أو ENSA"
+                        required
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-cyan-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold text-slate-300 mb-1">السنة (Année)</label>
+                      <input
+                        type="text"
+                        value={qcmAnneeInput}
+                        onChange={(e) => setQcmAnneeInput(e.target.value)}
+                        placeholder="2025"
+                        required
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono outline-none focus:border-cyan-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-slate-300 mb-1">المادة (Matière)</label>
+                    <input
+                      type="text"
+                      value={qcmMatiereInput}
+                      onChange={(e) => setQcmMatiereInput(e.target.value)}
+                      placeholder="Sciences de la Vie, Physique, etc."
+                      required
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-cyan-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-slate-300 mb-1">نص السؤال (Énoncé)</label>
+                    <textarea
+                      value={qcmEnonceInput}
+                      onChange={(e) => setQcmEnonceInput(e.target.value)}
+                      placeholder="اكتب نص السؤال هنا..."
+                      required
+                      rows={3}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white outline-none focus:border-cyan-500"
+                    />
+                  </div>
+
+                  <div className="space-y-2 pt-1">
+                    <label className="block font-semibold text-slate-300">الخيارات المقترحة (Options):</label>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold font-mono text-cyan-400 w-4">A:</span>
+                      <input
+                        type="text"
+                        value={qcmOptA}
+                        onChange={(e) => setQcmOptA(e.target.value)}
+                        placeholder="الخيار A"
+                        required
+                        className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white outline-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold font-mono text-cyan-400 w-4">B:</span>
+                      <input
+                        type="text"
+                        value={qcmOptB}
+                        onChange={(e) => setQcmOptB(e.target.value)}
+                        placeholder="الخيار B"
+                        required
+                        className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white outline-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold font-mono text-cyan-400 w-4">C:</span>
+                      <input
+                        type="text"
+                        value={qcmOptC}
+                        onChange={(e) => setQcmOptC(e.target.value)}
+                        placeholder="الخيار C (اختياري)"
+                        className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white outline-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold font-mono text-cyan-400 w-4">D:</span>
+                      <input
+                        type="text"
+                        value={qcmOptD}
+                        onChange={(e) => setQcmOptD(e.target.value)}
+                        placeholder="الخيار D (اختياري)"
+                        className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white outline-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold font-mono text-cyan-400 w-4">E:</span>
+                      <input
+                        type="text"
+                        value={qcmOptE}
+                        onChange={(e) => setQcmOptE(e.target.value)}
+                        placeholder="الخيار E (اختياري)"
+                        className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-white outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div>
+                      <label className="block font-semibold text-slate-300 mb-1">الجواب الصحيح</label>
+                      <select
+                        value={qcmReponseInput}
+                        onChange={(e) => setQcmReponseInput(e.target.value)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono font-bold text-center outline-none focus:border-cyan-500"
+                      >
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-300 mb-1">شرح الجواب (اختياري)</label>
+                      <input
+                        type="text"
+                        value={qcmExplicationInput}
+                        onChange={(e) => setQcmExplicationInput(e.target.value)}
+                        placeholder="تعليل التصحيح..."
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-cyan-500"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl transition cursor-pointer mt-2 flex items-center justify-center gap-1.5"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>حفظ السؤال في Firestore</span>
+                  </button>
+                </form>
+              </div>
+
+              {/* List Column: Existing QCM packs in Firestore */}
+              <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-cyan-400" />
+                    <span>المجموعات المحفوظة في Firestore ({qcmList.length})</span>
+                  </h3>
+                  <span className="text-xs text-slate-400 font-mono">
+                    Collection: "qcm"
+                  </span>
+                </div>
+
+                {loadingQcm ? (
+                  <div className="py-12 text-center text-slate-500 text-xs">
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto text-cyan-400 mb-2" />
+                    جاري تحميل بنك الأسئلة من Firestore...
+                  </div>
+                ) : qcmList.length === 0 ? (
+                  <div className="py-12 text-center text-slate-400 text-xs space-y-3">
+                    <FileQuestion className="w-10 h-10 mx-auto text-slate-600" />
+                    <p>لا توجد نماذج مسجلة في collection "qcm" حتى الآن.</p>
+                    <button
+                      onClick={handleSeedDefaultQcm}
+                      disabled={isSeedingQcm}
+                      className="px-4 py-2 bg-cyan-500 text-slate-950 font-bold rounded-xl text-xs hover:bg-cyan-400 cursor-pointer"
+                    >
+                      استيراد نماذج Médecine 2025 و ENSA 2024 الآن
+                    </button>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-right text-xs">
+                      <thead className="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                        <tr>
+                          <th className="p-3">المباراة</th>
+                          <th className="p-3">السنة</th>
+                          <th className="p-3">المادة</th>
+                          <th className="p-3">عدد الأسئلة</th>
+                          <th className="p-3 text-center">إجراءات</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800/80 text-slate-300">
+                        {qcmList.map((item) => (
+                          <tr key={item.id} className="hover:bg-slate-800/40 transition">
+                            <td className="p-3 font-bold text-white">{item.concours}</td>
+                            <td className="p-3 font-mono">{item.annee}</td>
+                            <td className="p-3 text-cyan-400 font-medium">{item.matiere}</td>
+                            <td className="p-3 font-mono font-bold text-emerald-400">
+                              {item.questions?.length || 0} أسئلة
+                            </td>
+                            <td className="p-3 text-center space-x-2">
+                              <button
+                                onClick={() => setSelectedQcmForView(item)}
+                                className="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 rounded-lg hover:bg-cyan-500/20 font-semibold cursor-pointer"
+                              >
+                                استعراض
+                              </button>
+                              <button
+                                onClick={() => handleDeleteQcm(item.id)}
+                                className="px-2.5 py-1 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 font-semibold cursor-pointer"
+                              >
+                                حذف
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
 
       {/* Modal: View Individual User Details */}
@@ -834,6 +1330,67 @@ export const AdminPortal: React.FC = () => {
                 className="w-full py-2 bg-slate-800 text-white font-bold rounded-xl text-xs hover:bg-slate-700"
               >
                 إغلاق النافذة
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: View QCM Questions Pack */}
+      {selectedQcmForView && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-white">
+                  أسئلة {selectedQcmForView.concours} ({selectedQcmForView.annee}) — {selectedQcmForView.matiere}
+                </h3>
+                <span className="text-xs text-cyan-400 font-mono">
+                  إجمالي الأسئلة: {selectedQcmForView.questions?.length || 0}
+                </span>
+              </div>
+              <button
+                onClick={() => setSelectedQcmForView(null)}
+                className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              {selectedQcmForView.questions?.map((q, idx) => (
+                <div key={idx} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white font-mono">السؤال #{q.id || idx + 1}</span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold">
+                      الجواب: {q.reponse}
+                    </span>
+                  </div>
+                  <p className="text-slate-200 leading-relaxed font-sans">{q.enonce}</p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-[11px] text-slate-400">
+                    {q.options?.A && <div className={q.reponse === 'A' ? 'text-emerald-400 font-bold' : ''}>A. {q.options.A}</div>}
+                    {q.options?.B && <div className={q.reponse === 'B' ? 'text-emerald-400 font-bold' : ''}>B. {q.options.B}</div>}
+                    {q.options?.C && <div className={q.reponse === 'C' ? 'text-emerald-400 font-bold' : ''}>C. {q.options.C}</div>}
+                    {q.options?.D && <div className={q.reponse === 'D' ? 'text-emerald-400 font-bold' : ''}>D. {q.options.D}</div>}
+                    {q.options?.E && <div className={q.reponse === 'E' ? 'text-emerald-400 font-bold' : ''}>E. {q.options.E}</div>}
+                  </div>
+
+                  {q.explication && (
+                    <div className="mt-2 p-2 bg-slate-900 rounded-lg text-[11px] text-cyan-300 font-mono">
+                      💡 {q.explication}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-2">
+              <button
+                onClick={() => setSelectedQcmForView(null)}
+                className="w-full py-2.5 bg-slate-800 text-white font-bold rounded-xl text-xs hover:bg-slate-700 cursor-pointer"
+              >
+                إغلاق
               </button>
             </div>
           </div>

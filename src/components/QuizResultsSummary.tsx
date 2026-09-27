@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Question, UserAnswers, QuizResult, ExamSectionInfo } from '../types';
 import MathText from './MathText';
+import {
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  Legend as RechartsLegend,
+} from 'recharts';
 import {
   Trophy,
   CheckCircle2,
@@ -13,6 +21,7 @@ import {
   ChevronRight,
   Sparkles,
   BookOpen,
+  PieChart as PieIcon,
 } from 'lucide-react';
 
 interface QuizResultsSummaryProps {
@@ -64,6 +73,80 @@ export const QuizResultsSummary: React.FC<QuizResultsSummaryProps> = ({
   };
 
   const admissBadge = getAdmissibilityBadge(result.percentage);
+
+  // Selected matière for Recharts circular breakdown
+  const [selectedSubjectForChart, setSelectedSubjectForChart] = useState<string>('ALL');
+
+  // Breakdown statistics per subject
+  const subjectStats = useMemo(() => {
+    const map: Record<string, { total: number; correct: number; wrong: number; unanswered: number }> = {};
+
+    sections.forEach((sec) => {
+      map[sec.nom] = { total: 0, correct: 0, wrong: 0, unanswered: 0 };
+    });
+
+    questions.forEach((q) => {
+      const secName = q.section;
+      if (!map[secName]) {
+        map[secName] = { total: 0, correct: 0, wrong: 0, unanswered: 0 };
+      }
+      map[secName].total += 1;
+      const ans = userAnswers[q.id];
+      if (!ans) {
+        map[secName].unanswered += 1;
+      } else if (ans === q.correct_answer) {
+        map[secName].correct += 1;
+      } else {
+        map[secName].wrong += 1;
+      }
+    });
+
+    return map;
+  }, [questions, sections, userAnswers]);
+
+  // Active chart data based on selected subject
+  const activeChartData = useMemo(() => {
+    let correct = 0;
+    let wrong = 0;
+    let unanswered = 0;
+    let total = 0;
+
+    if (selectedSubjectForChart === 'ALL') {
+      correct = result.correctAnswersCount;
+      wrong = result.wrongAnswersCount;
+      unanswered = result.unansweredCount;
+      total = questions.length;
+    } else {
+      const stats = subjectStats[selectedSubjectForChart];
+      if (stats) {
+        correct = stats.correct;
+        wrong = stats.wrong;
+        unanswered = stats.unanswered;
+        total = stats.total;
+      }
+    }
+
+    const pctCorrect = total > 0 ? Math.round((correct / total) * 100) : 0;
+    const pctWrong = total > 0 ? Math.round((wrong / total) * 100) : 0;
+    const pctUnanswered = total > 0 ? Math.round((unanswered / total) * 100) : 0;
+
+    const segments = [
+      { name: 'Correctes', value: correct, color: '#10b981', pct: pctCorrect },
+      { name: 'Fausses', value: wrong, color: '#f43f5e', pct: pctWrong },
+      { name: 'Non Répondues', value: unanswered, color: '#64748b', pct: pctUnanswered },
+    ].filter((item) => item.value > 0);
+
+    return {
+      total,
+      correct,
+      wrong,
+      unanswered,
+      pctCorrect,
+      pctWrong,
+      pctUnanswered,
+      segments,
+    };
+  }, [selectedSubjectForChart, result, questions.length, subjectStats]);
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -166,6 +249,178 @@ export const QuizResultsSummary: React.FC<QuizResultsSummaryProps> = ({
                   : 0}%
               </span>
               <BarChart3 className="w-5 h-5 text-cyan-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recharts Circular Chart Breakdown per Matière */}
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl text-slate-100 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+              <PieIcon className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                <span>Répartition Circulaire des Réponses par Matière</span>
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  Recharts
+                </span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Visualisez la distribution précise : Bonnes réponses, erreurs et questions omises.
+              </p>
+            </div>
+          </div>
+
+          {/* Subject Filter Pills */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              onClick={() => setSelectedSubjectForChart('ALL')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                selectedSubjectForChart === 'ALL'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                  : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+              }`}
+            >
+              Toutes les matières
+            </button>
+            {sections.map((sec) => (
+              <button
+                key={sec.nom}
+                onClick={() => setSelectedSubjectForChart(sec.nom)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                  selectedSubjectForChart === sec.nom
+                    ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                    : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                }`}
+              >
+                {sec.nom}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Circular Chart + Details Display */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Recharts PieChart Container */}
+          <div className="lg:col-span-6 flex flex-col items-center justify-center relative min-h-[260px]">
+            <ResponsiveContainer width="100%" height={260}>
+              <RechartsPieChart>
+                <RechartsTooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0];
+                      const val = Number(data.value);
+                      const pct = activeChartData.total > 0 ? Math.round((val / activeChartData.total) * 100) : 0;
+                      return (
+                        <div className="bg-slate-950 border border-slate-800 p-3 rounded-xl shadow-xl text-xs font-sans">
+                          <p className="font-bold text-white mb-1 flex items-center gap-1.5">
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: data.payload.color }} />
+                            <span>{data.name}</span>
+                          </p>
+                          <p className="text-slate-300 font-mono">
+                            {val} question{val > 1 ? 's' : ''} ({pct}%)
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Pie
+                  data={activeChartData.segments}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={105}
+                  paddingAngle={4}
+                  dataKey="value"
+                  animationDuration={800}
+                >
+                  {activeChartData.segments.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#0f172a" strokeWidth={2} />
+                  ))}
+                </Pie>
+                <RechartsLegend
+                  verticalAlign="bottom"
+                  height={36}
+                  formatter={(value) => <span className="text-xs text-slate-300 font-medium ml-1">{value}</span>}
+                />
+              </RechartsPieChart>
+            </ResponsiveContainer>
+
+            {/* Inner Center Label inside the Donut */}
+            <div className="absolute top-[102px] flex flex-col items-center justify-center pointer-events-none text-center">
+              <span className="text-2xl font-black font-mono text-white">
+                {activeChartData.pctCorrect}%
+              </span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                Réussite
+              </span>
+            </div>
+          </div>
+
+          {/* Details & Metric Cards */}
+          <div className="lg:col-span-6 space-y-3">
+            <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></div>
+                <div>
+                  <h4 className="text-xs font-bold text-white">Réponses Correctes</h4>
+                  <p className="text-[11px] text-slate-400">Points validés sans faute</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-lg font-black text-emerald-400 font-mono">
+                  {activeChartData.correct}
+                </span>
+                <span className="text-xs text-slate-400 font-mono ml-1.5">
+                  ({activeChartData.pctCorrect}%)
+                </span>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></div>
+                <div>
+                  <h4 className="text-xs font-bold text-white">Réponses Fausses</h4>
+                  <p className="text-[11px] text-slate-400">Erreurs commises sur l'épreuve</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-lg font-black text-rose-400 font-mono">
+                  {activeChartData.wrong}
+                </span>
+                <span className="text-xs text-slate-400 font-mono ml-1.5">
+                  ({activeChartData.pctWrong}%)
+                </span>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3.5 h-3.5 rounded-full bg-slate-500 shadow-sm shadow-slate-500/50"></div>
+                <div>
+                  <h4 className="text-xs font-bold text-white">Non Répondues (Omises)</h4>
+                  <p className="text-[11px] text-slate-400">Questions laissées sans choix</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-lg font-black text-slate-400 font-mono">
+                  {activeChartData.unanswered}
+                </span>
+                <span className="text-xs text-slate-500 font-mono ml-1.5">
+                  ({activeChartData.pctUnanswered}%)
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-between text-xs text-slate-400 px-1">
+              <span>Matière sélectionnée : <strong className="text-cyan-400">{selectedSubjectForChart === 'ALL' ? 'Toutes les matières' : selectedSubjectForChart}</strong></span>
+              <span>Total : <strong className="text-white font-mono">{activeChartData.total}</strong> questions</span>
             </div>
           </div>
         </div>
