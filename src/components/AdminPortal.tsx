@@ -10,6 +10,7 @@ import ensaExamRaw from '../data/ensa_2024_exam.json';
 import { 
   collection, 
   getDocs, 
+  onSnapshot,
   addDoc, 
   updateDoc, 
   deleteDoc, 
@@ -143,13 +144,42 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
   const [selectedSessionForModal, setSelectedSessionForModal] = useState<SessionQcmDoc | null>(null);
   const [rulesNotice, setRulesNotice] = useState<string | null>(null);
 
-  // Load Firestore data when authenticated
+  // Load Firestore data when authenticated with real-time listener on sessions_qcm
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchEcoles();
-      fetchSessions();
-      fetchQcm();
-    }
+    if (!isAuthenticated) return;
+
+    fetchEcoles();
+    fetchQcm();
+
+    // Setup real-time listener for sessions_qcm collection
+    setLoadingSessions(true);
+    const q = collection(db, 'sessions_qcm');
+    const unsubscribeSessions = onSnapshot(
+      q,
+      (snapshot) => {
+        const list: SessionQcmDoc[] = [];
+        snapshot.forEach((d) => {
+          list.push({ id: d.id, ...(d.data() as Omit<SessionQcmDoc, 'id'>) });
+        });
+        // Sort by score descending
+        list.sort((a, b) => (Number(b.score_total) || 0) - (Number(a.score_total) || 0));
+        setSessions(list);
+        setLoadingSessions(false);
+        console.log(`[Admin] sessions_qcm real-time listener loaded ${list.length} sessions.`);
+      },
+      (error) => {
+        console.error('sessions_qcm listener error:', error);
+        handleFirestoreError(error, OperationType.LIST, 'sessions_qcm');
+        setLoadingSessions(false);
+        if (error?.message?.includes('permission') || (error as any)?.code === 'permission-denied') {
+          setRulesNotice("تنبيه أمان Firestore: قاعدة البيانات تمنع الوصول (Permission Denied). المرجو التأكد من نشر القواعد الموجودة في ملف firestore.rules عبر Firebase Console > Firestore Database > Rules.");
+        }
+      }
+    );
+
+    return () => {
+      unsubscribeSessions();
+    };
   }, [isAuthenticated]);
 
   // Fetch Ecoles from Firestore
@@ -173,25 +203,40 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
     }
   };
 
-  // Fetch Sessions from Firestore
+  // Manual Fetch Sessions from Firestore
   const fetchSessions = async () => {
     setLoadingSessions(true);
     try {
-      const snap = await getDocs(collection(db, 'sessions_qcm'));
+      const q = collection(db, 'sessions_qcm');
+      const snap = await getDocs(q);
       const list: SessionQcmDoc[] = [];
       snap.forEach((d) => {
         list.push({ id: d.id, ...(d.data() as Omit<SessionQcmDoc, 'id'>) });
       });
       // Sort by score descending
-      list.sort((a, b) => (b.score_total || 0) - (a.score_total || 0));
+      list.sort((a, b) => (Number(b.score_total) || 0) - (Number(a.score_total) || 0));
       setSessions(list);
+      console.log(`[Admin] fetchSessions loaded ${list.length} sessions from Firestore.`);
     } catch (err: any) {
+      console.error('ERROR FETCHING SESSIONS_QCM:', err);
       handleFirestoreError(err, OperationType.LIST, 'sessions_qcm');
       if (err?.message?.includes('permission') || err?.code === 'permission-denied') {
         setRulesNotice("تنبيه أمان Firestore: قاعدة البيانات تمنع الوصول. المرجو التأكد من نشر القواعد الموجودة في ملف firestore.rules عبر Firebase Console > Firestore Database > Rules.");
       }
     } finally {
       setLoadingSessions(false);
+    }
+  };
+
+  // Delete session from Firestore
+  const handleDeleteSession = async (sessionId: string) => {
+    if (!confirm('هل تريد بالتأكيد حذف نتيجة هذه الجلسة من Firestore؟')) return;
+    try {
+      await deleteDoc(doc(db, 'sessions_qcm', sessionId));
+      console.log(`[Admin] Session ${sessionId} deleted.`);
+    } catch (err: any) {
+      console.error('ERROR DELETING SESSION:', err);
+      alert(`Erreur de suppression: ${err.message}`);
     }
   };
 
@@ -492,10 +537,30 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
     }
   };
 
+  // Format Firestore Timestamp or date
+  const formatSessionDate = (val: any) => {
+    if (!val) return '—';
+    try {
+      if (typeof val.toDate === 'function') {
+        return val.toDate().toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
+      }
+      if (val.seconds) {
+        return new Date(val.seconds * 1000).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
+      }
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) {
+        return d.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
+      }
+    } catch {
+      return '—';
+    }
+    return '—';
+  };
+
   // Filtered sessions
   const filteredSessions = sessions.filter((s) => {
     const matchConcours = filterConcours === 'ALL' || s.concours === filterConcours;
-    const matchAnnee = filterAnnee === 'ALL' || s.annee === filterAnnee;
+    const matchAnnee = filterAnnee === 'ALL' || String(s.annee) === String(filterAnnee);
     return matchConcours && matchAnnee;
   });
 
@@ -979,7 +1044,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
                       <th className="p-3">المباراة</th>
                       <th className="p-3">السنة</th>
                       <th className="p-3">النقطة المحصلة</th>
+                      <th className="p-3">تاريخ الإجراء</th>
                       <th className="p-3 text-center">التفاصيل والأخطاء</th>
+                      <th className="p-3 text-center">إجراءات</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/80 text-slate-300">
@@ -998,12 +1065,24 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
                         <td className="p-3 font-mono font-bold text-emerald-400 text-sm">
                           {s.score_total} نقطة
                         </td>
+                        <td className="p-3 font-mono text-[11px] text-slate-400">
+                          {formatSessionDate(s.date)}
+                        </td>
                         <td className="p-3 text-center">
                           <button
                             onClick={() => setSelectedSessionForModal(s)}
                             className="px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 font-bold text-[11px] transition cursor-pointer"
                           >
                             عرض الأخطاء بالتفصيل
+                          </button>
+                        </td>
+                        <td className="p-3 text-center">
+                          <button
+                            onClick={() => handleDeleteSession(s.id)}
+                            title="حذف من Firestore"
+                            className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </td>
                       </tr>

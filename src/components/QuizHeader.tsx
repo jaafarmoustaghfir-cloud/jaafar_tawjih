@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Timer, Play, Pause, RotateCcw, CheckCircle2, Award, Clock, FileText, AlertTriangle } from 'lucide-react';
+import { Timer, Play, Pause, RotateCcw, CheckCircle2, Award, Clock, FileText, AlertTriangle, User, Edit3 } from 'lucide-react';
 import { ExamInfo } from '../types';
 
 interface QuizHeaderProps {
@@ -8,8 +8,10 @@ interface QuizHeaderProps {
   answeredCount: number;
   totalPointsPossible: number;
   isSubmitted: boolean;
+  userName?: string;
+  onUpdateUserName?: (name: string) => void;
   onTimeExpired: () => void;
-  onSubmitExam: () => void;
+  onSubmitExam: (confirmedName?: string) => void;
   onResetExam: () => void;
 }
 
@@ -19,6 +21,8 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
   answeredCount,
   totalPointsPossible,
   isSubmitted,
+  userName = '',
+  onUpdateUserName,
   onTimeExpired,
   onSubmitExam,
   onResetExam,
@@ -28,6 +32,13 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
   const [timeLeft, setTimeLeft] = useState<number>(INITIAL_TIME);
   const [isTimerActive, setIsTimerActive] = useState<boolean>(true);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [candidateNameInput, setCandidateNameInput] = useState<string>(userName || '');
+
+  useEffect(() => {
+    if (userName) {
+      setCandidateNameInput(userName);
+    }
+  }, [userName]);
 
   // Timer countdown effect
   useEffect(() => {
@@ -107,6 +118,14 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
               </div>
             )}
 
+            {/* Candidate Name Badge */}
+            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
+              <User className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="text-white font-bold max-w-[120px] truncate" title={userName || 'تلميذ'}>
+                {userName || 'تلميذ زائر'}
+              </span>
+            </div>
+
             {/* Answer Progress Pill */}
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs text-slate-300">
               <FileText className="w-4 h-4 text-emerald-400" />
@@ -165,21 +184,40 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
               )}
             </p>
 
+            {/* Candidate Name Input to guarantee full name in Classement */}
+            <div className="mb-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-right">
+              <label className="block text-xs font-bold text-slate-200 mb-1.5">
+                اسم التلميذ (للتسجيل في لائحة المتفوقين Classement) :
+              </label>
+              <input
+                type="text"
+                value={candidateNameInput}
+                onChange={(e) => setCandidateNameInput(e.target.value)}
+                placeholder="مثال: يوسف العلمي أو Test User"
+                className="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 outline-none text-right font-medium"
+              />
+              <span className="text-[10px] text-slate-400 mt-1 block">
+                سيتم حفظ هذا الاسم والنتيجة في قاعدة بيانات Firestore (sessions_qcm).
+              </span>
+            </div>
+
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition"
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer"
               >
                 Poursuivre le test
               </button>
               <button
                 onClick={() => {
+                  const finalName = candidateNameInput.trim() || userName.trim() || 'تلميذ زائر';
+                  if (onUpdateUserName) onUpdateUserName(finalName);
                   setShowConfirmModal(false);
-                  onSubmitExam();
+                  onSubmitExam(finalName);
                 }}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 transition"
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 transition cursor-pointer"
               >
-                Valider et calculer mon score
+                Valider et enregistrer ma note
               </button>
             </div>
           </div>

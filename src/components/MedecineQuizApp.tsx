@@ -29,6 +29,8 @@ import {
   ArrowRight,
   ShieldAlert,
   UserCheck,
+  RefreshCw,
+  AlertTriangle,
 } from 'lucide-react';
 
 export type ExamTypeKey = 'ENSA_2024' | 'MEDECINE_2025' | 'MEDECINE_2022' | 'FMP_RABAT_2018';
@@ -58,6 +60,11 @@ export const MedecineQuizApp: React.FC = () => {
   const [userName, setUserName] = useState<string>('');
   const [showNameModal, setShowNameModal] = useState<boolean>(false);
   const [tempNameInput, setTempNameInput] = useState<string>('');
+
+  // Firestore session saving status & diagnostics
+  const [sessionSaveStatus, setSessionSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+  const [sessionSaveError, setSessionSaveError] = useState<string | null>(null);
+  const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('jaafar_tawjih_user_name');
@@ -93,6 +100,9 @@ export const MedecineQuizApp: React.FC = () => {
     setCurrentIndex(0);
     setViewMode('QUIZ');
     setHasStarted(false);
+    setSessionSaveStatus('idle');
+    setSessionSaveError(null);
+    setSavedSessionId(null);
   };
 
   // Total possible points
@@ -163,7 +173,81 @@ export const MedecineQuizApp: React.FC = () => {
     };
   };
 
-  const handleSubmitExam = async () => {
+  const saveSessionToFirestore = async (currentResult: QuizResult, candidateName?: string) => {
+    setSessionSaveStatus('saving');
+    setSessionSaveError(null);
+
+    const currentUserName = (
+      (candidateName || userName).trim() ||
+      localStorage.getItem('jaafar_tawjih_user_name')?.trim() ||
+      'تلميذ زائر'
+    );
+
+    let concoursName = 'Médecine';
+    let anneeVal: string | number = '2025';
+
+    if (selectedExamKey === 'ENSA_2024') {
+      concoursName = 'ENSA';
+      anneeVal = '2024';
+    } else if (selectedExamKey === 'MEDECINE_2022') {
+      concoursName = 'Médecine';
+      anneeVal = '2022';
+    } else if (selectedExamKey === 'FMP_RABAT_2018') {
+      concoursName = 'Médecine';
+      anneeVal = '2018';
+    } else {
+      concoursName = 'Médecine';
+      anneeVal = '2025';
+    }
+
+    const sessionReponses = questions.map((q) => {
+      const userChoice = userAnswers[q.id];
+      const isCorrect = userChoice ? userChoice === q.correct_answer : false;
+      return {
+        question_id: Number(q.id) || 0,
+        reponse_donnee: typeof userChoice === 'string' ? userChoice : 'NON_REPONDU',
+        correcte: Boolean(isCorrect),
+        points_obtenus: isCorrect ? (Number(q.points) || 1) : 0,
+      };
+    });
+
+    const safeScore = Number.isFinite(currentResult.totalPointsObtained)
+      ? currentResult.totalPointsObtained
+      : 0;
+
+    const payload = {
+      nom_utilisateur: currentUserName || 'تلميذ زائر',
+      concours: concoursName || 'Médecine',
+      annee: String(anneeVal || '2025'),
+      score_total: Number(safeScore) || 0,
+      reponses: Array.isArray(sessionReponses) ? sessionReponses : [],
+      date: serverTimestamp(),
+    };
+
+    console.log('Saving QCM session...', payload);
+
+    try {
+      const docRef = await addDoc(collection(db, 'sessions_qcm'), payload);
+      console.log('QCM session saved successfully');
+      console.log('QCM session saved:', docRef.id);
+      setSavedSessionId(docRef.id);
+      setSessionSaveStatus('success');
+    } catch (error: any) {
+      console.error('ERROR SAVING QCM SESSION:', error);
+      console.error('QCM session save failed:', error);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      setSessionSaveError(errMsg);
+      setSessionSaveStatus('error');
+      handleFirestoreError(error, OperationType.CREATE, 'sessions_qcm');
+    }
+  };
+
+  const handleSubmitExam = async (confirmedName?: string) => {
+    if (confirmedName && confirmedName.trim()) {
+      setUserName(confirmedName.trim());
+      localStorage.setItem('jaafar_tawjih_user_name', confirmedName.trim());
+    }
+
     const res = calculateResults();
     setQuizResult(res);
     setIsSubmitted(true);
@@ -171,32 +255,7 @@ export const MedecineQuizApp: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Save session automatically to Firestore collection "sessions_qcm"
-    try {
-      const currentUserName = userName || localStorage.getItem('jaafar_tawjih_user_name') || 'تلميذ زائر';
-      
-      const sessionReponses = questions.map((q) => {
-        const userChoice = userAnswers[q.id];
-        const isCorrect = userChoice ? userChoice === q.correct_answer : false;
-        return {
-          question_id: q.id,
-          reponse_donnee: userChoice || 'NON_REPONDU',
-          correcte: isCorrect,
-          points_obtenus: isCorrect ? q.points : 0,
-        };
-      });
-
-      await addDoc(collection(db, 'sessions_qcm'), {
-        nom_utilisateur: currentUserName,
-        concours: selectedExamKey === 'ENSA_2024' ? 'ENSA' : 'Médecine',
-        annee: selectedExamKey === 'ENSA_2024' ? '2024' : selectedExamKey === 'MEDECINE_2022' ? '2022' : selectedExamKey === 'FMP_RABAT_2018' ? '2018' : '2025',
-        score_total: res.totalPointsObtained,
-        reponses: sessionReponses,
-        date: serverTimestamp(),
-      });
-      console.log('Session QCM enregistrée avec succès dans Firestore !');
-    } catch (err: any) {
-      handleFirestoreError(err, OperationType.CREATE, 'sessions_qcm');
-    }
+    await saveSessionToFirestore(res, confirmedName);
   };
 
   const handleResetExam = () => {
@@ -206,6 +265,9 @@ export const MedecineQuizApp: React.FC = () => {
     setCurrentIndex(0);
     setViewMode('QUIZ');
     setHasStarted(false);
+    setSessionSaveStatus('idle');
+    setSessionSaveError(null);
+    setSavedSessionId(null);
   };
 
   const currentQuestion = questions[currentIndex];
@@ -244,8 +306,13 @@ export const MedecineQuizApp: React.FC = () => {
         answeredCount={answeredCount}
         totalPointsPossible={totalPointsPossible}
         isSubmitted={isSubmitted}
-        onTimeExpired={handleSubmitExam}
-        onSubmitExam={handleSubmitExam}
+        userName={userName}
+        onUpdateUserName={(name) => {
+          setUserName(name);
+          localStorage.setItem('jaafar_tawjih_user_name', name);
+        }}
+        onTimeExpired={() => handleSubmitExam()}
+        onSubmitExam={(confirmedName) => handleSubmitExam(confirmedName)}
         onResetExam={handleResetExam}
       />
 
@@ -488,17 +555,115 @@ export const MedecineQuizApp: React.FC = () => {
 
         {/* Results Summary View */}
         {isSubmitted && viewMode === 'SUMMARY' && quizResult && (
-          <QuizResultsSummary
-            questions={questions}
-            sections={examInfo.sections}
-            userAnswers={userAnswers}
-            result={quizResult}
-            onRestart={handleResetExam}
-            onReviewQuestion={(idx) => {
-              setCurrentIndex(idx);
-              setViewMode('QUIZ');
-            }}
-          />
+          <div className="space-y-6">
+            
+            {/* FIRESTORE SESSION SAVE STATUS NOTIFICATION */}
+            {sessionSaveStatus === 'saving' && (
+              <div className="p-4 rounded-2xl bg-cyan-950/70 border border-cyan-500/30 text-cyan-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs animate-pulse">
+                <div className="flex items-center gap-2.5">
+                  <RefreshCw className="w-5 h-5 animate-spin text-cyan-400 shrink-0" />
+                  <span className="font-medium">جاري تسجيل نتيجتك تلقائياً في قاعدة البيانات Firestore (collection: sessions_qcm)...</span>
+                </div>
+                <span className="font-mono text-[11px] bg-cyan-900/50 px-2.5 py-1 rounded-lg border border-cyan-500/30 text-cyan-300">
+                  {userName || 'تلميذ'}
+                </span>
+              </div>
+            )}
+
+            {sessionSaveStatus === 'success' && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs shadow-xl shadow-emerald-950/40 animate-fadeIn">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm sm:text-base font-extrabold text-emerald-300">
+                        تم تسجيل نتيجتك بنجاح ✅
+                      </span>
+                      <span className="text-[10px] bg-emerald-900/60 px-2 py-0.5 rounded-full border border-emerald-500/30 font-mono text-emerald-300">
+                        Firestore: sessions_qcm
+                      </span>
+                    </div>
+                    <p className="text-xs text-emerald-300/90 mt-1 leading-relaxed">
+                      تم حفظ النتيجة (<strong className="text-white">{quizResult.totalPointsObtained} نقطة</strong>) باسم <strong className="text-white underline decoration-emerald-400">{userName || 'تلميذ زائر'}</strong> في لائحة المتفوقين وقاعدة البيانات.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2.5 shrink-0 self-end sm:self-center">
+                  {savedSessionId && (
+                    <span className="text-[10px] font-mono bg-emerald-900/80 px-2.5 py-1.5 rounded-xl border border-emerald-600/40 text-emerald-200">
+                      ID: {savedSessionId.slice(0, 10)}...
+                    </span>
+                  )}
+                  <a
+                    href="/admin"
+                    className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition shadow-md flex items-center gap-1.5"
+                  >
+                    <span>عرض الترتيب (Classement)</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {sessionSaveStatus === 'error' && (
+              <div className="p-5 rounded-2xl bg-rose-950/80 border border-rose-500/50 text-rose-100 space-y-3.5 text-xs shadow-2xl animate-fadeIn">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-xl bg-rose-500/20 text-rose-400 shrink-0">
+                      <AlertTriangle className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-extrabold text-rose-300">
+                        تعذر حفظ النتيجة في Firebase Firestore تلقائياً
+                      </h4>
+                      <p className="text-xs text-rose-300/80 mt-0.5">
+                        حدث خطأ أثناء محاولة إضافة الوثيقة إلى مجموعة <code>sessions_qcm</code>.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => saveSessionToFirestore(quizResult)}
+                    className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shrink-0 transition flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-rose-900/40 active:scale-95"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>إعادة المحاولة الآن</span>
+                  </button>
+                </div>
+
+                {sessionSaveError && (
+                  <div className="p-3 bg-rose-900/40 border border-rose-800/50 rounded-xl font-mono text-[11px] text-rose-200 break-words">
+                    <strong>رسالة الخطأ الأصلية (Firebase Error):</strong> {sessionSaveError}
+                  </div>
+                )}
+
+                <div className="text-[11px] text-amber-200/90 bg-amber-950/40 p-3 rounded-xl border border-amber-500/30 leading-relaxed space-y-1">
+                  <p className="font-bold text-amber-300">⚠️ تنبيه هام للمسؤول (Firestore Security Rules):</p>
+                  <p>
+                    إذا كانت رسالة الخطأ تشير إلى <em>"Missing or insufficient permissions"</em> (permission-denied)، فهذا يعني أن القواعد الحالية في Firebase Console تمنع الإضافة.
+                  </p>
+                  <p className="font-mono text-[10px] text-amber-200 bg-amber-950/80 p-2 rounded border border-amber-700/50">
+                    الحل: انسخ القواعد من ملف firestore.rules في المشروع والصقها في Firebase Console &gt; Build &gt; Firestore Database &gt; Rules ثم اضغط Publish.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <QuizResultsSummary
+              questions={questions}
+              sections={examInfo.sections}
+              userAnswers={userAnswers}
+              result={quizResult}
+              onRestart={handleResetExam}
+              onReviewQuestion={(idx) => {
+                setCurrentIndex(idx);
+                setViewMode('QUIZ');
+              }}
+            />
+          </div>
         )}
       </main>
     </div>

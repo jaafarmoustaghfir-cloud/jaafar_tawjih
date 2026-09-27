@@ -12,7 +12,8 @@ service cloud.firestore {
     }
 
     match /sessions_qcm/{sessionId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if true;
     }
   }
 }
