@@ -1,0 +1,919 @@
+{
+  "exam_info": {
+    "title": "Concours d'Accès aux Facultés de Médecine, de Pharmacie et de Médecine Dentaire",
+    "annee_universitaire": "2022-2023",
+    "date": "29 juillet 2022",
+    "duree": "2 heures",
+    "version": "Version française officielle",
+    "sections": [
+      { "nom": "Sciences de la Vie", "de": 1, "a": 14, "coefficient": 1 },
+      { "nom": "Physique", "de": 15, "a": 28, "coefficient": 1 },
+      { "nom": "Chimie", "de": 29, "a": 42, "coefficient": 1 },
+      { "nom": "Mathématiques", "de": 43, "a": 56, "coefficient": 1 }
+    ],
+    "consignes": [
+      "Chaque question comporte 5 propositions (A, B, C, D et E), une seule proposition est juste.",
+      "Toute réponse fausse vaut 0 à la question.",
+      "Une note inférieure à 5/20 dans l'une des 4 composantes est éliminatoire."
+    ]
+  },
+  "questions": [
+    {
+      "id": 1,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "context": "Dans une expérience de laboratoire, on place une suspension de mitochondries isolées dans un bioréacteur hermétique où la concentration de dioxygène dissous ([O₂]) est mesurée en continu. À t1 on introduit les mitochondries, à t2 on injecte une solution de glucose, à t3 on injecte du pyruvate, à t4 de l'ADP + Pi, et à t5 du cyanure (inhibiteur de la cytochrome c oxydase).",
+      "question": "La nette diminution de la concentration de dioxygène [O₂] observée immédiatement après l'ajout de pyruvate au temps t3 s'explique par :",
+      "options": {
+        "A": "L'oxydation du pyruvate dans la matrice mitochondriale et le transfert d'électrons vers l'O₂ via la chaîne respiratoire",
+        "B": "La consommation directe du glucose qui a finalement été activé par les mitochondries",
+        "C": "La transformation anaérobie du pyruvate en lactate consommant de l'oxygène",
+        "D": "L'épuisement immédiat du stock d'ATP intra-mitochondrial stimulant l'entrée d'O₂",
+        "E": "La fermeture des canaux à protons de la membrane externe des mitochondries"
+      },
+      "correct_answer": "A",
+      "explication": "Les mitochondries ne peuvent pas métaboliser directement le glucose (qui nécessite la glycolyse cytosolique), mais oxydent le pyruvate. Dans la matrice, le pyruvate alimente le cycle de Krebs pour former NADH,H+ et FADH2, dont les électrons sont transférés le long de la chaîne respiratoire jusqu'à l'accepteur final O₂, qui est réduit en H₂O, d'où la baisse de [O₂].",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 2,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Au cours de la phosphorylation oxydative dans la membrane interne mitochondriale :",
+      "options": {
+        "A": "Les protons H+ sont pompés depuis l'espace intermembranaire vers la matrice mitochondriale par les complexes I, III et IV",
+        "B": "Le pH de l'espace intermembranaire devient plus basique que celui de la matrice",
+        "C": "La réduction de l'accepteur final O₂ se produit au niveau du complexe I de la chaîne respiratoire",
+        "D": "Le gradient électrochimique de protons entraîne le flux de H+ à travers l'ATP synthase vers la matrice, catalysant la synthèse d'ATP",
+        "E": "L'oxydation d'une molécule de FADH₂ permet la synthèse théorique de 3 molécules d'ATP"
+      },
+      "correct_answer": "D",
+      "explication": "Les complexes I, III et IV expulsent les H+ de la matrice vers l'espace intermembranaire, créant un gradient de protons (pH plus acide dans l'espace intermembranaire). Le retour spontané des H+ vers la matrice à travers les sphères pédonculées (ATP synthase) fournit l'énergie nécessaire à la phosphorylation de l'ADP en ATP.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 3,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "Concernant le mécanisme moléculaire de la contraction d'une fibre musculaire striée squelettique :",
+      "options": {
+        "A": "Le raccourcissement du sarcomère s'accompagne d'une diminution de la longueur des bandes sombres (bandes A)",
+        "B": "Les ions Ca²⁺ libérés par le réticulum sarcoplasmique se fixent sur la tête de myosine pour libérer l'actine",
+        "C": "La fixation du Ca²⁺ sur la troponine déplace la tropomyosine et démasque les sites de liaison de l'actine pour la myosine",
+        "D": "L'hydrolyse de l'ATP est requise pour détacher la tête de myosine du filament d'actine à la fin du cycle",
+        "E": "La longueur des myofilaments d'actine et de myosine diminue proportionnellement à la tension développée"
+      },
+      "correct_answer": "C",
+      "explication": "Lors de la contraction, les myofilaments ne raccourcissent pas mais glissent les uns par rapport aux autres (la bande A reste constante, la bande I et la zone H rétrécissent). Le Ca²⁺ se lie à la troponine, entraînant un changement de conformation qui déplace la tropomyosine et libère le site de fixation de la myosine sur l'actine. C'est la fixation d'une nouvelle molécule d'ATP (et non son hydrolyse) qui provoque le détachement de la myosine.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 4,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "À propos de la réplication semi-conservative de la molécule d'ADN :",
+      "options": {
+        "A": "L'ADN polymérase synthétise le nouveau brin en progressant obligatoirement dans le sens 5' vers 3'",
+        "B": "Les deux brins de la double hélice sont répliqués de manière continue sur les deux fourches de réplication",
+        "C": "Le brin matrice et le brin néoformé sont parallèles et ont la même polarité 5'→3'",
+        "D": "L'ARN polymérase remplace l'ADN ligase pour lier les fragments d'Okazaki sur le brin précoce",
+        "E": "La réplication se déroule pendant la phase G1 de l'interphase du cycle cellulaire"
+      },
+      "correct_answer": "A",
+      "explication": "L'ADN polymérase ne peut ajouter des désoxyribonucléotides qu'à l'extrémité 3'-OH libre, elle synthétise donc toujours le nouveau brin dans le sens 5' → 3'. Le brin retardé est synthétisé sous forme discontinue (fragments d'Okazaki) reliés par l'ADN ligase. La réplication s'effectue pendant la phase S.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 5,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "Concernant le brassage génétique au cours de la méiose :",
+      "options": {
+        "A": "Le brassage interchromosomique résulte de recombinaisons homologues par crossing-over en anaphase I",
+        "B": "Le brassage intrachromosomique a lieu entre chromosomes non homologues lors de la télophase II",
+        "C": "La séparation des chromatides sœurs de chaque chromosome s'effectue lors de l'anaphase I",
+        "D": "Le brassage interchromosomique est dû à la séparation aléatoire et indépendante des chromosomes homologues en anaphase I",
+        "E": "La deuxième division méiotique est réductionnelle et divise le nombre de chromosomes par deux"
+      },
+      "correct_answer": "D",
+      "explication": "Le brassage intrachromosomique s'effectue en prophase I par crossing-over entre chromatides non-sœurs de chromosomes homologues. Le brassage interchromosomique s'effectue en anaphase I par la ségrégation aléatoire des chromosomes homologues vers les pôles opposés de la cellule. La division I est réductionnelle (2n → n) et la division II est équationnelle.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 6,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Dans les techniques du génie génétique, la production d'un vecteur recombinant nécessite :",
+      "options": {
+        "A": "Le clivage du plasmide et du fragment d'ADN d'intérêt par la même enzyme de restriction pour générer des extrémités cohésives compatibles",
+        "B": "L'utilisation de la transcriptase inverse pour couper le plasmide bactérien à des sites spécifiques",
+        "C": "La polymérisation de l'ARNm viral par une ADN hélicase thermostable sans amorces",
+        "D": "L'élimination des gènes de résistance aux antibiotiques du plasmide pour faciliter la sélection des bactéries transformées",
+        "E": "La transcription in vitro de l'ADN en protéines directement dans la solution de clonage"
+      },
+      "correct_answer": "A",
+      "explication": "Une même enzyme de restriction coupe le vecteur plasmidique et l'ADN contenant le gène d'intérêt aux mêmes séquences palindromiques, générant des extrémités cohésives (ou franches) complémentaires. L'ADN ligase assure ensuite la soudure des liaisons phosphodiester pour former le plasmide recombinant.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 7,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "On réalise un croisement test (back-cross) entre un individu dihybride F1 de phénotype dominant [AB] et un individu double récessif de phénotype [ab]. Si les deux gènes étudiés sont indépendants et autosomiques, la descendance attendue présente :",
+      "options": {
+        "A": "9/16 [AB], 3/16 [Ab], 3/16 [aB], 1/16 [ab]",
+        "B": "Une majorité de phénotypes parentaux et une minorité de phénotypes recombinés",
+        "C": "100% d'individus de phénotype intermédiaire selon la loi de pureté des gamètes",
+        "D": "Quatre phénotypes équiprobables en proportions 25% [AB], 25% [Ab], 25% [aB], 25% [ab]",
+        "E": "Uniquement deux phénotypes parentaux en proportions 50% [AB] et 50% [ab]"
+      },
+      "correct_answer": "D",
+      "explication": "Pour deux gènes indépendants, l'individu F1 (hétérozygote pour les deux couples d'allèles) produit 4 types de gamètes en proportions égales (25% AB, 25% Ab, 25% aB, 25% ab). Le parent double récessif ne produisant qu'un seul type de gamète (100% ab), les proportions phénotypiques du croisement-test reflètent exactement celles des gamètes de F1, soit 1:1:1:1 (25% chacun).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 8,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "Une maladie héréditaire monogénique est transmise selon le mode récessif lié au chromosome X. Deux parents sains ont un premier garçon atteint par cette affection. Quelle est la probabilité que leur deuxième enfant soit une fille atteinte ?",
+      "options": {
+        "A": "1/2 (50%)",
+        "B": "0% (impossible qu'une fille soit atteinte dans ce couple)",
+        "C": "1/4 (25%)",
+        "D": "1/8 (12.5%)",
+        "E": "1/16 (6.25%)"
+      },
+      "correct_answer": "B",
+      "explication": "Le père étant sain, son génotype est nécessairement (X_D, Y). Il transmet obligatoirement son chromosome X sain (X_D) à toutes ses filles. Comme l'allèle muté est récessif, toute fille aura au moins un allèle dominant sain et sera donc saine de phénotype (même si elle peut être conductrice hétérozygote si la mère lui transmet l'allèle muté). La probabilité d'avoir une fille atteinte est donc de 0%.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 9,
+      "section": "Sciences de la Vie",
+      "points": 2,
+      "question": "Dans une population humaine à l'équilibre de Hardy-Weinberg, la fréquence des individus albinos (phénotype récessif autosomique déterminé par l'allèle 'a') est de 1/10 000 (soit q² = 0,0001). La fréquence des individus sains porteurs sains (hétérozygotes 'Aa') dans cette population est d'environ :",
+      "options": {
+        "A": "0,0002 (environ 1/5 000)",
+        "B": "0,01 (environ 1/100)",
+        "C": "0,0198 (environ 2% ou 1/50)",
+        "D": "0,099 (environ 10%)",
+        "E": "0,495 (environ 50%)"
+      },
+      "correct_answer": "C",
+      "explication": "q² = 1/10 000 = 0,0001, donc la fréquence de l'allèle récessif est q = √0,0001 = 0,01 (1%). La fréquence de l'allèle dominant est p = 1 - q = 0,99. La fréquence des hétérozygotes porteurs sains est 2pq = 2 × 0,99 × 0,01 = 0,0198, soit environ 1 personne sur 50 (près de 2%).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 10,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Concernant la réponse immunitaire à médiation humorale dirigée contre un antigène thymo-dépendant :",
+      "options": {
+        "A": "L'activation et la différenciation des lymphocytes B en plasmocytes sécréteurs d'anticorps nécessitent l'aide des lymphocytes T auxiliaires (T4 / Th) par contact et sécrétion d'interleukines",
+        "B": "Les lymphocytes T cytotoxiques (T8) sécrètent directement des anticorps neutralisants",
+        "C": "Les anticorps circulants détruisent directement les antigènes par phagocytose sans intervention des macrophages",
+        "D": "Les plasmocytes possèdent des récepteurs membranaires BCR spécifiques et se divisent indéfiniment par mitose",
+        "E": "Le premier contact avec l'antigène engendre une production immédiate massive d'anticorps de haute affinité de type IgG"
+      },
+      "correct_answer": "A",
+      "explication": "Pour un antigène thymo-dépendant, le lymphocyte B présente le peptide antigénique associé au CMH-II au lymphocyte T4 (Th). Ce dernier s'active et sécrète des interleukines (comme IL-2, IL-4, IL-5) stimulant la prolifération clonale et la différenciation des lymphocytes B en plasmocytes (sécrétant les anticorps) et en lymphocytes B mémoire.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 11,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Concernant les molécules du Complexe Majeur d'Histocompatibilité (CMH) :",
+      "options": {
+        "A": "Les molécules du CMH-I sont exprimées uniquement à la surface des cellules présentatrices d'antigène professionnelles",
+        "B": "Les molécules du CMH-II présentent des peptides antigéniques endogènes aux lymphocytes T cytotoxiques CD8+",
+        "C": "La maturation des lymphocytes T dans la moelle osseuse élimine les cellules autoréactives par sélection positive",
+        "D": "Les molécules du CMH-I sont présentes sur toutes les cellules nucléées de l'organisme et présentent les peptides aux lymphocytes T CD8+",
+        "E": "Le répertoire des allèles du CMH est identique chez tous les individus d'une même espèce"
+      },
+      "correct_answer": "D",
+      "explication": "Le CMH de classe I est exprimé à la surface de toutes les cellules nucléées de l'organisme et présente des peptides endogènes (ex. viraux ou tumoraux) aux lymphocytes T CD8+. Le CMH-II est restreint aux CPA (cellules dendritiques, macrophages, lymphocytes B) pour activer les T CD4+. Les gènes du CMH sont caractérisés par un polymorphisme extrême.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 12,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Lors d'une injection de rappel vaccinal (réponse immunitaire secondaire) comparée à la primo-vaccination (réponse primaire) :",
+      "options": {
+        "A": "La phase de latence est plus longue et le taux d'anticorps produit est plus faible",
+        "B": "La réponse est plus rapide, plus intense et caractérisée par une sécrétion prédominante et durable d'anticorps de classe IgG",
+        "C": "Les lymphocytes B mémoire sont détruits par apoptose pour laisser place aux plasmocytes non spécifiques",
+        "D": "Seuls les anticorps d'isotype IgM sont synthétisés lors du rappel vaccinal",
+        "E": "L'immunité acquise est passive et ne dure que quelques jours"
+      },
+      "correct_answer": "B",
+      "explication": "Grâce aux cellules mémoires (LB et LT mémoire) créées lors du premier contact, la réponse secondaire se caractérise par une phase de latence très courte, un pic d'anticorps beaucoup plus élevé, une plus grande affinité antigénique et une dominance des IgG durables dans le sérum.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 13,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "La réaction allergique d'hypersensibilité immédiate (type I) est caractérisée par :",
+      "options": {
+        "A": "Une intervention exclusive des lymphocytes T cytotoxiques lors du premier contact avec l'allergène",
+        "B": "La synthèse préférentielle d'immunoglobulines de classe IgM se liant aux éosinophiles lors de la sensibilisation",
+        "C": "La fixation des IgE spécifiques par leur fragment constant (Fc) sur les récepteurs des mastocytes et des polynucléaires basophiles",
+        "D": "L'inhibition de la libération d'histamine par pontage des molécules d'IgE lors du contact déclenchant",
+        "E": "Une apparition des symptômes cliniques au bout de plusieurs jours après la réexposition à l'allergène"
+      },
+      "correct_answer": "C",
+      "explication": "Lors de la phase de sensibilisation, les plasmocytes synthétisent des IgE spécifiques qui vont se fixer sur les récepteurs FcεRI des mastocytes et basophiles. Lors du contact déclenchant ultérieur, l'allergène ponte deux molécules d'IgE voisines à la surface du mastocyte, provoquant sa dégranulation brutale et la libération d'histamine et autres médiateurs de l'inflammation en quelques minutes.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 14,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Concernant l'évolution de la quantité d'ADN par cellule au cours du cycle cellulaire d'une cellule somatique humaine (2n = 46 chromosomes) :",
+      "options": {
+        "A": "Elle est égale à q en phase G1, double en phase S pour atteindre 2q, reste constante à 2q en phase G2 et redevient q après la télophase",
+        "B": "Elle est égale à 2q en phase G1 et diminue à q pendant la phase S par décondensation de la chromatine",
+        "C": "Le nombre de chromosomes passe de 46 à 92 lors de la phase S d'interphase",
+        "D": "Chaque chromosome comporte deux chromatides sœurs identiques dès le début de la phase G1",
+        "E": "La quantité d'ADN est divisée par 4 à l'issue de chaque mitose somatique"
+      },
+      "correct_answer": "A",
+      "explication": "Pendant la phase G1, la cellule contient q d'ADN (chromosomes simples à 1 chromatide). La réplication pendant la phase S double la quantité d'ADN (de q à 2q), chaque chromosome possédant alors 2 chromatides sœurs. La quantité reste 2q en G2 et au début de la mitose (prophase, métaphase). L'anaphase sépare les chromatides sœurs et la télophase rétablit q d'ADN par cellule fille, tout en maintenant 2n = 46 chromosomes.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 15,
+      "section": "Physique",
+      "points": 1,
+      "question": "Une onde mécanique progressive sinusoïdale de fréquence N = 50 Hz se propage à la surface de l'eau à partir d'une source ponctuelle S avec une célérité v = 0,40 m·s⁻¹. La plus courte distance séparant deux points vibrant en opposition de phase est égale à :",
+      "options": {
+        "A": "2 mm",
+        "B": "4 mm",
+        "C": "8 mm",
+        "D": "16 mm",
+        "E": "40 mm"
+      },
+      "correct_answer": "B",
+      "explication": "La longueur d'onde est λ = v / N = 0,40 / 50 = 0,008 m = 8 mm. Deux points vibrent en opposition de phase si la distance qui les sépare est d = (2k + 1)·(λ / 2). La plus courte distance (k = 0) est d = λ / 2 = 8 / 2 = 4 mm.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 16,
+      "section": "Physique",
+      "points": 1,
+      "question": "On éclaire une fente fine verticale de largeur a = 0,10 mm par un faisceau laser de longueur d'onde dans le vide λ = 633 nm. Sur un écran situé à une distance D = 2,0 m de la fente, on observe une figure de diffraction. La largeur L de la tache centrale de diffraction est donnée par :",
+      "options": {
+        "A": "1,27 mm",
+        "B": "2,53 cm",
+        "C": "2,53 mm",
+        "D": "12,66 mm",
+        "E": "25,3 mm"
+      },
+      "correct_answer": "E",
+      "explication": "L'écart angulaire est θ = λ / a. Comme θ est petit, tan(θ) ≈ θ = (L/2) / D = L / (2D). D'où L = 2·λ·D / a = 2 × (633 × 10⁻⁹ m) × 2,0 m / (0,10 × 10⁻³ m) = 2,532 × 10⁻² m = 25,3 mm (soit 2,53 cm).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 17,
+      "section": "Physique",
+      "points": 1,
+      "question": "Un rayon lumineux monochromatique traverse l'interface séparant l'air (indice n₁ = 1,00) d'un milieu transparent d'indice n₂ = 1,50. Si la fréquence de cette onde lumineuse dans l'air est f = 5,0 × 10¹⁴ Hz et sa célérité dans le vide c = 3,0 × 10⁸ m·s⁻¹ :",
+      "options": {
+        "A": "Sa fréquence diminue à f' = 3,33 × 10¹⁴ Hz dans le second milieu",
+        "B": "Sa vitesse de propagation dans le second milieu vaut v = 2,0 × 10⁸ m·s⁻¹ et sa fréquence reste inchangée",
+        "C": "Sa longueur d'onde augmente de 50% dans le milieu transparent",
+        "D": "Sa célérité dans le second milieu est supérieure à c selon le principe de Huygens",
+        "E": "L'onde subit une réflexion totale quel que soit l'angle d'incidence"
+      },
+      "correct_answer": "B",
+      "explication": "La fréquence d'une onde ne dépend que de la source et reste strictement invariante lors du passage d'un milieu à un autre. La vitesse dans le milieu d'indice n₂ est v = c / n₂ = (3,0 × 10⁸) / 1,50 = 2,0 × 10⁸ m·s⁻¹. La longueur d'onde diminue selon λ₂ = λ₁ / n₂.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 18,
+      "section": "Physique",
+      "points": 2,
+      "question": "Un échantillon radioactif contient initialement à t = 0 un nombre N₀ de noyaux d'iode-131 de demi-vie t₁/₂ = 8,0 jours. L'activité de cet échantillon au bout de t = 24 jours représente :",
+      "options": {
+        "A": "50% de son activité initiale",
+        "B": "25% de son activité initiale",
+        "C": "12,5% de son activité initiale",
+        "D": "6,25% de son activité initiale",
+        "E": "3,125% de son activité initiale"
+      },
+      "correct_answer": "C",
+      "explication": "La durée écoulée t = 24 jours correspond exactement à n = 24 / 8 = 3 demi-vies. À chaque demi-vie, l'activité est divisée par 2. Après 3 demi-vies : A(t) = A₀ / 2³ = A₀ / 8 = 0,125 · A₀, soit 12,5% de la valeur initiale.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 19,
+      "section": "Physique",
+      "points": 1,
+      "question": "À propos de la stabilité des noyaux atomiques et de l'énergie de liaison :",
+      "options": {
+        "A": "Un noyau est d'autant plus stable que son énergie de liaison par nucléon E_l/A est grande",
+        "B": "L'énergie de liaison d'un noyau est égale au défaut de masse multiplié par la vitesse de la lumière : E_l = Δm · c",
+        "C": "La masse d'un noyau atomique est toujours supérieure à la somme des masses de ses nucléons constitutifs pris isolément",
+        "D": "Tous les isotopes d'un même élément chimique possèdent le même nombre de masse A",
+        "E": "La réaction de fusion nucléaire brise un noyau lourd instable en deux noyaux plus légers"
+      },
+      "correct_answer": "A",
+      "explication": "Par définition, plus l'énergie de liaison par nucléon (E_l / A) est élevée, plus le noyau est stable (le maximum étant situé vers le fer 56 sur la courbe d'Aston, environ 8,8 MeV/nucléon). L'énergie de liaison vaut E_l = Δm · c² avec Δm = (Z·m_p + (A-Z)·m_n) - m_noyau > 0.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 20,
+      "section": "Physique",
+      "points": 2,
+      "question": "Le noyau de thorium ²³⁰₉₀Th se désintègre spontanément en un noyau de radium ²²⁶₈₈Ra avec émission d'une particule alpha (⁴₂He). Sachant que les masses respectives sont m(Th) = 230,0331 u ; m(Ra) = 226,0254 u ; m(He) = 4,0015 u et que 1 u = 931,5 MeV/c², l'énergie libérée E_lib par cette réaction nucléaire est de :",
+      "options": {
+        "A": "4,7 MeV",
+        "B": "5,8 MeV",
+        "C": "9,3 MeV",
+        "D": "2,4 MeV",
+        "E": "18,6 MeV"
+      },
+      "correct_answer": "B",
+      "explication": "La perte de masse est Δm = m(Th) - [m(Ra) + m(He)] = 230,0331 - (226,0254 + 4,0015) = 230,0331 - 230,0269 = 0,0062 u. L'énergie libérée est E_lib = Δm × 931,5 MeV = 0,0062 × 931,5 ≈ 5,775 MeV ≈ 5,8 MeV.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 21,
+      "section": "Physique",
+      "points": 1,
+      "question": "Un dipôle RC est constitué d'un conducteur ohmique de résistance R = 100 kΩ et d'un condensateur de capacité C = 2,2 µF connecté à un générateur idéal de tension continue E = 12 V. La constante de temps τ du dipôle RC vaut :",
+      "options": {
+        "A": "0,022 s",
+        "B": "0,22 s",
+        "C": "2,2 s",
+        "D": "22 s",
+        "E": "220 s"
+      },
+      "correct_answer": "B",
+      "explication": "La constante de temps d'un dipôle RC est donnée par τ = R × C = (100 × 10³ Ω) × (2,2 × 10⁻⁶ F) = 2,2 × 10⁻¹ s = 0,22 s.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 22,
+      "section": "Physique",
+      "points": 1,
+      "question": "Lorsque la tension aux bornes du condensateur de capacité C = 2,2 µF atteint sa valeur maximale en régime permanent (U_c = 12 V), l'énergie électrostatique E_e emmagasinée dans ce condensateur est égale à :",
+      "options": {
+        "A": "1,58 × 10⁻⁴ J",
+        "B": "3,17 × 10⁻⁴ J",
+        "C": "1,32 × 10⁻² J",
+        "D": "0,264 J",
+        "E": "1,58 J"
+      },
+      "correct_answer": "A",
+      "explication": "L'énergie électrostatique emmagasinée dans un condensateur est E_e = (1/2) · C · U_c² = 0,5 × (2,2 × 10⁻⁶ F) × (12 V)² = 1,1 × 10⁻⁶ × 144 = 1,584 × 10⁻⁴ J.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 23,
+      "section": "Physique",
+      "points": 2,
+      "question": "Une bobine d'inductance L et de résistance interne r = 10 Ω est branchée en série avec un conducteur ohmique de résistance R = 40 Ω aux bornes d'un générateur de tension constante E = 10 V. En régime permanent, l'intensité du courant I_p traversant le circuit vaut :",
+      "options": {
+        "A": "0,20 A",
+        "B": "0,25 A",
+        "C": "1,0 A",
+        "D": "0,10 A",
+        "E": "2,0 A"
+      },
+      "correct_answer": "A",
+      "explication": "En régime permanent établi, le courant est constant (di/dt = 0), donc la tension aux bornes de la bobine est u_L = r·I. La loi des mailles s'écrit E = (R + r)·I_p. D'où I_p = E / (R + r) = 10 / (40 + 10) = 10 / 50 = 0,20 A.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 24,
+      "section": "Physique",
+      "points": 1,
+      "question": "Dans un circuit RLC série où la résistance totale est négligeable (circuit LC idéal), la période propre des oscillations électriques libres est T₀ = 2π√(LC). Si l'on quadruple l'inductance de la bobine (L' = 4L) et que l'on divise par quatre la capacité (C' = C/4), la nouvelle période propre T'₀ est égale à :",
+      "options": {
+        "A": "T₀ / 4",
+        "B": "T₀ / 2",
+        "C": "T₀ (inchangée)",
+        "D": "2 T₀",
+        "E": "4 T₀"
+      },
+      "correct_answer": "C",
+      "explication": "La nouvelle période propre est T'₀ = 2π√(L'·C') = 2π√(4L · (C/4)) = 2π√(LC) = T₀. Le produit LC reste inchangé, donc la période propre ne varie pas.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 25,
+      "section": "Physique",
+      "points": 1,
+      "question": "Pour obtenir une modulation d'amplitude de bonne qualité (sans surmodulation ni distorsion du signal transmis), il faut que :",
+      "options": {
+        "A": "La fréquence de l'onde porteuse F_p soit nettement inférieure à la fréquence du signal modulant f_s",
+        "B": "Le taux de modulation m = S_max / U₀ vérifie impérativement m > 1",
+        "C": "L'amplitude de la porteuse varie en conservant une enveloppe sinusoïdale avec un taux de modulation m < 1 et F_p >> f_s",
+        "D": "La tension de décalage U₀ appliquée soit négative pour annuler l'offset",
+        "E": "Le spectre de fréquences du signal modulé contienne une seule raie de fréquence F_p"
+      },
+      "correct_answer": "C",
+      "explication": "La condition d'une bonne modulation d'amplitude nécessite : 1) que le taux de modulation m = S_m / U₀ soit strictement inférieur à 1 (m < 1) pour éviter le phénomène d'inversion de phase à l'origine de la surmodulation ; 2) que la fréquence de la porteuse F_p soit au moins 10 fois supérieure à la fréquence maximale du signal modulant (F_p >> f_s).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 26,
+      "section": "Physique",
+      "points": 2,
+      "question": "Une bille d'acier de masse m = 50 g est lâchée sans vitesse initiale dans une éprouvette remplie d'huile. Le fluide exerce une force de frottement fluide opposée au mouvement d'intensité f = k·v avec k = 0,25 kg·s⁻¹. En négligeant la poussée d'Archimède et en prenant g = 10 m·s⁻², la vitesse limite atteinte par la bille est :",
+      "options": {
+        "A": "0,5 m·s⁻¹",
+        "B": "1,0 m·s⁻¹",
+        "C": "2,0 m·s⁻¹",
+        "D": "4,0 m·s⁻¹",
+        "E": "5,0 m·s⁻¹"
+      },
+      "correct_answer": "C",
+      "explication": "D'après la deuxième loi de Newton projetée sur l'axe vertical descendant : m·(dv/dt) = m·g - k·v. Lorsque la vitesse limite est atteinte, l'accélération s'annule (dv/dt = 0), donc m·g - k·v_lim = 0 <=> v_lim = (m·g) / k = (0,050 kg × 10 m·s⁻²) / 0,25 kg·s⁻¹ = 0,50 / 0,25 = 2,0 m·s⁻¹.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 27,
+      "section": "Physique",
+      "points": 2,
+      "question": "Un solide de masse m glisse sans frottement le long d'une ligne de plus grande pente d'un plan incliné faisant un angle α = 30° avec l'horizontale. En prenant g = 10 m·s⁻² et en considérant que le solide part du repos (v₀ = 0) au sommet, la valeur de son accélération le long du plan incliné est :",
+      "options": {
+        "A": "2,5 m·s⁻²",
+        "B": "5,0 m·s⁻²",
+        "C": "8,66 m·s⁻²",
+        "D": "10 m·s⁻²",
+        "E": "0 m·s⁻²"
+      },
+      "correct_answer": "B",
+      "explication": "Les forces appliquées sont le poids P et la réaction normale R_N (pas de frottement). Projetée sur l'axe parallèle au plan incliné orienté vers le bas : m·a = P·sin(α) = m·g·sin(α). D'où a = g·sin(30°) = 10 × 0,5 = 5,0 m·s⁻².",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 28,
+      "section": "Physique",
+      "points": 1,
+      "question": "Pour un oscillateur harmonique horizontal constitué d'un ressort de raideur k = 40 N·m⁻¹ et d'un solide de masse m = 100 g oscillant sans frottement :",
+      "options": {
+        "A": "L'énergie mécanique se conserve et s'exprime par E_m = 1/2·m·v² + 1/2·k·x²",
+        "B": "La période propre vaut T₀ = 2π√(k / m)",
+        "C": "L'énergie potentielle élastique est maximale lorsque le solide passe par sa position d'équilibre x = 0",
+        "D": "La vitesse du solide s'annule lorsque l'énergie cinétique est maximale",
+        "E": "L'accélération du solide est constante tout au long de la trajectoire"
+      },
+      "correct_answer": "A",
+      "explication": "En l'absence de frottement, les forces non conservatives sont nulles, donc l'énergie mécanique est constante : E_m = E_c + E_pe = 1/2·m·v² + 1/2·k·x². La période propre est T₀ = 2π√(m / k) (environ 0,314 s). Au point d'équilibre x = 0, l'énergie potentielle est nulle et l'énergie cinétique est maximale.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 29,
+      "section": "Chimie",
+      "points": 1,
+      "question": "On étudie la cinétique de la décomposition de l'eau oxygénée selon la réaction : 2 H₂O₂(aq) → 2 H₂O(l) + O₂(g). La vitesse volumique de disparition du peroxyde d'hydrogène à un instant t dans un volume constant V est définie par :",
+      "options": {
+        "A": "v = + (1/V) · (d[H₂O₂]/dt)",
+        "B": "v = - (1/2V) · (dn(H₂O₂)/dt) = - (1/2) · (d[H₂O₂]/dt)",
+        "C": "v = V · (d[O₂]/dt)",
+        "D": "v = - (1/V) · [H₂O₂]²",
+        "E": "v = (dn(H₂O₂)/dt) / t"
+      },
+      "correct_answer": "B",
+      "explication": "D'après la stœchiométrie de la réaction (coefficient 2 pour H₂O₂), la vitesse volumique de réaction est v = (1/V) · (dx/dt). Comme n(H₂O₂) = n₀ - 2x, on a x = (n₀ - n(H₂O₂))/2, donc dx/dt = - 1/2 · (dn(H₂O₂)/dt). D'où v = - (1/2V) · (dn(H₂O₂)/dt) = - 1/2 · (d[H₂O₂]/dt).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 30,
+      "section": "Chimie",
+      "points": 1,
+      "question": "À propos du temps de demi-réaction t₁/₂ d'une transformation chimique :",
+      "options": {
+        "A": "C'est la durée au bout de laquelle la réaction s'arrête complètement",
+        "B": "C'est la durée au bout de laquelle l'avancement x(t) atteint la moitié de sa valeur finale x_f : x(t₁/₂) = x_f / 2",
+        "C": "Le temps de demi-réaction est toujours indépendant de la température du milieu réactionnel",
+        "D": "L'utilisation d'un catalyseur augmente la valeur de t₁/₂",
+        "E": "Pour une réaction totale, à t = 2·t₁/₂, la réaction est obligatoirement terminée à 100%"
+      },
+      "correct_answer": "B",
+      "explication": "Par définition, le temps de demi-réaction t₁/₂ est la durée nécessaire pour que l'avancement x atteigne la moitié de l'avancement final x_f (ou x_max pour une réaction totale). Un catalyseur ou une élévation de température accélère la réaction et réduit donc t₁/₂.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 31,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Une solution aqueuse d'acide éthanoïque CH₃COOH de concentration molaire C = 1,0 × 10⁻² mol·L⁻¹ a un pH mesuré de 3,4 à 25 °C. Le taux d'avancement final τ de la réaction de l'acide avec l'eau est de : (On donne 10^(-3,4) ≈ 4,0 × 10⁻⁴)",
+      "options": {
+        "A": "0,04% (τ = 0,0004)",
+        "B": "4,0% (τ = 0,04)",
+        "C": "40% (τ = 0,40)",
+        "D": "100% (τ = 1,00, acide fort)",
+        "E": "0,1%"
+      },
+      "correct_answer": "B",
+      "explication": "Pour la réaction CH₃COOH + H₂O ⇌ CH₃COO⁻ + H₃O⁺ : x_f = [H₃O⁺]_eq · V = 10^(-pH) · V. L'avancement maximal est x_max = C · V. Le taux d'avancement est donc τ = x_f / x_max = 10^(-pH) / C = (4,0 × 10⁻⁴) / (1,0 × 10⁻²) = 0,04 = 4,0%. Comme τ < 1, l'acide est un acide faible.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 32,
+      "section": "Chimie",
+      "points": 2,
+      "question": "On mélange dans un bécher des ions Fe³⁺, SCN⁻, et le complexe rouge [Fe(SCN)]²⁺. Si le quotient de réaction initial Q_r,i vérifie Q_r,i < K (où K est la constante d'équilibre de la réaction Fe³⁺ + SCN⁻ ⇌ [Fe(SCN)]²⁺) :",
+      "options": {
+        "A": "Le système est à l'équilibre chimique dynamique et n'évolue pas",
+        "B": "Le système évolue spontanément dans le sens direct (formation du complexe [Fe(SCN)]²⁺)",
+        "C": "Le système évolue spontanément dans le sens inverse (dissociation du complexe)",
+        "D": "La constante d'équilibre K diminue jusqu'à égaler Q_r,i",
+        "E": "La réaction est thermodynamiquement impossible à température constante"
+      },
+      "correct_answer": "B",
+      "explication": "Selon le critère d'évolution spontanée : si Q_r,i < K, le quotient de réaction doit augmenter pour tendre vers K, ce qui correspond à une augmentation de la concentration des produits (au numérateur) et une consommation des réactifs, c'est-à-dire une évolution dans le sens direct.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 33,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Le pKa du couple acide éthanoïque / ion éthanoate (CH₃COOH / CH₃COO⁻) est de 4,8 à 25 °C. Dans une solution tampon où le pH vaut 5,8, le rapport des concentrations [[CH₃COO⁻]] / [[CH₃COOH]] est égal à :",
+      "options": {
+        "A": "0,1",
+        "B": "1",
+        "C": "10",
+        "D": "100",
+        "E": "0,01"
+      },
+      "correct_answer": "C",
+      "explication": "D'après la relation de Henderson-Hasselbalch : pH = pKa + log([Base]/[Acide]). D'où log([CH₃COO⁻]/[CH₃COOH]) = pH - pKa = 5,8 - 4,8 = 1,0. Par suite, [CH₃COO⁻]/[CH₃COOH] = 10^(1,0) = 10.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 34,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Lors du titrage pH-métrique d'un volume V_A d'un acide fort (HCl) par une solution aqueuse d'hydroxyde de sodium (NaOH) de concentration C_B :",
+      "options": {
+        "A": "Le pH à l'équivalence à 25 °C est égal à 7,0",
+        "B": "Le pH à l'équivalence est basique (pH_E > 7) car la base conjuguée est forte",
+        "C": "Le volume versé à la demi-équivalence permet de déterminer directement le pKa de HCl",
+        "D": "La réaction de titrage est une réaction lente et athermique",
+        "E": "L'espèce majoritaire à l'équivalence est le gaz dichlore Cl₂ dissous"
+      },
+      "correct_answer": "A",
+      "explication": "Le titrage d'un acide fort (H₃O⁺) par une base forte (HO⁻) repose sur la réaction totale H₃O⁺ + HO⁻ → 2 H₂O. À l'équivalence, tous les ions H₃O⁺ et HO⁻ introduits ont réagi en proportions stœchiométriques ; les seuls ions présents sont les ions spectateurs Na⁺ et Cl⁻ qui n'ont aucun caractère acido-basique dans l'eau. La solution est donc neutre, soit pH_E = 7,0 à 25 °C.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 35,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Concernant une solution tampon acido-basique :",
+      "options": {
+        "A": "Son pH varie brusquement lors d'une dilution modérée",
+        "B": "Elle est constituée d'un acide fort et d'une base forte en proportions égales",
+        "C": "Son pouvoir tampon est maximal lorsque le pH de la solution est égal au pKa du couple utilisé ([Acide] = [Base])",
+        "D": "Son pH augmente de plusieurs unités lors de l'ajout d'une faible quantité d'acide fort",
+        "E": "Elle ne peut être préparée qu'à partir de sels insolubles"
+      },
+      "correct_answer": "C",
+      "explication": "Une solution tampon est composée d'un mélange équimolaire (ou de concentrations voisines) d'un acide faible et de sa base conjuguée. Son pH varie très peu lors d'une dilution modérée ou de l'addition de faibles quantités d'acide ou de base. Son pouvoir tampon est maximal pour pH = pKa (demi-équivalence).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 36,
+      "section": "Chimie",
+      "points": 2,
+      "question": "Dans une pile Daniell standard zinc-cuivre (Zn / Zn²⁺ // Cu²⁺ / Cu) :",
+      "options": {
+        "A": "L'électrode de zinc constitue la cathode et est le siège d'une réduction",
+        "B": "Les électrons circulent dans le circuit extérieur de l'électrode de zinc (anode, pôle négatif) vers l'électrode de cuivre (cathode, pôle positif)",
+        "C": "Dans le pont salin, les anions migrent vers le compartiment de la cathode pour compenser la disparition de Cu²⁺",
+        "D": "La masse de l'électrode de zinc augmente au cours du fonctionnement de la pile",
+        "E": "La force électromotrice de la pile devient infinie lorsque l'équilibre chimique est atteint"
+      },
+      "correct_answer": "B",
+      "explication": "Le zinc s'oxyde plus facilement que le cuivre : Zn(s) → Zn²⁺(aq) + 2 e⁻. L'électrode de zinc est l'anode (pôle -) où se produit l'oxydation, elle libère les électrons qui circulent via le circuit métallique vers l'électrode de cuivre (cathode, pôle +) où les ions Cu²⁺ sont réduits : Cu²⁺(aq) + 2 e⁻ → Cu(s).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 37,
+      "section": "Chimie",
+      "points": 2,
+      "question": "On réalise l'électrolyse d'une solution aqueuse de sulfate de cuivre (Cu²⁺ + SO₄²⁻) avec une intensité constante I = 0,50 A pendant une durée Δt = 32 minutes et 10 secondes (soit 1930 s). En prenant F = 96 500 C·mol⁻¹ et M(Cu) = 63,5 g·mol⁻¹, la masse m de cuivre déposée à la cathode est :",
+      "options": {
+        "A": "0,317 g",
+        "B": "0,635 g",
+        "C": "1,27 g",
+        "D": "3,17 g",
+        "E": "6,35 g"
+      },
+      "correct_answer": "A",
+      "explication": "La quantité d'électricité traversant la cellule est Q = I · Δt = 0,50 × 1930 = 965 C. Le nombre de moles d'électrons échangés est n(e⁻) = Q / F = 965 / 96 500 = 0,010 mol. La réduction à la cathode est Cu²⁺ + 2 e⁻ → Cu, donc n(Cu) = n(e⁻)/2 = 0,005 mol. La masse de cuivre déposée est m = n(Cu) × M(Cu) = 0,005 × 63,5 = 0,3175 g ≈ 0,317 g.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 38,
+      "section": "Chimie",
+      "points": 1,
+      "question": "La réaction d'estérification directe entre un acide carboxylique R-COOH et un alcool primaire R'-OH présente les caractéristiques suivantes :",
+      "options": {
+        "A": "C'est une réaction rapide, totale et fortement exothermique",
+        "B": "C'est une réaction lente, réversible (limitée par l'hydrolyse de l'ester) et athermique, avec un rendement d'environ 67% pour un mélange équimolaire",
+        "C": "L'ajout d'ions hydronium H₃O⁺ (acide sulfurique concentré) permet de déplacer l'état d'équilibre et d'atteindre un rendement de 100%",
+        "D": "La constante d'équilibre K dépend fortement de la température",
+        "E": "Le produit secondaire obtenu avec l'ester est le dihydrogène H₂"
+      },
+      "correct_answer": "B",
+      "explication": "L'estérification d'un acide carboxylique par un alcool primaire est lente, athermique et limitée par la réaction inverse d'hydrolyse. À partir d'un mélange équimolaire, le rendement à l'équilibre est d'environ 67% (2/3). Le catalyseur acide (H₂SO₄) accélère la réaction sans changer la composition du mélange à l'équilibre.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 39,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Pour obtenir un rendement de 100% (réaction totale et rapide) dans la synthèse d'un ester sans recourir à un excès de réactif, on peut remplacer l'acide carboxylique par :",
+      "options": {
+        "A": "Un chlorure d'acyle (R-COCl) ou un anhydride d'acide ((R-CO)₂O)",
+        "B": "Un aldéhyde correspondant",
+        "C": "Un alcane de même chaîne carbonée",
+        "D": "Une amine primaire en milieu basique",
+        "E": "Du dioxyde de carbone sous haute pression"
+      },
+      "correct_answer": "A",
+      "explication": "Les chlorures d'acyle et les anhydrides d'acide sont des dérivés d'acides très réactifs qui réagissent avec les alcools de façon rapide et totale (irréversible), formant l'ester avec un rendement quantitatif.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 40,
+      "section": "Chimie",
+      "points": 1,
+      "question": "La saponification d'un corps gras (triglycéride) par une solution concentrée d'hydroxyde de sodium (NaOH) produit :",
+      "options": {
+        "A": "Un acide carboxylique et de l'eau",
+        "B": "Un savon (sels de sodium d'acides gras) et du glycérol (propane-1,2,3-triol)",
+        "C": "Un ester éthylique et de l'éthanol",
+        "D": "Un détergent cationique et du dioxyde de carbone",
+        "E": "Un hydrocarbure linéaire insaturé"
+      },
+      "correct_answer": "B",
+      "explication": "La saponification est l'hydrolyse basique des esters d'acides gras du glycérol (triglycérides) par une base forte comme NaOH ou KOH. Elle est totale et produit du glycérol (trialcool) et des carboxylates de sodium, qui constituent le savon.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 41,
+      "section": "Chimie",
+      "points": 1,
+      "question": "D'après la loi de Kohlrausch, la conductivité σ d'une solution aqueuse très diluée contenant des ions Na⁺, Cl⁻, H₃O⁺ et NO₃⁻ s'exprime par :",
+      "options": {
+        "A": "σ = Σ λ_i · [X_i] où λ_i est la conductivité molaire ionique de chaque ion présent",
+        "B": "σ = G · (L / S) où G est la conductance",
+        "C": "σ = [Na⁺] + [Cl⁻] + [H₃O⁺] + [NO₃⁻]",
+        "D": "σ = C_total / V",
+        "E": "σ = 1 / R_solution"
+      },
+      "correct_answer": "A",
+      "explication": "La loi de Kohlrausch stipule que pour des solutions diluées d'électrolytes forts, la conductivité totale est la somme des contributions individuelles de chaque ion : σ = Σ λ_i · [X_i].",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 42,
+      "section": "Chimie",
+      "points": 1,
+      "question": "On dissout 1,0 × 10⁻³ mol de chlorure de sodium (NaCl) dans de l'eau pure pour obtenir 1,0 L de solution. Sachant que λ(Na⁺) = 5,0 mS·m²·mol⁻¹ et λ(Cl⁻) = 7,6 mS·m²·mol⁻¹, la conductivité σ de la solution en S·m⁻¹ est :",
+      "options": {
+        "A": "1,26 × 10⁻² S·m⁻¹",
+        "B": "1,26 × 10⁻¹ S·m⁻¹",
+        "C": "1,26 S·m⁻¹",
+        "D": "12,6 S·m⁻¹",
+        "E": "2,6 × 10⁻³ S·m⁻¹"
+      },
+      "correct_answer": "A",
+      "explication": "Attention aux unités du Système International : C = 1,0 × 10⁻³ mol/L = 1,0 mol/m³. σ = λ(Na⁺)·[Na⁺] + λ(Cl⁻)·[Cl⁻] = (5,0 × 10⁻³ + 7,6 × 10⁻³ S·m²·mol⁻¹) × 1,0 mol·m⁻³ = 12,6 × 10⁻³ S·m⁻¹ = 1,26 × 10⁻² S·m⁻¹.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 43,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "La limite lim(x → +∞) [ (x² + 3x - 1) · e^(-x) ] est égale à :",
+      "options": {
+        "A": "0",
+        "B": "+∞",
+        "C": "1",
+        "D": "-1",
+        "E": "e"
+      },
+      "correct_answer": "A",
+      "explication": "Par croissances comparées, pour tout entier n, lim(x → +∞) (x^n · e^(-x)) = 0. En développant l'expression x²·e^(-x) + 3x·e^(-x) - e^(-x), tous les termes tendent vers 0 quand x → +∞. La limite est donc égale à 0.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 44,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Soit la fonction f définie sur ℝ par f(x) = ln(x + √(x² + 1)). La dérivée f'(x) est donnée par :",
+      "options": {
+        "A": "1 / (x + √(x² + 1))",
+        "B": "1 / √(x² + 1)",
+        "C": "x / √(x² + 1)",
+        "D": "2x / (x² + 1)",
+        "E": "1 / (x² + 1)"
+      },
+      "correct_answer": "B",
+      "explication": "Posons u(x) = x + √(x² + 1). Sa dérivée est u'(x) = 1 + (2x)/(2√(x² + 1)) = 1 + x/√(x² + 1) = (√(x² + 1) + x) / √(x² + 1). Par la formule de la dérivée de ln(u) : f'(x) = u'(x)/u(x) = [(√(x² + 1) + x) / √(x² + 1)] / [x + √(x² + 1)] = 1 / √(x² + 1).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 45,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "L'équation de la tangente à la courbe représentative de f(x) = (2x - 1) / (x + 1) au point d'abscisse x₀ = 1 est :",
+      "options": {
+        "A": "y = 3/4 x - 1/4",
+        "B": "y = 3/2 x - 1",
+        "C": "y = 3/4 x + 1/2",
+        "D": "y = 1/2 x + 1/4",
+        "E": "y = 3/4 x"
+      },
+      "correct_answer": "A",
+      "explication": "On calcule f(1) = (2(1) - 1)/(1 + 1) = 1/2. La dérivée est f'(x) = (2(x + 1) - (2x - 1)(1))/(x + 1)² = (2x + 2 - 2x + 1)/(x + 1)² = 3/(x + 1)². En x₀ = 1 : f'(1) = 3 / (2)² = 3/4. L'équation de la tangente est y = f'(1)(x - 1) + f(1) = 3/4·(x - 1) + 1/2 = 3/4 x - 3/4 + 2/4 = 3/4 x - 1/4.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 46,
+      "section": "Mathématiques",
+      "points": 2,
+      "question": "La valeur de l'intégrale I = ∫[0, 1] x · e^(2x) dx est égale à :",
+      "options": {
+        "A": "(e² - 1) / 4",
+        "B": "(e² + 1) / 4",
+        "C": "e² / 2",
+        "D": "(2e² - 1) / 4",
+        "E": "e² - 1"
+      },
+      "correct_answer": "B",
+      "explication": "Par intégration par parties : posons u(x) = x => u'(x) = 1, et v'(x) = e^(2x) => v(x) = (1/2)·e^(2x). Alors I = [ (x/2)·e^(2x) ][0, 1] - ∫[0, 1] (1/2)·e^(2x) dx = (1/2)·e² - 0 - [ (1/4)·e^(2x) ][0, 1] = e²/2 - (e²/4 - 1/4) = e²/4 + 1/4 = (e² + 1) / 4.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 47,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Soit la suite numérique (u_n) définie par u₀ = 1 et la relation de récurrence u_(n+1) = (1/2)·u_n + 3 pour tout n ∈ ℕ. La limite de (u_n) quand n → +∞ est :",
+      "options": {
+        "A": "3",
+        "B": "6",
+        "C": "+∞",
+        "D": "0",
+        "E": "1"
+      },
+      "correct_answer": "B",
+      "explication": "La suite arithmético-géométrique converge car |a| = 1/2 < 1. Sa limite L vérifie le point fixe L = (1/2)·L + 3 <=> (1/2)·L = 3 <=> L = 6. (En posant v_n = u_n - 6, v_n est géométrique de raison 1/2 tendant vers 0).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 48,
+      "section": "Mathématiques",
+      "points": 2,
+      "question": "La somme des termes S = Σ[k=0 to n] (1 / 3^k) = 1 + 1/3 + 1/9 + ... + 1/3^n a pour limite quand n → +∞ :",
+      "options": {
+        "A": "3/2",
+        "B": "4/3",
+        "C": "3",
+        "D": "2",
+        "E": "+∞"
+      },
+      "correct_answer": "A",
+      "explication": "C'est la somme des termes d'une suite géométrique de premier terme 1 et de raison q = 1/3 (|q| < 1). S = 1 · (1 - (1/3)^(n+1)) / (1 - 1/3). Quand n → +∞, (1/3)^(n+1) → 0, donc la limite est 1 / (2/3) = 3/2 = 1,5.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 49,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "On considère le nombre complexe z = (√3 + i)¹². La valeur simplifiée de z est :",
+      "options": {
+        "A": "4096",
+        "B": "-4096",
+        "C": "4096 i",
+        "D": "-4096 i",
+        "E": "2048"
+      },
+      "correct_answer": "A",
+      "explication": "Mise sous forme exponentielle : |√3 + i| = √(3 + 1) = 2. √3 + i = 2·(√3/2 + (1/2)·i) = 2·e^(i·π/6). Donc z = [ 2·e^(i·π/6) ]¹² = 2¹² · e^(i · 12π/6) = 4096 · e^(i·2π) = 4096 × 1 = 4096.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 50,
+      "section": "Mathématiques",
+      "points": 2,
+      "question": "Dans le plan complexe rapporté à un repère orthonormé (O; u, v), l'ensemble des points M d'affixe z vérifiant |z - 2 + i| = |z + 3 - 2i| est :",
+      "options": {
+        "A": "Un cercle de rayon 5",
+        "B": "La médiatrice du segment [AB] où A(2, -1) et B(-3, 2)",
+        "C": "Une ellipse de foyers A et B",
+        "D": "La droite passant par l'origine et de vecteur directeur (2, -1)",
+        "E": "L'ensemble vide"
+      },
+      "correct_answer": "B",
+      "explication": "Posons z_A = 2 - i (donc A(2, -1)) et z_B = -3 + 2i (donc B(-3, 2)). La relation s'écrit |z - z_A| = |z - z_B|, c'est-à-dire AM = BM. L'ensemble des points M équidistants de A et B est par définition la droite médiatrice du segment [AB].",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 51,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "La solution générale de l'équation différentielle y'' + 4y = 0 est de la forme (où A et B sont des constantes réelles) :",
+      "options": {
+        "A": "y(x) = A·e^(2x) + B·e^(-2x)",
+        "B": "y(x) = A·cos(2x) + B·sin(2x)",
+        "C": "y(x) = A·cos(4x) + B·sin(4x)",
+        "D": "y(x) = (Ax + B)·e^(2x)",
+        "E": "y(x) = A·sin(2x + B) + 4"
+      },
+      "correct_answer": "B",
+      "explication": "L'équation caractéristique associée à y'' + ω²·y = 0 avec ω = 2 est r² + 4 = 0, dont les racines complexes conjuguées sont r = ± 2i. La solution générale sur ℝ est donc y(x) = A·cos(2x) + B·sin(2x).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 52,
+      "section": "Mathématiques",
+      "points": 2,
+      "question": "Dans l'espace muni d'un repère orthonormé (O; i, j, k), la distance du point A(1, 2, -1) au plan (P) d'équation 2x - y + 2z - 5 = 0 est égale à :",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "7/3",
+        "D": "3",
+        "E": "7/9"
+      },
+      "correct_answer": "C",
+      "explication": "La formule de la distance d'un point au plan ax + by + cz + d = 0 est d(A, P) = |a·x_A + b·y_A + c·z_A + d| / √(a² + b² + c²). Ici : |2(1) - 1(2) + 2(-1) - 5| / √(2² + (-1)² + 2²) = |2 - 2 - 2 - 5| / √(4 + 1 + 4) = |-7| / √9 = 7 / 3.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 53,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Une urne contient 4 boules blanches et 6 boules noires indiscernables au toucher. On tire simultanément 3 boules de l'urne. La probabilité d'obtenir exactement 2 boules blanches et 1 boule noire est :",
+      "options": {
+        "A": "1/5 (0,20)",
+        "B": "3/10 (0,30)",
+        "C": "3/5 (0,60)",
+        "D": "1/2 (0,50)",
+        "E": "9/20 (0,45)"
+      },
+      "correct_answer": "B",
+      "explication": "Le nombre de tirages possibles est C(10, 3) = (10 × 9 × 8) / (3 × 2 × 1) = 120. Le nombre de cas favorables (2 blanches parmi 4 et 1 noire parmi 6) est C(4, 2) × C(6, 1) = 6 × 6 = 36. La probabilité est donc P = 36 / 120 = 3 / 10 = 0,30.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 54,
+      "section": "Mathématiques",
+      "points": 2,
+      "question": "Soit X une variable aléatoire suivant une loi binomiale B(n, p) de paramètres n = 100 et p = 0,2. L'espérance mathématique E(X) et l'écart-type σ(X) valent respectivement :",
+      "options": {
+        "A": "E(X) = 20 et σ(X) = 4",
+        "B": "E(X) = 20 et σ(X) = 16",
+        "C": "E(X) = 50 et σ(X) = 5",
+        "D": "E(X) = 20 et σ(X) = 2",
+        "E": "E(X) = 10 et σ(X) = 4"
+      },
+      "correct_answer": "A",
+      "explication": "Pour une loi binomiale B(n, p) : l'espérance est E(X) = n·p = 100 × 0,2 = 20. La variance est V(X) = n·p·(1 - p) = 100 × 0,2 × 0,8 = 16. L'écart-type est donc σ(X) = √V(X) = √16 = 4.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 55,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Le domaine de définition D_f de la fonction réelle f(x) = ln( (x - 2) / (x + 3) ) est :",
+      "options": {
+        "A": "]2, +∞[",
+        "B": "]-∞, -3[ ∪ ]2, +∞[",
+        "C": "]-3, 2[",
+        "D": "ℝ \\ {-3, 2}",
+        "E": "[-3, 2]"
+      },
+      "correct_answer": "B",
+      "explication": "La fonction ln(u) est définie si et seulement si u > 0. Le quotient (x - 2)/(x + 3) est strictement positif lorsque son numérateur et son dénominateur ont le même signe : soit pour x > 2, soit pour x < -3. D'où D_f = ]-∞, -3[ ∪ ]2, +∞[.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 56,
+      "section": "Mathématiques",
+      "points": 2,
+      "question": "On considère la fonction g(x) = x · ln(x) pour x > 0, et g(0) = 0. Quelle affirmation est vraie concernant g en 0 ?",
+      "options": {
+        "A": "g n'est pas continue en 0 car ln(0) n'est pas défini",
+        "B": "g est continue en 0 et sa courbe admet une demi-tangente verticale au point d'abscisse 0",
+        "C": "g est dérivable en 0 et g'(0) = 1",
+        "D": "g admet en 0 un extremum local de valeur 1",
+        "E": "La courbe de g admet l'axe des ordonnées comme asymptote verticale"
+      },
+      "correct_answer": "B",
+      "explication": "1) Continuité : lim(x → 0⁺) (x·ln(x)) = 0 = g(0), donc g est continue à droite en 0. 2) Dérivabilité : le taux d'accroissement est [g(x) - g(0)] / (x - 0) = (x·ln(x)) / x = ln(x). Quand x → 0⁺, ln(x) → -∞. Le taux tend vers -∞, donc g n'est pas dérivable en 0, mais sa courbe représentative admet au point (0,0) une demi-tangente verticale dirigée vers le bas.",
+      "special_format": { "needed": false }
+    }
+  ]
+}

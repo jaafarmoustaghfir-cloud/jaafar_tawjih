@@ -1,0 +1,638 @@
+{
+  "exam_info": {
+    "title": "Concours d'Accès en 1ère Année de Médecine — FMP Rabat",
+    "annee_universitaire": "2018-2019",
+    "date": "21 juillet 2018",
+    "duree": "2 heures (30 min par matière)",
+    "version": "Faculté de Médecine et de Pharmacie de Rabat",
+    "sections": [
+      { "nom": "Mathématiques", "de": 1, "a": 10, "coefficient": 1 },
+      { "nom": "Physique", "de": 11, "a": 20, "coefficient": 1 },
+      { "nom": "Chimie", "de": 21, "a": 30, "coefficient": 1 },
+      { "nom": "Sciences de la Vie", "de": 31, "a": 40, "coefficient": 1 }
+    ],
+    "consignes": [
+      "L'épreuve comporte 40 questions réparties sur 4 matières (10 questions par matière).",
+      "Chaque question propose 4 choix (A, B, C et D). Une seule réponse est attendue sur la grille.",
+      "Toute réponse fausse ou non cochée vaut 0 point."
+    ]
+  },
+  "questions": [
+    {
+      "id": 1,
+      "section": "Mathématiques",
+      "points": 1,
+      "context": "Exercice 1 : Dans le plan complexe rapporté à un repère orthonormé direct, on considère les points A, B, C, D et E d'affixes respectives : zA = -1 ; zB = -2 + i√3 ; zC = -z̄B ; zD = (zB - 1)/(zB + 1) ; zE = 1.",
+      "question": "zB + 1 est égal à :",
+      "options": {
+        "A": "zB + 1 = 2 e^(iπ/3)",
+        "B": "zB + 1 = 2 e^(i2π/3)",
+        "C": "zB + 1 = 2 e^(-iπ/3)",
+        "D": "zB + 1 = 4 e^(iπ/3)"
+      },
+      "correct_answer": "B",
+      "explication": "zB + 1 = -2 + i√3 + 1 = -1 + i√3. Le module vaut |-1 + i√3| = √(1 + 3) = 2. On a cos(θ) = -1/2 et sin(θ) = √3/2, donc θ = 2π/3 [2π]. Ainsi, zB + 1 = 2 e^(i2π/3).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 2,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "zD est égal à :",
+      "options": {
+        "A": "zD = √3(√3/2 - i/2)",
+        "B": "zD = 3(1/2 - i√3/2)",
+        "C": "zD = √3(√3/2 + i/2)",
+        "D": "zD = 3(1/2 + i√3/2)"
+      },
+      "correct_answer": "C",
+      "explication": "zD = (zB - 1)/(zB + 1) = (-3 + i√3)/(-1 + i√3). Or -3 + i√3 = 2√3 e^(i5π/6) et -1 + i√3 = 2 e^(i2π/3). D'où zD = (2√3/2) · e^(i(5π/6 - 2π/3)) = √3 e^(iπ/6) = √3(√3/2 + i/2).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 3,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "Le rapport (zC - zD) / (zC - zE) vérifie :",
+      "options": {
+        "A": "(zC - zD)/(zC - zE) = 1/2",
+        "B": "(zC - zD)/(zC - zE) = -1/2",
+        "C": "(zC - zD)/(zC - zE) = i/2",
+        "D": "Les points D, C, E forment un triangle rectangle"
+      },
+      "correct_answer": "A",
+      "explication": "zC = -z̄B = -(-2 - i√3) = 2 + i√3. zD = 3/2 + i√3/2 et zE = 1. zC - zD = 1/2 + i√3/2. zC - zE = 1 + i√3 = 2(1/2 + i√3/2). Donc (zC - zD)/(zC - zE) = 1/2. Ce rapport étant réel, les points D, C, E sont de plus alignés.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 4,
+      "section": "Mathématiques",
+      "points": 1,
+      "context": "Exercice 2 : Soit (uₙ)n∈ℕ la suite numérique définie par u₀ = 1 et (∀n∈ℕ) u_(n+1) = uₙ / (uₙ + 2). On pose vₙ = uₙ / (uₙ + 1) pour tout n de ℕ.",
+      "question": "La suite (vₙ) vérifie la relation :",
+      "options": {
+        "A": "∀n≥0 ; v_(n+1) = (1/2) vₙ",
+        "B": "∀n≥0 ; v_(n+1) = 1 + vₙ",
+        "C": "∀n≥0 ; vₙ = (1/2)ⁿ",
+        "D": "∀n≥0 ; vₙ = (1/2)^(n+1)"
+      },
+      "correct_answer": "A",
+      "explication": "v_(n+1) = u_(n+1)/(u_(n+1) + 1) = [uₙ/(uₙ+2)] / [uₙ/(uₙ+2) + 1] = uₙ / (2uₙ + 2) = (1/2) · [uₙ / (uₙ + 1)] = (1/2) vₙ.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 5,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "La limite de la suite (uₙ) quand n → +∞ est :",
+      "options": {
+        "A": "lim uₙ = 1",
+        "B": "lim uₙ = 0",
+        "C": "lim uₙ = -1",
+        "D": "lim uₙ = +∞"
+      },
+      "correct_answer": "B",
+      "explication": "vₙ est une suite géométrique de raison 1/2 avec v₀ = 1/2, donc vₙ = (1/2)^(n+1) → 0. Or uₙ = vₙ / (1 - vₙ), donc lim uₙ = 0 / 1 = 0.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 6,
+      "section": "Mathématiques",
+      "points": 1,
+      "context": "Exercice 3 : On considère la fonction numérique f définie sur ]0;+∞[ par f(x) = (ln x)² / x.",
+      "question": "La limite lim(x → 0, x > 0) f(x) est égale à :",
+      "options": {
+        "A": "lim(x→0, x>0) f(x) = -∞",
+        "B": "lim(x→0, x>0) f(x) = +∞",
+        "C": "lim(x→0, x>0) f(x) = 0",
+        "D": "lim(x→0, x>0) f(x) = 1"
+      },
+      "correct_answer": "B",
+      "explication": "Quand x → 0⁺, ln(x) → -∞, donc (ln x)² → +∞. Comme le dénominateur x tend vers 0⁺, on obtient lim f(x) = +∞. (En +∞, la limite vaut 0 par croissances comparées).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 7,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "La dérivée f'(x) pour x > 0 est égale à :",
+      "options": {
+        "A": "f'(x) = (1 - ln x) / x²",
+        "B": "f'(x) = (1 + ln x) / x²",
+        "C": "f'(x) = ln x · (2 - ln x) / x²",
+        "D": "f'(x) = ln x · (2 - x ln x) / x²"
+      },
+      "correct_answer": "C",
+      "explication": "f'(x) = [(2·(1/x)·ln x) · x - (ln x)² · 1] / x² = [2 ln x - (ln x)²] / x² = ln x · (2 - ln x) / x².",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 8,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "La valeur de l'intégrale ∫[1, e] (ln x)² / x dx est égale à :",
+      "options": {
+        "A": "5/6",
+        "B": "1/3",
+        "C": "1",
+        "D": "e"
+      },
+      "correct_answer": "B",
+      "explication": "L'expression est de la forme u'·u² avec u = ln x. Une primitive est (1/3)·(ln x)³. Entre 1 et e : (1/3)·(ln e)³ - (1/3)·(ln 1)³ = 1/3 · 1 - 0 = 1/3.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 9,
+      "section": "Mathématiques",
+      "points": 1,
+      "context": "Exercice 4 : On lance un dé cubique trois fois de suite. Soit X la variable aléatoire égale au nombre de fois où le chiffre 6 apparaît.",
+      "question": "Les paramètres n et p de la loi binomiale suivie par X sont :",
+      "options": {
+        "A": "n = 3 et p = 1/2",
+        "B": "n = 6 et p = 1/2",
+        "C": "n = 3 et p = 1/3",
+        "D": "n = 3 et p = 1/6"
+      },
+      "correct_answer": "D",
+      "explication": "L'expérience consiste en 3 épreuves de Bernoulli indépendantes (n = 3). Le succès correspond à obtenir le chiffre 6, de probabilité p = 1/6. D'où X ~ B(3, 1/6).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 10,
+      "section": "Mathématiques",
+      "points": 1,
+      "question": "La probabilité de l'événement (X = 2) est :",
+      "options": {
+        "A": "p(X = 2) = 3/8",
+        "B": "p(X = 2) = 5/72",
+        "C": "p(X = 2) = 5/24",
+        "D": "p(X = 2) = 1/216"
+      },
+      "correct_answer": "B",
+      "explication": "p(X = 2) = C(3, 2) · (1/6)² · (5/6)¹ = 3 × (1/36) × (5/6) = 15 / 216 = 5 / 72.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 11,
+      "section": "Physique",
+      "points": 1,
+      "context": "Oscillateur LC : Soit un circuit LC idéal, siège d'oscillations périodiques. À la date t₀ = 0, la tension uC aux bornes du condensateur a pour valeur UC,m = 4 V. Données : L = 0,50 H ; C = 10 mF ; √2 ≈ 1,4 ; π√2 ≈ 4,44.",
+      "question": "La période propre T₀ des oscillations est :",
+      "options": {
+        "A": "T₀ = 444 ms",
+        "B": "T₀ = 4,44 s",
+        "C": "T₀ = 8,88 s",
+        "D": "T₀ = 4,5 × 10⁻² s"
+      },
+      "correct_answer": "A",
+      "explication": "T₀ = 2π√(L·C) = 2π√(0,50 × 10 × 10⁻³) = 2π√(5 × 10⁻³) = 10π√2 × 10⁻² = π√2 / 10 ≈ 4,44 / 10 = 0,444 s = 444 ms.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 12,
+      "section": "Physique",
+      "points": 1,
+      "question": "La tension aux bornes du condensateur uC(t) (en Volts) a pour expression :",
+      "options": {
+        "A": "uC(t) = 4 · cos(14t + π)",
+        "B": "uC(t) = 4 · cos(14t)",
+        "C": "uC(t) = 4 · cos(14t + π/2)",
+        "D": "uC(t) = 4 · cos(1,4t)"
+      },
+      "correct_answer": "B",
+      "explication": "La pulsation est ω₀ = 2π / T₀ = 20 / √2 = 10√2 ≈ 14 rad·s⁻¹. À t = 0, uC(0) = 4 V = UC,m, donc la phase initiale est nulle : φ = 0. D'où uC(t) = 4 · cos(14t).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 13,
+      "section": "Physique",
+      "points": 1,
+      "question": "L'intensité du courant dans ce circuit (en Ampères) a pour amplitude et forme :",
+      "options": {
+        "A": "i(t) = 56 · sin(14t)",
+        "B": "i(t) = - 0,56 · sin(14t)",
+        "C": "i(t) = 0,56 · sin(1,4t)",
+        "D": "i(t) = 0,56 · cos(14t + π)"
+      },
+      "correct_answer": "B",
+      "explication": "i(t) = C · (duC/dt) = (10 × 10⁻³ F) × (-4 × 14 · sin(14t)) = - 0,56 · sin(14t). L'amplitude vaut Im = 0,56 A.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 14,
+      "section": "Physique",
+      "points": 1,
+      "context": "Transformation nucléaire : Une substance radioactive de demi-vie t½ = 100 s émet à t₀ = 0 un nombre de 2 × 10⁷ particules α par seconde. Données : ln 2 ≈ 0,7 ; 7 × 0,1428 ≈ 1.",
+      "question": "La constante de temps τ de cette substance est de l'ordre de :",
+      "options": {
+        "A": "τ ≈ 10⁻² s",
+        "B": "τ ≈ 7 × 10⁻³ s",
+        "C": "τ ≈ 70 s",
+        "D": "τ ≈ 142,8 s"
+      },
+      "correct_answer": "D",
+      "explication": "τ = 1 / λ = t½ / ln 2 = 100 / 0,7 = 1000 / 7 ≈ 142,8 s.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 15,
+      "section": "Physique",
+      "points": 1,
+      "question": "Le nombre de noyaux radioactifs N₀ présents à t₀ = 0 est :",
+      "options": {
+        "A": "N₀ = 2 × 10⁷",
+        "B": "N₀ = (7/2) × 10⁷",
+        "C": "N₀ = (2/7) × 10¹⁰",
+        "D": "N₀ = 10¹⁰"
+      },
+      "correct_answer": "C",
+      "explication": "A₀ = N₀ / τ <=> N₀ = A₀ · τ = 2 × 10⁷ × (100 / 0,7) = (2 × 10⁹) / 0,7 = (2/7) × 10¹⁰ noyaux.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 16,
+      "section": "Physique",
+      "points": 1,
+      "context": "Propagation d'une onde : Un vibreur met en mouvement une corde de longueur L = 2 m. On compte n = 10 oscillations du vibreur pendant une durée τ₁ = 5 s. L'onde met une durée τ₂ = 2,0 s pour atteindre l'extrémité de la corde.",
+      "question": "La longueur d'onde λ vaut :",
+      "options": {
+        "A": "λ = 50 cm",
+        "B": "λ = 25 cm",
+        "C": "λ = 20 cm",
+        "D": "λ = 10 cm"
+      },
+      "correct_answer": "A",
+      "explication": "Fréquence f = 10 / 5 = 2 Hz. Célérité v = 2,0 m / 2,0 s = 1,0 m·s⁻¹. Longueur d'onde λ = v / f = 1,0 / 2 = 0,50 m = 50 cm.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 17,
+      "section": "Physique",
+      "points": 1,
+      "context": "Glissement sur plan incliné : Un solide (S) de masse m = 500 g est lancé à t₀ = 0 d'un point A selon la ligne de plus grande pente d'un plan incliné d'un angle α = 30°. (S) monte jusqu'à un point B en parcourant AB = 1,0 m. Données : g = 10 m·s⁻² ; sin 30° = 1/2 ; √10 ≈ 3,2.",
+      "question": "Le solide s'est élevé d'une hauteur h égale à :",
+      "options": {
+        "A": "h = 0,50 m",
+        "B": "h = 0,87 m",
+        "C": "h = 1,00 m",
+        "D": "h = 1,50 m"
+      },
+      "correct_answer": "A",
+      "explication": "h = AB · sin(30°) = 1,0 × 0,50 = 0,50 m.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 18,
+      "section": "Physique",
+      "points": 1,
+      "question": "Si on néglige les frottements, la vitesse vA que doit posséder le solide en A pour s'arrêter en B est :",
+      "options": {
+        "A": "vA = 2,0 m·s⁻¹",
+        "B": "vA = 2,3 m·s⁻¹",
+        "C": "vA = 3,0 m·s⁻¹",
+        "D": "vA = 3,2 m·s⁻¹"
+      },
+      "correct_answer": "D",
+      "explication": "(1/2)·m·vA² = m·g·h <=> vA = √(2·g·h) = √(2 × 10 × 0,50) = √10 ≈ 3,2 m·s⁻¹.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 19,
+      "section": "Physique",
+      "points": 1,
+      "question": "Le solide (S) atteint B à l'instant tB égal à :",
+      "options": {
+        "A": "tB = 6,4 s",
+        "B": "tB = 2 s",
+        "C": "tB = 0,64 s",
+        "D": "tB = 64 ms"
+      },
+      "correct_answer": "C",
+      "explication": "L'accélération vaut a = - g·sin(30°) = - 5 m·s⁻². En B, v(tB) = 0 <=> vA - 5·tB = 0 <=> tB = 3,2 / 5 = 0,64 s.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 20,
+      "section": "Physique",
+      "points": 1,
+      "context": "En réalité le solide (S) ne parcourt qu'une distance AC = 0,80 m avant de redescendre s'il est lancé avec la vitesse vA précédente.",
+      "question": "L'intensité de la force de frottement f supposée constante s'exerçant sur (S) est :",
+      "options": {
+        "A": "f = 5/8 N",
+        "B": "f = 8/5 N",
+        "C": "f = 1/8 N",
+        "D": "f = 1/5 N"
+      },
+      "correct_answer": "A",
+      "explication": "Théorème de l'énergie cinétique entre A et C : (1/2)·m·vA² = m·g·AC·sin(α) + f·AC. Comme (1/2)·m·vA² = m·g·AB·sin(α), on a f·AC = m·g·sin(α)·(AB - AC) = 0,5 × 10 × 0,5 × 0,20 = 0,50 J. D'où f = 0,50 / 0,80 = 5/8 N.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 21,
+      "section": "Chimie",
+      "points": 1,
+      "context": "Chimie - Acide lactique et cinétique : L'acide lactique (acide 2-hydroxypropanoïque de formule semi-développée CH₃-CH(OH)-COOH, noté AH) est présent dans les laits fermentés.",
+      "question": "La formule brute et la masse molaire M de l'acide lactique sont :",
+      "options": {
+        "A": "C₃H₆O₃ et M = 90 g·mol⁻¹",
+        "B": "C₃H₈O₃ et M = 92 g·mol⁻¹",
+        "C": "C₂H₄O₂ et M = 60 g·mol⁻¹",
+        "D": "C₄H₈O₃ et M = 104 g·mol⁻¹"
+      },
+      "correct_answer": "A",
+      "explication": "L'acide 2-hydroxypropanoïque possède 3 carbones, 6 hydrogènes et 3 oxygènes : C₃H₆O₃. M = 3×12 + 6×1 + 3×16 = 90 g·mol⁻¹.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 22,
+      "section": "Chimie",
+      "points": 1,
+      "question": "On dose V_A = 20,0 mL d'un échantillon de lait par une solution d'hydroxyde de sodium de concentration C_B = 5,0 × 10⁻² mol·L⁻¹. Le volume équivalent est V_BE = 10,0 mL. La concentration molaire C_A en acide lactique est :",
+      "options": {
+        "A": "C_A = 1,0 × 10⁻² mol·L⁻¹",
+        "B": "C_A = 2,5 × 10⁻² mol·L⁻¹",
+        "C": "C_A = 5,0 × 10⁻² mol·L⁻¹",
+        "D": "C_A = 2,5 × 10⁻³ mol·L⁻¹"
+      },
+      "correct_answer": "B",
+      "explication": "C_A · V_A = C_B · V_BE <=> C_A = (5,0 × 10⁻² × 10,0) / 20,0 = 2,5 × 10⁻² mol·L⁻¹.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 23,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Le degré Dornic (°D) correspond à 0,1 g d'acide lactique par litre de lait. L'acidité du lait précédent vaut : (M = 90 g·mol⁻¹)",
+      "options": {
+        "A": "18 °D",
+        "B": "22,5 °D",
+        "C": "25 °D",
+        "D": "45 °D"
+      },
+      "correct_answer": "B",
+      "explication": "Concentration massique : C_m = C_A × M = 0,025 × 90 = 2,25 g/L. Acidité Dornic : 2,25 / 0,1 = 22,5 °D.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 24,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Une solution aqueuse d'acide lactique de concentration C = 1,0 × 10⁻² mol·L⁻¹ a un pH = 2,9 à 25 °C. Le pKa du couple AH/A⁻ est voisin de : (On donne 10^(-2,9) ≈ 1,26 × 10⁻³)",
+      "options": {
+        "A": "pKa ≈ 3,86",
+        "B": "pKa ≈ 4,75",
+        "C": "pKa ≈ 2,90",
+        "D": "pKa ≈ 5,20"
+      },
+      "correct_answer": "A",
+      "explication": "[A⁻] = [H₃O⁺] = 1,26 × 10⁻³ mol/L. [AH] = 1,0 × 10⁻² - 1,26 × 10⁻³ = 8,74 × 10⁻³ mol/L. Ka = (1,26 × 10⁻³)² / 8,74 × 10⁻³ ≈ 1,82 × 10⁻⁴. pKa = - log(Ka) ≈ 3,86.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 25,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Le taux d'avancement final τ de la dissociation de l'acide lactique dans cette solution est :",
+      "options": {
+        "A": "τ = 1,26%",
+        "B": "τ = 12,6%",
+        "C": "τ = 29%",
+        "D": "τ = 100%"
+      },
+      "correct_answer": "B",
+      "explication": "τ = [H₃O⁺] / C = (1,26 × 10⁻³) / (1,0 × 10⁻²) = 0,126 = 12,6%.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 26,
+      "section": "Chimie",
+      "points": 1,
+      "context": "On fait réagir m = 0,50 g de carbonate de calcium CaCO₃ solide avec V = 100 mL d'une solution d'acide lactique AH de concentration C = 0,20 mol·L⁻¹ dans un flacon fermé : CaCO₃(s) + 2 AH(aq) → CO₂(g) + Ca²⁺(aq) + 2 A⁻(aq) + H₂O(l). Donnée : M(CaCO₃) = 100 g·mol⁻¹.",
+      "question": "Les quantités de matière initiales de CaCO₃ et d'acide lactique AH sont :",
+      "options": {
+        "A": "n₀(CaCO₃) = 5,0 × 10⁻³ mol et n₀(AH) = 2,0 × 10⁻² mol",
+        "B": "n₀(CaCO₃) = 5,0 × 10⁻² mol et n₀(AH) = 2,0 × 10⁻³ mol",
+        "C": "n₀(CaCO₃) = 2,0 × 10⁻³ mol et n₀(AH) = 5,0 × 10⁻² mol",
+        "D": "n₀(CaCO₃) = 1,0 × 10⁻² mol et n₀(AH) = 2,0 × 10⁻² mol"
+      },
+      "correct_answer": "A",
+      "explication": "n₀(CaCO₃) = 0,50 / 100 = 5,0 × 10⁻³ mol. n₀(AH) = C × V = 0,20 × 0,100 = 2,0 × 10⁻² mol.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 27,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Le réactif limitant et l'avancement maximal x_max de cette réaction sont :",
+      "options": {
+        "A": "AH est limitant et x_max = 1,0 × 10⁻² mol",
+        "B": "CaCO₃ est limitant et x_max = 5,0 × 10⁻³ mol",
+        "C": "Le mélange est stœchiométrique et x_max = 2,0 × 10⁻² mol",
+        "D": "L'eau est limitante et x_max = 0,5 mol"
+      },
+      "correct_answer": "B",
+      "explication": "n₀(CaCO₃)/1 = 5,0 × 10⁻³ mol < n₀(AH)/2 = 1,0 × 10⁻² mol. CaCO₃ est donc le réactif limitant et x_max = 5,0 × 10⁻³ mol.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 28,
+      "section": "Chimie",
+      "points": 1,
+      "question": "Le volume disponible pour le gaz étant V_gaz = 0,90 L à T = 300 K, la surpression maximale ΔP_max due au CO₂ produit est : (R ≈ 8,314 J·K⁻¹·mol⁻¹)",
+      "options": {
+        "A": "ΔP_max ≈ 1,38 × 10⁴ Pa (environ 138 hPa)",
+        "B": "ΔP_max ≈ 2,76 × 10⁴ Pa",
+        "C": "ΔP_max ≈ 1,38 × 10⁵ Pa",
+        "D": "ΔP_max ≈ 6,9 × 10³ Pa"
+      },
+      "correct_answer": "A",
+      "explication": "ΔP_max = (x_max · R · T) / V_gaz = (5,0 × 10⁻³ × 8,314 × 300) / (0,90 × 10⁻³) ≈ 13 857 Pa ≈ 138,6 hPa.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 29,
+      "section": "Chimie",
+      "points": 1,
+      "question": "L'avancement x(t) de la réaction à l'instant t est relié à la surpression ΔP(t) par la relation :",
+      "options": {
+        "A": "x(t) = x_max · (ΔP(t) / ΔP_max)",
+        "B": "x(t) = x_max · (ΔP_max / ΔP(t))",
+        "C": "x(t) = ΔP(t) · V_gaz",
+        "D": "x(t) = x_max - ΔP(t)"
+      },
+      "correct_answer": "A",
+      "explication": "ΔP(t) = (x(t)·R·T)/V_gaz et ΔP_max = (x_max·R·T)/V_gaz, donc x(t) / x_max = ΔP(t) / ΔP_max <=> x(t) = x_max · (ΔP(t) / ΔP_max).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 30,
+      "section": "Chimie",
+      "points": 1,
+      "question": "À la date de demi-réaction t₁/₂, la surpression ΔP(t₁/₂) dans le flacon est égale à :",
+      "options": {
+        "A": "ΔP(t₁/₂) = ΔP_max / 4",
+        "B": "ΔP(t₁/₂) = ΔP_max / 2 (environ 69 hPa)",
+        "C": "ΔP(t₁/₂) = ΔP_max",
+        "D": "ΔP(t₁/₂) = 0 Pa"
+      },
+      "correct_answer": "B",
+      "explication": "Par définition, x(t₁/₂) = x_max / 2, donc ΔP(t₁/₂) = ΔP_max / 2 ≈ 138 / 2 = 69 hPa.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 31,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "context": "Exercice I : Respiration cellulaire et myologie",
+      "question": "Au cours de la respiration cellulaire, le plus grand nombre des transporteurs d'électrons et de protons H⁺ réduits est formé lors :",
+      "options": {
+        "A": "de la glycolyse",
+        "B": "de la formation d'acétyl-Coenzyme A",
+        "C": "du cycle de Krebs",
+        "D": "de la phosphorylation oxydative"
+      },
+      "correct_answer": "C",
+      "explication": "Pour une molécule de glucose, le cycle de Krebs produit 6 NADH,H⁺ et 2 FADH₂, soit 8 transporteurs réduits au total (contre 2 pour la glycolyse et 2 pour la transition).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 32,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Une coupe transversale d'une myofibrille montrant à la fois des filaments épais de myosine et des filaments fins d'actine est réalisée au niveau :",
+      "options": {
+        "A": "de la strie Z",
+        "B": "du disque clair (bande I) hors de la bande H",
+        "C": "de la bande H",
+        "D": "du disque sombre (bande A) hors de la bande H"
+      },
+      "correct_answer": "D",
+      "explication": "La bande I ne contient que de l'actine ; la bande H ne contient que de la myosine. La zone du disque sombre (bande A) située de part et d'autre de la bande H correspond à la zone de chevauchement où coexistent les filaments de myosine et d'actine.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 33,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "L'activité musculaire s'accompagne de la production de chaleur. La chaleur initiale libérée lors de la contraction provient de :",
+      "options": {
+        "A": "l'oxydation de l'acide pyruvique",
+        "B": "la régénération de l'ATP par la phosphocréatine",
+        "C": "l'hydrolyse de l'ATP",
+        "D": "la régénération de l'ATP par la fermentation lactique"
+      },
+      "correct_answer": "C",
+      "explication": "La chaleur initiale est directement liée aux réactions biochimiques de la contraction et du relâchement, principalement l'hydrolyse de l'ATP par les têtes de myosine.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 34,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "context": "Exercice II : Génétique et synthèse des protéines",
+      "question": "La mutation d'un gène :",
+      "options": {
+        "A": "donne toujours un désavantage à un individu porteur de l'allèle muté",
+        "B": "donne toujours un avantage à un individu porteur de l'allèle muté",
+        "C": "a un effet variable selon l'environnement de l'individu porteur de l'allèle muté",
+        "D": "ne peut jamais modifier la séquence primaire de la protéine"
+      },
+      "correct_answer": "C",
+      "explication": "L'impact d'une mutation sur la valeur sélective dépend de l'environnement (par exemple, la résistance conférée contre une maladie dans certaines zones géographiques).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 35,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "context": "On considère un fragment d'ADN et le polypeptide codé par ce fragment d'ADN :\nBrin transcrit : 3'-TAC TGC AAA GCT CAG TTC ATA ACG TTG CAT-5'\nBrin codant : 5'-ATG ACG TTT CGA GTC AAT TAT TGC AAC GTA-3'\nPeptide : Met - Thr - Phe - Arg - Val - Lys - Tyr - Cys - Asn - Val",
+      "question": "Les deux anticodons de l'ARNt correspondant à la valine (Val) constituant ce polypeptide sont :",
+      "options": {
+        "A": "identiques",
+        "B": "différents par un nucléotide",
+        "C": "différents par 2 nucléotides",
+        "D": "différents par 3 nucléotides"
+      },
+      "correct_answer": "B",
+      "explication": "Les deux codons de l'ARNm pour la valine sont GUC (provenant de CAG) et GUA (provenant de CAT). Leurs anticodons respectifs sur l'ARNt sont 3'-CAG-5' et 3'-CAU-5', qui ne diffèrent que d'un seul nucléotide (G vs U).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 36,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "En croisant entre eux des poulets à pattes courtes, on obtient toujours dans la descendance des poulets à pattes courtes et des poulets à pattes normales, et 1/4 des embryons meurent avant l'éclosion. On peut affirmer que :",
+      "options": {
+        "A": "L'allèle muté est récessif",
+        "B": "Les poulets à pattes courtes sont hétérozygotes",
+        "C": "L'allèle normal est dominant",
+        "D": "Les poulets à pattes normales sont hétérozygotes"
+      },
+      "correct_answer": "B",
+      "explication": "Ce résultat traduit un allèle létal à l'état homozygote. Les poulets à pattes courtes viables sont tous hétérozygotes (2/3 de pattes courtes et 1/3 normales parmi les survivants).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 37,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "context": "Exercice III : Génétique humaine",
+      "question": "L'analyse d'un arbre généalogique où deux parents sains ont des enfants atteints d'une maladie héréditaire permet d'affirmer avec certitude que l'allèle responsable de la maladie est :",
+      "options": {
+        "A": "récessif",
+        "B": "porté par un autosome",
+        "C": "dominant",
+        "D": "porté par le chromosome sexuel Y"
+      },
+      "correct_answer": "A",
+      "explication": "Des parents sains ayant un enfant malade possèdent nécessairement l'allèle muté sans l'exprimer dans leur phénotype, ce qui caractérise un allèle récessif.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 38,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "Pour une maladie récessive autosomique, un homme atteint épouse une femme saine mais ayant un risque 1/2 d'être conductrice hétérozygote. La probabilité pour que leur premier enfant soit atteint est :",
+      "options": {
+        "A": "1/4 si c'est une fille",
+        "B": "1/2 quel que soit le sexe de l'enfant",
+        "C": "1/4 si c'est un garçon",
+        "D": "1/4 quel que soit le sexe de l'enfant"
+      },
+      "correct_answer": "D",
+      "explication": "Le père atteint transmet 'a' avec probabilité 1. La mère transmet 'a' avec probabilité (1/2) × (1/2) = 1/4. La probabilité que l'enfant soit 'a//a' est donc 1/4 quel que soit le sexe (car le gène est autosomique).",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 39,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "context": "Exercice IV : Immunologie",
+      "question": "La cytotoxicité cellulaire est un mécanisme immunitaire spécifique participant à :",
+      "options": {
+        "A": "l'immunité humorale par sécrétion d'anticorps",
+        "B": "la neutralisation d'antigènes solubles",
+        "C": "l'inhibition de la phagocytose",
+        "D": "la lyse des cellules infectées ou étrangères (par perforine et granzymes)"
+      },
+      "correct_answer": "D",
+      "explication": "La cytotoxicité exercée par les lymphocytes T cytotoxiques (CD8+) provoque la lyse des cellules cibles présentant l'antigène associé au CMH-I, par libération de perforine et de granzymes.",
+      "special_format": { "needed": false }
+    },
+    {
+      "id": 40,
+      "section": "Sciences de la Vie",
+      "points": 1,
+      "question": "L'expérience montre que le transfert de sérum d'un animal immunisé contre Listeria ne confère aucune protection, tandis que le transfert de lymphocytes T d'un animal immunisé protège totalement l'animal receveur. On en déduit que :",
+      "options": {
+        "A": "les lymphocytes T ne sont pas efficaces contre Listeria",
+        "B": "les anticorps sériques sont indispensables à la guérison",
+        "C": "la protection repose sur l'immunité innée non spécifique",
+        "D": "l'élimination de cette bactérie intracellulaire nécessite une réponse immunitaire à médiation cellulaire"
+      },
+      "correct_answer": "D",
+      "explication": "Listeria monocytogenes est une bactérie à localisation intracellulaire, inaccessible aux anticorps sériques. Seule une réponse immunitaire à médiation cellulaire (lymphocytes T) est efficace pour éliminer les cellules infectées.",
+      "special_format": { "needed": false }
+    }
+  ]
+}

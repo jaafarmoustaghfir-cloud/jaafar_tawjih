@@ -352,7 +352,7 @@ export default function App() {
             </h1>
             
             <p className="text-slate-600 text-xs sm:text-xs max-w-sm mx-auto leading-relaxed font-semibold">
-              Estimation d'admissibilité dans les grandes écoles supérieures marocaines et entraînement aux Concours (ENSA 2024 &amp; Médecine 2025).
+              Estimation d'admissibilité dans les grandes écoles supérieures marocaines et entraînement aux Concours (ENSA 2024, Médecine 2025, 2022 &amp; FMP Rabat 2018).
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 pt-3">

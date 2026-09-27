@@ -4,6 +4,8 @@ import {
 } from '../firebase';
 import { handleFirestoreError, OperationType } from '../firebaseErrors';
 import medecineExamRaw from '../data/medecine_2025_exam.json';
+import medecine2022ExamRaw from '../data/medecine_2022_exam.json';
+import fmpRabat2018ExamRaw from '../data/fmp_rabat_2018_exam.json';
 import ensaExamRaw from '../data/ensa_2024_exam.json';
 import { 
   collection, 
@@ -215,7 +217,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
 
   // Seed default exams into Firestore collection qcm
   const handleSeedDefaultQcm = async () => {
-    if (!confirm('هل تريد استيراد بنك أسئلة المباريات (Médecine 2025 & ENSA 2024) إلى Firestore مباشرة؟')) return;
+    if (!confirm('هل تريد استيراد بنك أسئلة المباريات (Médecine 2025, 2022, FMP Rabat 2018 & ENSA 2024) إلى Firestore مباشرة؟')) return;
     setIsSeedingQcm(true);
     try {
       // 1. Seed Medecine 2025 by section
@@ -247,7 +249,65 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
         });
       }
 
-      // 2. Seed ENSA 2024 by section
+      // 2. Seed Medecine 2022 by section
+      const med2022Sections: Record<string, QcmQuestionItem[]> = {};
+      (medecine2022ExamRaw as any).questions.forEach((q: any) => {
+        if (!med2022Sections[q.section]) med2022Sections[q.section] = [];
+        med2022Sections[q.section].push({
+          id: q.id,
+          enonce: q.question,
+          options: {
+            A: q.options?.A || '',
+            B: q.options?.B || '',
+            C: q.options?.C || '',
+            D: q.options?.D || '',
+            E: q.options?.E || '',
+          },
+          reponse: q.correct_answer || 'A',
+          explication: q.explication || '',
+        });
+      });
+
+      for (const [secName, qList] of Object.entries(med2022Sections)) {
+        await addDoc(collection(db, 'qcm'), {
+          concours: 'Médecine',
+          annee: '2022',
+          matiere: secName,
+          questions: qList,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // 3. Seed FMP Rabat 2018 by section
+      const rabat2018Sections: Record<string, QcmQuestionItem[]> = {};
+      (fmpRabat2018ExamRaw as any).questions.forEach((q: any) => {
+        if (!rabat2018Sections[q.section]) rabat2018Sections[q.section] = [];
+        rabat2018Sections[q.section].push({
+          id: q.id,
+          enonce: q.question,
+          options: {
+            A: q.options?.A || '',
+            B: q.options?.B || '',
+            C: q.options?.C || '',
+            D: q.options?.D || '',
+            E: q.options?.E || '',
+          },
+          reponse: q.correct_answer || 'A',
+          explication: q.explication || '',
+        });
+      });
+
+      for (const [secName, qList] of Object.entries(rabat2018Sections)) {
+        await addDoc(collection(db, 'qcm'), {
+          concours: 'Médecine',
+          annee: '2018',
+          matiere: secName,
+          questions: qList,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // 4. Seed ENSA 2024 by section
       const ensaSections: Record<string, QcmQuestionItem[]> = {};
       ensaExamRaw.questions.forEach((q: any) => {
         if (!ensaSections[q.section]) ensaSections[q.section] = [];
@@ -885,6 +945,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
                   className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white outline-none"
                 >
                   <option value="ALL">جميع السنوات</option>
+                  <option value="2018">2018</option>
+                  <option value="2022">2022</option>
                   <option value="2024">2024</option>
                   <option value="2025">2025</option>
                 </select>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import medecineExamRaw from '../data/medecine_2025_exam.json';
+import medecine2022ExamRaw from '../data/medecine_2022_exam.json';
+import fmpRabat2018ExamRaw from '../data/fmp_rabat_2018_exam.json';
 import ensaExamRaw from '../data/ensa_2024_exam.json';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -29,13 +31,17 @@ import {
   UserCheck,
 } from 'lucide-react';
 
-const EXAMS: Record<'MEDECINE_2025' | 'ENSA_2024', ExamDataset> = {
-  MEDECINE_2025: medecineExamRaw as ExamDataset,
+export type ExamTypeKey = 'ENSA_2024' | 'MEDECINE_2025' | 'MEDECINE_2022' | 'FMP_RABAT_2018';
+
+const EXAMS: Record<ExamTypeKey, ExamDataset> = {
   ENSA_2024: ensaExamRaw as unknown as ExamDataset,
+  MEDECINE_2025: medecineExamRaw as ExamDataset,
+  MEDECINE_2022: medecine2022ExamRaw as unknown as ExamDataset,
+  FMP_RABAT_2018: fmpRabat2018ExamRaw as unknown as ExamDataset,
 };
 
 export const MedecineQuizApp: React.FC = () => {
-  const [selectedExamKey, setSelectedExamKey] = useState<'MEDECINE_2025' | 'ENSA_2024'>('ENSA_2024');
+  const [selectedExamKey, setSelectedExamKey] = useState<ExamTypeKey>('ENSA_2024');
 
   const currentDataset = EXAMS[selectedExamKey];
   const questions = currentDataset.questions;
@@ -79,7 +85,7 @@ export const MedecineQuizApp: React.FC = () => {
     setHasStarted(true);
   };
 
-  const handleSwitchExam = (key: 'MEDECINE_2025' | 'ENSA_2024') => {
+  const handleSwitchExam = (key: ExamTypeKey) => {
     setSelectedExamKey(key);
     setUserAnswers({});
     setIsSubmitted(false);
@@ -182,7 +188,7 @@ export const MedecineQuizApp: React.FC = () => {
       await addDoc(collection(db, 'sessions_qcm'), {
         nom_utilisateur: currentUserName,
         concours: selectedExamKey === 'ENSA_2024' ? 'ENSA' : 'Médecine',
-        annee: selectedExamKey === 'ENSA_2024' ? '2024' : '2025',
+        annee: selectedExamKey === 'ENSA_2024' ? '2024' : selectedExamKey === 'MEDECINE_2022' ? '2022' : selectedExamKey === 'FMP_RABAT_2018' ? '2018' : '2025',
         score_total: res.totalPointsObtained,
         reponses: sessionReponses,
         date: serverTimestamp(),
@@ -274,6 +280,36 @@ export const MedecineQuizApp: React.FC = () => {
             <span>Concours Médecine 2025</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950/60 font-mono">
               56 QCM
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleSwitchExam('MEDECINE_2022')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer ${
+              selectedExamKey === 'MEDECINE_2022'
+                ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-purple-500/25 ring-2 ring-purple-400 font-extrabold'
+                : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-purple-300" />
+            <span>Concours Médecine 2022</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950/60 font-mono">
+              56 QCM
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleSwitchExam('FMP_RABAT_2018')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer ${
+              selectedExamKey === 'FMP_RABAT_2018'
+                ? 'bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-lg shadow-rose-500/25 ring-2 ring-rose-400 font-extrabold'
+                : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
+            }`}
+          >
+            <BookOpen className="w-4 h-4 text-rose-300" />
+            <span>FMP Rabat 2018</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950/60 font-mono">
+              40 QCM
             </span>
           </button>
         </div>
