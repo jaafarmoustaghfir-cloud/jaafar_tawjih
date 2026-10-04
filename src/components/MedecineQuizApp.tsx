@@ -42,8 +42,24 @@ const EXAMS: Record<ExamTypeKey, ExamDataset> = {
   FMP_RABAT_2018: fmpRabat2018ExamRaw as unknown as ExamDataset,
 };
 
-export const MedecineQuizApp: React.FC = () => {
-  const [selectedExamKey, setSelectedExamKey] = useState<ExamTypeKey>('ENSA_2024');
+interface MedecineQuizAppProps {
+  initialExamKey?: ExamTypeKey;
+}
+
+export const MedecineQuizApp: React.FC<MedecineQuizAppProps> = ({ initialExamKey }) => {
+  const [selectedExamKey, setSelectedExamKey] = useState<ExamTypeKey>(initialExamKey || 'ENSA_2024');
+
+  useEffect(() => {
+    if (initialExamKey && initialExamKey !== selectedExamKey) {
+      setSelectedExamKey(initialExamKey);
+      setCurrentIndex(0);
+      setUserAnswers({});
+      setIsSubmitted(false);
+      setQuizResult(null);
+      setViewMode('QUIZ');
+      setHasStarted(false);
+    }
+  }, [initialExamKey]);
 
   const currentDataset = EXAMS[selectedExamKey];
   const questions = currentDataset.questions;

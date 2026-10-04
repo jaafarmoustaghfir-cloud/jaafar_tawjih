@@ -1,10 +1,17 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { SchoolFr, BAC_NAMES, SCHOOLS_FR, BacType, SchoolCategory } from './data/schools_fr';
 import MedecineQuizApp from './components/MedecineQuizApp';
+import HomeOverview from './components/HomeOverview';
+import SchoolDetailModal from './components/SchoolDetailModal';
+import ConcoursView from './components/ConcoursView';
+import GuidesView from './components/GuidesView';
+import FilieresView from './components/FilieresView';
+import FaqView from './components/FaqView';
 import AboutView from './components/AboutView';
 import PrivacyView from './components/PrivacyView';
 import LegalView from './components/LegalView';
 import ContactView from './components/ContactView';
+import AdSenseUnit from './components/AdSenseUnit';
 import { AdminPortal } from './components/AdminPortal';
 import { db } from './firebase';
 import { collection, getDocs } from 'firebase/firestore';
@@ -21,7 +28,15 @@ import {
   Award,
   BookOpen,
   Info,
-  ShieldAlert
+  ShieldAlert,
+  Home,
+  Building2,
+  Compass,
+  HelpCircle,
+  ArrowRight,
+  ExternalLink,
+  CheckCircle2,
+  ChevronRight,
 } from 'lucide-react';
 
 const isConcoursSchool = (schoolId: string) => {
@@ -43,15 +58,26 @@ const isConcoursSchool = (schoolId: string) => {
   );
 };
 
-// Helper function to keep list clean
 function text_check_isic_isitt_trad(id: string) {
   return id === 'isic' || id === 'isitt' || id === 'fahd_traduction';
 }
 
-type TabType = 'QUIZ' | 'CALCULATOR' | 'ABOUT' | 'PRIVACY' | 'LEGAL' | 'CONTACT' | 'ADMIN';
+export type TabType =
+  | 'HOME'
+  | 'CALCULATOR'
+  | 'SCHOOLS'
+  | 'CONCOURS'
+  | 'QUIZ'
+  | 'GUIDES'
+  | 'FILIERES'
+  | 'FAQ'
+  | 'ABOUT'
+  | 'PRIVACY'
+  | 'LEGAL'
+  | 'CONTACT'
+  | 'ADMIN';
 
 export default function App() {
-  // Check if current URL path or hash points to /admin
   const checkIsAdminPath = () => {
     if (typeof window === 'undefined') return false;
     const cleanPath = window.location.pathname.toLowerCase().replace(/\/+$/, '');
@@ -64,15 +90,55 @@ export default function App() {
     );
   };
 
-  // Main view tab state (Default to QUIZ or ADMIN if accessed directly)
-  const [activeTab, setActiveTab] = useState<TabType>(() => (checkIsAdminPath() ? 'ADMIN' : 'QUIZ'));
+  const getInitialTab = (): TabType => {
+    if (checkIsAdminPath()) return 'ADMIN';
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase().replace(/^#\/?/, '');
+      if (hash === 'calculator' || hash === 'calculateur') return 'CALCULATOR';
+      if (hash === 'quiz' || hash === 'qcm') return 'QUIZ';
+      if (hash === 'schools' || hash === 'ecoles') return 'SCHOOLS';
+      if (hash === 'concours') return 'CONCOURS';
+      if (hash === 'guides') return 'GUIDES';
+      if (hash === 'filieres') return 'FILIERES';
+      if (hash === 'faq') return 'FAQ';
+      if (hash === 'about') return 'ABOUT';
+      if (hash === 'contact') return 'CONTACT';
+      if (hash === 'privacy') return 'PRIVACY';
+      if (hash === 'legal') return 'LEGAL';
+    }
+    return 'HOME';
+  };
+
+  const [activeTab, setActiveTab] = useState<TabType>(getInitialTab);
+  const [selectedSchoolIdForModal, setSelectedSchoolIdForModal] = useState<string | null>(null);
+  const [quizExamKey, setQuizExamKey] = useState<'ENSA_2024' | 'MEDECINE_2025' | 'MEDECINE_2022' | 'FMP_RABAT_2018'>('ENSA_2024');
+
+  const navigateTo = (tab: TabType, hashName?: string) => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      window.location.hash = hashName || tab.toLowerCase();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const handleLocationChange = () => {
       if (checkIsAdminPath()) {
         setActiveTab('ADMIN');
       } else {
-        setActiveTab((prev) => (prev === 'ADMIN' ? 'QUIZ' : prev));
+        const hash = window.location.hash.toLowerCase().replace(/^#\/?/, '');
+        if (hash === 'calculator') setActiveTab('CALCULATOR');
+        else if (hash === 'quiz' || hash === 'qcm') setActiveTab('QUIZ');
+        else if (hash === 'schools' || hash === 'ecoles') setActiveTab('SCHOOLS');
+        else if (hash === 'concours') setActiveTab('CONCOURS');
+        else if (hash === 'guides') setActiveTab('GUIDES');
+        else if (hash === 'filieres') setActiveTab('FILIERES');
+        else if (hash === 'faq') setActiveTab('FAQ');
+        else if (hash === 'about') setActiveTab('ABOUT');
+        else if (hash === 'contact') setActiveTab('CONTACT');
+        else if (hash === 'privacy') setActiveTab('PRIVACY');
+        else if (hash === 'legal') setActiveTab('LEGAL');
+        else if (hash === '' || hash === 'home') setActiveTab('HOME');
       }
     };
 
@@ -84,7 +150,7 @@ export default function App() {
     };
   }, []);
 
-  // Initial states with pre-filled values
+  // Initial calculator states
   const [bacType, setBacType] = useState<BacType>('PC');
   const [nationalGrade, setNationalGrade] = useState<string>('14.75');
   const [regionalGrade, setRegionalGrade] = useState<string>('15.50');
@@ -118,12 +184,10 @@ export default function App() {
               },
             });
           });
-          // Merge with predefined list
           setLiveSchools([...fetched, ...SCHOOLS_FR]);
         }
       } catch (e: any) {
         handleFirestoreError(e, OperationType.LIST, 'ecoles');
-        // Graceful fallback: maintain offline/default schools catalog
         setLiveSchools(SCHOOLS_FR);
       }
     };
@@ -134,21 +198,17 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Toutes');
   const [selectedStatus, setSelectedStatus] = useState<string>('Tous');
-
-  // Input validation errors
   const [errors, setErrors] = useState<{ national?: string; regional?: string }>({});
 
-  // 1. Calculate weighted final BAC score
   const finalScore = useMemo(() => {
     const nat = parseFloat(nationalGrade);
     const reg = parseFloat(regionalGrade);
     if (!isNaN(nat) && nat >= 0 && nat <= 20 && !isNaN(reg) && reg >= 0 && reg <= 20) {
-      return (nat * 0.75) + (reg * 0.25);
+      return nat * 0.75 + reg * 0.25;
     }
     return 0;
   }, [nationalGrade, regionalGrade]);
 
-  // Form submit handler
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
     const nat = parseFloat(nationalGrade);
@@ -172,16 +232,14 @@ export default function App() {
     setHasChecked(true);
   };
 
-  // 2. Compute status helper for each school
-  // Prudent estimation labels for AdSense compliance
   const getSchoolEligibility = (school: SchoolFr, score: number, type: BacType) => {
     const isAccepted = school.acceptedBacs.includes(type);
     if (!isAccepted) {
       return {
-        status: 'DIFFICILE' as const,
-        label: '🔴 NON ADMISSIBLE (FILIÈRE)',
-        bgColor: 'bg-rose-50 border-rose-100',
-        textColor: 'text-rose-800'
+        status: 'NON_ELIGIBLE' as const,
+        label: 'Bac non compatible',
+        bgColor: 'bg-slate-100 border-slate-200',
+        textColor: 'text-slate-500',
       };
     }
 
@@ -191,74 +249,63 @@ export default function App() {
         status: 'ADMIS' as const,
         label: '🟢 ADMISSIBILITÉ ESTIMÉE',
         bgColor: 'bg-emerald-50 border-emerald-100',
-        textColor: 'text-emerald-800'
+        textColor: 'text-emerald-800',
       };
     } else {
       return {
         status: 'DIFFICILE' as const,
         label: '🔴 NON ADMISSIBLE (SOUS LE SEUIL)',
         bgColor: 'bg-slate-50 border-slate-200',
-        textColor: 'text-rose-700 font-bold'
+        textColor: 'text-rose-700 font-bold',
       };
     }
   };
 
-  // 3. Process recommendations (top 3 best options matching profile)
   const bestOptions = useMemo(() => {
     if (finalScore <= 0) return [];
 
-    const scoredSchools = liveSchools.map(school => {
+    const scoredSchools = liveSchools.map((school) => {
       const isAccepted = school.acceptedBacs.includes(bacType);
       const threshold = isAccepted ? school.thresholds[bacType] : 99;
       const eligibility = getSchoolEligibility(school, finalScore, bacType);
       return {
         school,
         threshold,
-        eligibility
+        eligibility,
       };
     });
 
-    // Sort: Admis first, then Possible, then Difficult.
-    // Within each, sort by higher threshold (most matching selective) first.
     return scoredSchools
-      .filter(item => item.school.acceptedBacs.includes(bacType))
+      .filter((item) => item.school.acceptedBacs.includes(bacType))
       .sort((a, b) => {
-        const order = { ADMIS: 0, POSSIBLE: 1, DIFFICILE: 2 };
+        const order = { ADMIS: 0, POSSIBLE: 1, DIFFICILE: 2, NON_ELIGIBLE: 3 };
         if (order[a.eligibility.status] !== order[b.eligibility.status]) {
           return order[a.eligibility.status] - order[b.eligibility.status];
         }
         return b.threshold - a.threshold;
       })
       .slice(0, 3)
-      .map(item => item.school);
+      .map((item) => item.school);
   }, [finalScore, bacType, liveSchools]);
 
-  // 4. Combined Filtering logic for all schools
   const filteredSchools = useMemo(() => {
-    return liveSchools.filter(school => {
-      // Search
+    return liveSchools.filter((school) => {
       const textToSearch = `${school.name} ${school.city} ${school.category}`.toLowerCase();
       if (searchQuery && !textToSearch.includes(searchQuery.toLowerCase())) {
         return false;
       }
-
-      // Category
       if (selectedCategory !== 'Toutes' && school.category !== selectedCategory) {
         return false;
       }
-
-      // Status
       if (selectedStatus !== 'Tous') {
         const eligibility = getSchoolEligibility(school, finalScore, bacType);
         if (selectedStatus === 'ADMIS' && eligibility.status !== 'ADMIS') return false;
         if (selectedStatus === 'DIFFICILE' && eligibility.status !== 'DIFFICILE') return false;
       }
-
       return true;
     });
   }, [searchQuery, selectedCategory, selectedStatus, finalScore, bacType, liveSchools]);
 
-  // Unique list of categories present
   const categoriesList: SchoolCategory[] = [
     'Ingénierie / Sciences',
     'Commerce / Gestion',
@@ -268,8 +315,26 @@ export default function App() {
     'Militaire / Sécurité',
     'Formation Professionnelle',
     'Universités Privées',
-    'Spécial Concours'
+    'Spécial Concours',
   ];
+
+  const getBreadcrumbLabel = (tab: TabType) => {
+    switch (tab) {
+      case 'HOME': return 'Accueil';
+      case 'CALCULATOR': return 'Calculateur de Seuil 75/25';
+      case 'SCHOOLS': return 'Annuaire des Écoles & Universités';
+      case 'CONCOURS': return 'Dossiers & Préparation des Concours';
+      case 'QUIZ': return 'QCM d’Entraînement en Ligne';
+      case 'GUIDES': return 'Guides d’Orientation Post-Bac';
+      case 'FILIERES': return 'Filières & Métiers au Maroc';
+      case 'FAQ': return 'Foire Aux Questions (FAQ)';
+      case 'ABOUT': return 'À propos de JAAFAR TAWJIH';
+      case 'CONTACT': return 'Contact & Assistance';
+      case 'PRIVACY': return 'Politique de Confidentialité';
+      case 'LEGAL': return 'Mentions Légales';
+      default: return tab;
+    }
+  };
 
   if (activeTab === 'ADMIN') {
     return (
@@ -278,773 +343,806 @@ export default function App() {
           if (typeof window !== 'undefined') {
             window.history.pushState({}, '', '/');
           }
-          setActiveTab('QUIZ');
+          setActiveTab('HOME');
         }}
       />
     );
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen text-slate-800 font-sans antialiased pb-16 selection:bg-blue-600 selection:text-white"
       style={{
-        backgroundImage: "linear-gradient(to bottom, rgba(248, 250, 252, 0.93), rgba(243, 244, 246, 0.97)), url('https://i.imgur.com/z7DyxIM.png')",
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(248, 250, 252, 0.94), rgba(243, 244, 246, 0.98)), url('https://i.imgur.com/z7DyxIM.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}
     >
-      
       {/* HEADER BANNER */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-amber-500/10 py-8 sm:py-10 shadow-sm relative overflow-hidden">
-        {/* Subtle executive gold header highlight line */}
+      <header className="bg-white/95 backdrop-blur-md border-b border-amber-500/10 py-7 sm:py-9 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-900 via-amber-400 to-indigo-950"></div>
-        
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-5 animate-fade-in flex flex-col items-center relative z-10">
-          
+
+        <div className="max-w-5xl mx-auto px-4 text-center space-y-4 animate-fade-in flex flex-col items-center relative z-10">
           {/* Logo container with luxurious gold-and-navy medallion profile style */}
           <div className="relative group mx-auto flex flex-col items-center justify-center">
-            {/* Soft luxury gold outer glow */}
             <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-300 to-yellow-600 opacity-50 blur-sm group-hover:opacity-100 group-hover:blur-md transition-all duration-500"></div>
-            
-            {/* Main medallion base */}
+
             <div className="relative p-1.5 rounded-full bg-gradient-to-b from-slate-900 to-indigo-950 shadow-2xl flex items-center justify-center border border-amber-400/30">
               <div className="absolute inset-1 rounded-full bg-indigo-950"></div>
-              
-              <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden border-2 border-amber-400/40 bg-white flex items-center justify-center shadow-inner">
+
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-amber-400/40 bg-white flex items-center justify-center shadow-inner">
                 <img
-                  src="https://i.imgur.com/SyoLpC7.png"
-                  alt="Tawjih Avenir Logo"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                  referrerPolicy="no-referrer"
+                  src="/logo.svg"
+                  alt="Jaafar Tawjih Logo"
+                  className="w-full h-full object-contain p-0.5 transition-transform duration-700 ease-out group-hover:scale-105"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    const fb = document.getElementById('logo-fallback');
-                    if (fb) fb.className = "w-full h-full rounded-full bg-gradient-to-tr from-indigo-950 to-slate-900 flex items-center justify-center text-amber-400";
+                    const target = e.currentTarget;
+                    if (target.src.endsWith('/logo.svg')) {
+                      target.src = '/logo.png';
+                    } else {
+                      target.style.display = 'none';
+                      const fb = document.getElementById('logo-fallback');
+                      if (fb)
+                        fb.className =
+                          'w-full h-full rounded-full bg-gradient-to-tr from-indigo-950 to-slate-900 flex items-center justify-center text-amber-400';
+                    }
                   }}
                 />
-                <div 
-                  id="logo-fallback"
-                  className="hidden"
-                >
+                <div id="logo-fallback" className="hidden">
                   <GraduationCap className="w-14 h-14 text-amber-400" />
                 </div>
               </div>
 
-              {/* Gold credential check/star badge styled at the bottom-right corner representing high-end expert guidance */}
-              <div className="absolute bottom-1 right-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 rounded-full p-2 border-2 border-white shadow-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
+              <div className="absolute bottom-1 right-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 rounded-full p-1.5 border-2 border-white shadow-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
                 <Sparkles className="w-3.5 h-3.5 text-slate-950" />
               </div>
             </div>
           </div>
 
-          <div className="space-y-2 text-center flex flex-col items-center">
-            {/* Elegant premium advisor badge */}
-            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 px-4 py-1.5 rounded-full border border-amber-500/30 text-amber-400 text-xs font-semibold shadow-md transition-all duration-300 hover:border-amber-400/50">
+          <div className="space-y-1.5 text-center flex flex-col items-center">
+            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 px-3.5 py-1 rounded-full border border-amber-500/30 text-amber-400 text-xs font-semibold shadow-md">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-              <span className="text-[9px] sm:text-[10px] tracking-widest uppercase font-bold text-amber-300">PREMIUM ORIENTATION &amp; ADVISORY</span>
+              <span className="text-[9px] sm:text-[10px] tracking-widest uppercase font-bold text-amber-300">
+                ORIENTATION ACADÉMIQUE DE RÉFÉRENCE
+              </span>
               <span className="text-slate-600 font-light">|</span>
-              <span className="text-[9px] sm:text-[10px] text-white/95 font-medium tracking-wide">Maroc 2026</span>
+              <span className="text-[9px] sm:text-[10px] text-white/95 font-medium tracking-wide">Maroc</span>
             </div>
-            
-            <h1 id="app-title" className="text-3xl sm:text-4.5xl font-black tracking-tight text-slate-900 font-sans">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-indigo-900 to-amber-600">JAAFAR TAWJIH</span>
+
+            <h1 id="app-title" className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-sans">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-indigo-900 to-amber-600">
+                JAAFAR TAWJIH
+              </span>
             </h1>
-            
-            <p className="text-slate-600 text-xs sm:text-xs max-w-sm mx-auto leading-relaxed font-semibold">
-              Estimation d'admissibilité dans les grandes écoles supérieures marocaines et entraînement aux Concours (ENSA 2024, Médecine 2025, 2022 &amp; FMP Rabat 2018).
+
+            <p className="text-slate-600 text-xs max-w-lg mx-auto leading-relaxed font-semibold">
+              Portail indépendant d’orientation post-bac au Maroc : Simulateur de seuils d’admissibilité, préparation aux concours écrits (ENSA, Médecine) et dossiers complets des grandes écoles.
             </p>
 
-            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 pt-3">
-              <a 
-                href="https://www.instagram.com/tawjih_avenir?igsh=a2Qwem1scWE0MjZz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100 text-pink-700 text-[11px] font-bold border border-pink-100/85 transition duration-150 shadow-sm"
-              >
-                <Instagram className="w-3.5 h-3.5 text-pink-600" />
-                <span>Instagram : @tawjih_avenir</span>
-              </a>
-              <a 
+            {/* Quick Contact Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+              <a
                 href="https://wa.me/212772908456"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold border border-emerald-100/85 transition duration-150 shadow-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-200 transition"
               >
-                <svg className="w-3.5 h-3.5 fill-current text-emerald-600" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.966 14.113 1.01 11.49 1.01c-5.436 0-9.86 4.37-9.864 9.8 0 1.745.474 3.454 1.374 4.952l-1.002 3.66 3.75-.983zm11.215-3.56c-.27-.135-1.602-.79-1.85-.88-.25-.09-.432-.135-.615.135-.183.27-.71.88-.87 1.065-.16.185-.32.207-.59.072-.27-.135-1.143-.421-2.177-1.344-.805-.718-1.349-1.605-1.507-1.875-.16-.27-.015-.417.12-.551.123-.122.27-.315.405-.472.135-.157.18-.27.27-.45.09-.18.045-.337-.022-.472-.067-.135-.615-1.485-.84-2.03-.22-.53-.442-.457-.615-.466-.16-.007-.343-.01-.525-.01-.18 0-.473.067-.72.337-.248.27-.945.922-.945 2.25 0 1.328.967 2.61 1.102 2.79.135.18 1.902 2.904 4.61 4.07.645.278 1.148.441 1.54.566.65.206 1.24.177 1.706.108.52-.077 1.602-.656 1.83-1.258.226-.6.226-1.12.16-1.228-.067-.108-.25-.153-.52-.287z"/>
-                </svg>
-                <span>WhatsApp Assistance</span>
+                <span>💬 WhatsApp : 07 72 90 84 56</span>
               </a>
-              <a 
-                href="https://www.tiktok.com/@jaafar_tawjih?_r=1&_t=ZS-97JYWcP76Hv"
+              <a
+                href="https://www.instagram.com/tawjih_avenir?igsh=a2Qwem1scWE0MjZz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-black text-white text-[11px] font-bold border border-slate-800 transition duration-150 shadow-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-50 hover:bg-pink-100 text-pink-800 text-[11px] font-bold border border-pink-200 transition"
               >
-                <svg className="w-3.5 h-3.5 fill-current text-sky-400" viewBox="0 0 24 24">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .84.13V9.5a6.34 6.34 0 0 0-3.15-.3A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V7.82a8.16 8.16 0 0 0 4.77 1.52V5.89a4.8 4.8 0 0 1-1.04-.2z"/>
-                </svg>
-                <span>TikTok</span>
+                <Instagram className="w-3 h-3 text-pink-600" />
+                <span>Instagram : @tawjih_avenir</span>
               </a>
             </div>
           </div>
         </div>
 
         {/* TOP MAIN NAVIGATION BAR */}
-        <div className="max-w-4xl mx-auto px-4 mt-6">
-          <div className="bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 shadow-xl flex flex-wrap items-center justify-center gap-1.5">
+        <div className="max-w-5xl mx-auto px-4 mt-5">
+          <nav aria-label="Navigation principale" className="bg-slate-900/95 p-1.5 rounded-2xl border border-slate-800 shadow-xl flex flex-wrap items-center justify-center gap-1">
             <button
-              onClick={() => { setActiveTab('QUIZ'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
-                activeTab === 'QUIZ'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 ring-1 ring-cyan-400'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              onClick={() => navigateTo('HOME', 'home')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'HOME'
+                  ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-extrabold shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
               }`}
             >
-              <Award className="w-4 h-4 text-cyan-300" />
-              <span>QCM Concours (ENSA &amp; Médecine)</span>
-              <span className="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30 font-mono hidden sm:inline">
-                Nouveau : ENSA 2024
-              </span>
+              <Home className="w-3.5 h-3.5" />
+              <span>Accueil</span>
             </button>
 
             <button
-              onClick={() => { setActiveTab('CALCULATOR'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition duration-200 cursor-pointer ${
+              onClick={() => navigateTo('CALCULATOR', 'calculator')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
                 activeTab === 'CALCULATOR'
-                  ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 shadow-lg shadow-amber-500/25 ring-1 ring-amber-300'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-extrabold shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
               }`}
             >
-              <Calculator className="w-4 h-4 text-amber-400" />
-              <span>Calculateur de Seuil</span>
+              <Calculator className="w-3.5 h-3.5" />
+              <span>Calculateur Seuil</span>
             </button>
 
             <button
-              onClick={() => { setActiveTab('ABOUT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`px-3.5 py-2.5 rounded-xl font-semibold text-xs transition duration-200 cursor-pointer ${
+              onClick={() => navigateTo('SCHOOLS', 'schools')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'SCHOOLS'
+                  ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-extrabold shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Écoles &amp; Universités</span>
+            </button>
+
+            <button
+              onClick={() => navigateTo('CONCOURS', 'concours')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'CONCOURS'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-extrabold shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5 text-cyan-300" />
+              <span>Concours</span>
+            </button>
+
+            <button
+              onClick={() => navigateTo('QUIZ', 'quiz')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'QUIZ'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-extrabold shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>QCM Interactifs</span>
+            </button>
+
+            <button
+              onClick={() => navigateTo('GUIDES', 'guides')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'GUIDES'
+                  ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-extrabold shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Guides Post-Bac</span>
+            </button>
+
+            <button
+              onClick={() => navigateTo('FILIERES', 'filieres')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'FILIERES'
+                  ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-extrabold shadow-sm'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              }`}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span>Filières</span>
+            </button>
+
+            <button
+              onClick={() => navigateTo('FAQ', 'faq')}
+              className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'FAQ'
+                  ? 'bg-slate-800 text-amber-400 font-extrabold border border-amber-400/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              }`}
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>FAQ</span>
+            </button>
+
+            <button
+              onClick={() => navigateTo('ABOUT', 'about')}
+              className={`px-2.5 py-2 rounded-xl font-semibold text-xs transition cursor-pointer ${
                 activeTab === 'ABOUT'
                   ? 'bg-slate-800 text-amber-400 font-bold border border-amber-400/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              <span>À propos</span>
+              À propos
             </button>
 
             <button
-              onClick={() => { setActiveTab('CONTACT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`px-3.5 py-2.5 rounded-xl font-semibold text-xs transition duration-200 cursor-pointer ${
+              onClick={() => navigateTo('CONTACT', 'contact')}
+              className={`px-2.5 py-2 rounded-xl font-semibold text-xs transition cursor-pointer ${
                 activeTab === 'CONTACT'
                   ? 'bg-slate-800 text-amber-400 font-bold border border-amber-400/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              <span>Contact</span>
+              Contact
             </button>
-          </div>
+          </nav>
         </div>
       </header>
 
-      {/* RENDER ACTIVE TAB */}
-      {activeTab === 'QUIZ' && <MedecineQuizApp />}
-
-      {activeTab === 'ABOUT' && (
-        <main className="max-w-3xl mx-auto px-4 mt-8">
-          <AboutView />
-        </main>
-      )}
-
-      {activeTab === 'PRIVACY' && (
-        <main className="max-w-3xl mx-auto px-4 mt-8">
-          <PrivacyView />
-        </main>
-      )}
-
-      {activeTab === 'LEGAL' && (
-        <main className="max-w-3xl mx-auto px-4 mt-8">
-          <LegalView />
-        </main>
-      )}
-
-      {activeTab === 'CONTACT' && (
-        <main className="max-w-3xl mx-auto px-4 mt-8">
-          <ContactView />
-        </main>
-      )}
-
-      {activeTab === 'CALCULATOR' && (
-        <>
-          {/* CORE FRAMEWORK */}
-          <main className="max-w-3xl mx-auto px-4 mt-8 space-y-8">
-
-        {/* INFORMATIONAL SECTION: HOW IT WORKS */}
-        <section id="how-it-works" className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-sm space-y-3">
-          <h3 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-            <Info className="w-4 h-4 text-blue-800" />
-            Comment fonctionne JAAFAR TAWJIH ?
-          </h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
-              <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">1</span>
-              <p className="font-bold text-slate-800">Entrez vos informations</p>
-              <p className="text-slate-500 text-[11px]">Saisissez votre filière de Baccalauréat ainsi que vos notes de l'Examen National et Régional.</p>
-            </div>
-
-            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
-              <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">2</span>
-              <p className="font-bold text-slate-800">Consultez les formations</p>
-              <p className="text-slate-500 text-[11px]">Découvrez les établissements et les filières correspondant aux données de seuils disponibles.</p>
-            </div>
-
-            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
-              <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">3</span>
-              <p className="font-bold text-slate-800">Vérifiez les conditions</p>
-              <p className="text-slate-500 text-[11px]">Consultez toujours les annonces officielles des écoles avant toute inscription définitive.</p>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-slate-100 flex items-start gap-2 text-xs text-slate-600">
-            <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <p>
-              <strong>JAAFAR TAWJIH</strong> fournit des informations et des estimations indicatives. L'admission finale dépend toujours de l'établissement concerné.
-            </p>
-          </div>
-        </section>
-
-        {/* INPUT PANEL CARD */}
-        <section id="calcule-card" className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-          <div className="bg-gradient-to-r from-blue-900 to-indigo-950 px-6 py-4.5 text-white flex items-center justify-between">
-            <h2 className="font-bold text-sm uppercase tracking-wide flex items-center gap-2">
-              <Calculator className="w-4 h-4 text-emerald-400" />
-              Calculateur de Score
-            </h2>
-            <span className="text-[10px] font-bold font-mono text-emerald-300 bg-blue-950/60 border border-blue-800/40 px-2.5 py-0.5 rounded">
-              75% National + 25% Régional
-            </span>
-          </div>
-
-          <form onSubmit={handleVerify} className="p-6 space-y-6">
-            
-            {/* Bac stream buttons */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
-                Filière de votre Baccalauréat
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-                {(Object.keys(BAC_NAMES) as BacType[]).map((type) => {
-                  const isSelected = bacType === type;
-                  return (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setBacType(type)}
-                      className={`py-2 px-3 rounded-xl border text-center transition-all duration-150 relative ${
-                        isSelected
-                          ? 'border-blue-600 bg-blue-50/50 text-blue-900 font-bold ring-2 ring-blue-500/10'
-                          : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700 text-xs cursor-pointer'
-                      }`}
-                    >
-                      <span className="block font-bold">{type}</span>
-                      <span className="text-[9px] text-slate-450 block truncate font-normal">{BAC_NAMES[type].split(' (')[0]}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Input fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="national" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                  Note d’examen National (75%)
-                </label>
-                <div className="relative rounded-xl shadow-sm">
-                  <input
-                    id="national"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="20"
-                    value={nationalGrade}
-                    onChange={(e) => setNationalGrade(e.target.value)}
-                    placeholder="Ex: 15.25"
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/10 text-sm font-medium"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">/ 20</span>
-                </div>
-                {errors.national && <p className="text-xs text-rose-600 mt-1">{errors.national}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="regional" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                  Note d’examen Régional (25%)
-                </label>
-                <div className="relative rounded-xl shadow-sm">
-                  <input
-                    id="regional"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="20"
-                    value={regionalGrade}
-                    onChange={(e) => setRegionalGrade(e.target.value)}
-                    placeholder="Ex: 14.50"
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/10 text-sm font-medium"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">/ 20</span>
-                </div>
-                {errors.regional && <p className="text-xs text-rose-600 mt-1">{errors.regional}</p>}
-              </div>
-            </div>
-
-            {/* Action Verify */}
+      {/* BREADCRUMB NAVIGATION */}
+      {activeTab !== 'HOME' && (
+        <div className="max-w-5xl mx-auto px-4 mt-4">
+          <nav aria-label="Fil d’Ariane" className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
             <button
-              type="submit"
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-bold text-sm rounded-xl transition duration-150 shadow-md uppercase tracking-wider cursor-pointer"
+              onClick={() => navigateTo('HOME', 'home')}
+              className="hover:text-blue-900 transition flex items-center gap-1 text-slate-600 cursor-pointer"
             >
-              Vérifier l’éligibilité
+              <Home className="w-3.5 h-3.5" />
+              <span>Accueil</span>
             </button>
-          </form>
-        </section>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <span className="text-slate-900 font-bold">{getBreadcrumbLabel(activeTab)}</span>
+          </nav>
+        </div>
+      )}
 
-        {/* RESULTS WRAPPER DISPLAY */}
-        {hasChecked && finalScore > 0 && (
-          <div className="space-y-8">
-            
-            {/* SCORE HERO CHIP */}
-            <div id="score-hero" className="bg-gradient-to-r from-blue-800 via-indigo-900 to-purple-900 p-6 rounded-2xl text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
-              <div>
-                <span className="text-[10px] text-emerald-300 font-bold uppercase tracking-wider block">Filière Baccalauréat</span>
-                <p className="text-lg font-bold">{BAC_NAMES[bacType]}</p>
+      {/* MAIN CONTAINER */}
+      <main className="max-w-5xl mx-auto px-4 mt-6">
+        {/* 1. HOME VIEW */}
+        {activeTab === 'HOME' && (
+          <HomeOverview
+            onNavigateTab={(tab) => navigateTo(tab)}
+            onSelectSchool={(schoolId) => {
+              setSelectedSchoolIdForModal(schoolId);
+            }}
+          />
+        )}
+
+        {/* 2. CONCOURS DOSSIERS VIEW */}
+        {activeTab === 'CONCOURS' && (
+          <ConcoursView
+            onStartQuiz={(quizKey) => {
+              setQuizExamKey(quizKey);
+              navigateTo('QUIZ', 'quiz');
+            }}
+          />
+        )}
+
+        {/* 3. INTERACTIVE QUIZ APP */}
+        {activeTab === 'QUIZ' && (
+          <MedecineQuizApp initialExamKey={quizExamKey} />
+        )}
+
+        {/* 4. GUIDES VIEW */}
+        {activeTab === 'GUIDES' && (
+          <GuidesView
+            onNavigateSchools={() => navigateTo('SCHOOLS', 'schools')}
+            onStartQuiz={(key) => {
+              setQuizExamKey(key);
+              navigateTo('QUIZ', 'quiz');
+            }}
+          />
+        )}
+
+        {/* 5. FILIERES VIEW */}
+        {activeTab === 'FILIERES' && (
+          <FilieresView
+            onSelectSchool={(id) => setSelectedSchoolIdForModal(id)}
+            onNavigateTab={(tab) => navigateTo(tab)}
+          />
+        )}
+
+        {/* 6. FAQ VIEW */}
+        {activeTab === 'FAQ' && <FaqView />}
+
+        {/* 7. TRUST PAGES */}
+        {activeTab === 'ABOUT' && <AboutView />}
+        {activeTab === 'PRIVACY' && <PrivacyView />}
+        {activeTab === 'LEGAL' && <LegalView />}
+        {activeTab === 'CONTACT' && <ContactView />}
+
+        {/* 8. SCHOOLS DIRECTORY (ÉCOLES & UNIVERSITÉS) */}
+        {activeTab === 'SCHOOLS' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="rounded-3xl border border-slate-800 bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-300">
+                <Building2 className="h-4 w-4" />
+                <span>Répertoire Officieux des Écoles Supérieures au Maroc</span>
               </div>
-              <div className="bg-white/10 px-4 py-2.5 rounded-xl border border-white/20 text-center sm:text-right">
-                <span className="text-[10px] text-blue-200 block uppercase font-mono">Note Moyenne Calculée</span>
-                <span className="text-3xl font-extrabold font-mono text-white leading-none">{finalScore.toFixed(3)}</span>
+
+              <h2 className="mt-3 text-2xl font-black sm:text-3.5xl">
+                Annuaire Complet des Établissements
+              </h2>
+
+              <p className="mt-2 text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+                Consultez les critères d’accès, filières, durées d’études et débouchés pour plus de 40 écoles
+                et facultés publiques et privées d’excellence au Maroc.
+              </p>
+            </div>
+
+            {/* Filter Bar */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 shadow-xs">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Rechercher par nom d'école, filière ou ville (ex: ENSA, Agadir, Médecine)..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/15"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-mono">
+                    Secteur d’Enseignement
+                  </span>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full px-2.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none text-slate-700 font-semibold cursor-pointer"
+                  >
+                    <option value="Toutes">Tous les secteurs ({liveSchools.length} établissements)</option>
+                    {categoriesList.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-mono">
+                    Filière de Baccalauréat
+                  </span>
+                  <select
+                    value={bacType}
+                    onChange={(e) => setBacType(e.target.value as BacType)}
+                    className="w-full px-2.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none text-slate-700 font-semibold cursor-pointer"
+                  >
+                    {(Object.keys(BAC_NAMES) as BacType[]).map((type) => (
+                      <option key={type} value={type}>
+                        {BAC_NAMES[type]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
-            {/* MANDATORY DISCLAIMER BOX */}
-            <div className="p-4 bg-amber-50/90 border border-amber-200 rounded-2xl text-xs text-amber-900 space-y-1.5 shadow-xs">
-              <p className="font-bold text-amber-800 flex items-center gap-1.5">
-                <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-                ⚠️ Résultat indicatif :
-              </p>
-              <p className="leading-relaxed">
-                Cette estimation ne garantit pas l'admission. Les critères, seuils et capacités d'accueil peuvent varier chaque année. Vérifiez toujours les informations auprès de l'établissement concerné.
-              </p>
-              <p className="text-[11px] text-amber-800 pt-1 font-medium">
-                <strong>Seuil indicatif :</strong> Les seuils présentés sont indicatifs et peuvent varier d'une année à l'autre selon le nombre de candidats, les places disponibles et les critères de sélection.
-              </p>
-              <div className="flex flex-wrap items-center justify-between text-[10px] text-amber-800/80 pt-1 border-t border-amber-200/50">
-                <span>Source officielle : Notices et publications indicatives des établissements.</span>
-                <span>Informations susceptibles d'être mises à jour.</span>
-              </div>
-            </div>
+            {/* Compliant AdSense Unit Inside Schools Directory */}
+            <AdSenseUnit slot="schools_directory_top" label={true} />
 
-            {/* BONUS FEATURE: BEST OPTIONS COMPILATION */}
-            <section id="best-options" className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
-              <div className="flex items-center space-x-2">
-                <Sparkles className="w-4 h-4 text-emerald-400" />
-                <h3 className="font-bold text-sm tracking-wide uppercase">👉 Meilleures options estimées pour toi</h3>
-              </div>
-              
-              <div className="grid grid-cols-1 gap-2">
-                {bestOptions.length > 0 ? (
-                  bestOptions.map((school, idx) => {
-                    const eligibility = getSchoolEligibility(school, finalScore, bacType);
-                    return (
-                      <div
-                        key={school.id}
-                        className="bg-slate-800/80 border border-slate-700 px-4 py-3 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
-                      >
-                        <div className="flex items-center space-x-2.5">
-                          <span className="text-emerald-400 font-mono font-bold">N°{idx + 1}</span>
-                          <div>
-                            <p className="font-bold text-sm text-white">{school.name}</p>
-                            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10.5px] text-slate-400 font-medium mt-0.5">
-                              <span>{school.category}</span>
-                              <span className="text-slate-600">•</span>
-                              <span>{school.city}</span>
-                              {school.acceptedBacs.includes(bacType) && (
-                                <>
-                                  <span className="text-slate-600">•</span>
-                                  <span className="text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-mono">
-                                    Seuil indicatif: {school.thresholds[bacType]}/20
-                                  </span>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-                          <span className="font-bold uppercase tracking-wider px-2 py-1 bg-slate-950 rounded border border-slate-800 text-[10px] text-emerald-300">
-                            {eligibility.label}
+            {/* Schools Grid List */}
+            <div className="space-y-2.5">
+              {filteredSchools.length > 0 ? (
+                filteredSchools.map((school) => {
+                  const eligibility = getSchoolEligibility(school, finalScore, bacType);
+                  return (
+                    <div
+                      key={school.id}
+                      className="bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs hover:shadow-xs"
+                    >
+                      <div className="flex-1 min-w-0 pr-2 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-[10px] font-bold text-slate-600 font-mono">
+                            {school.category}
                           </span>
-                          {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
-                            <span className="font-bold uppercase tracking-wider px-2 py-1 bg-blue-950 border border-blue-900 rounded text-[10px] text-blue-300">
-                              🎓 ADMISSIBILITÉ ESTIMÉE AU CONCOURS
+                        </div>
+                        <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                          {school.name}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 font-medium">
+                          <span>{school.city}</span>
+                          <span>•</span>
+                          {school.acceptedBacs.includes(bacType) ? (
+                            <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 font-mono text-[11px]">
+                              Seuil indicatif : {school.thresholds[bacType]}/20
+                            </span>
+                          ) : (
+                            <span className="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded text-[11px]">
+                              Bac non compatible
                             </span>
                           )}
                         </div>
                       </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-xs text-slate-400 italic">Aucune école recommandée sous votre profil.</p>
-                )}
-              </div>
-            </section>
 
-            {/* DETAILED SCHOOL DIRECTORY INDEX */}
-            <section className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <h3 className="font-extrabold text-lg text-slate-900 tracking-tight">
-                  🏫 Éligibilité Estimée par Établissement
-                </h3>
-                <span className="text-xs text-slate-400 font-mono">
-                  {filteredSchools.length} écoles répertoriées
-                </span>
-              </div>
-
-              {/* DYNAMIC INTERFACE SEARCH & FILTER BAR */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 shadow-xs">
-                
-                {/* Text filter row */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    type="text"
-                    placeholder="Rechercher une école par nom ou ville..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/15"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                {/* Dropdowns filters */}
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Category Filter */}
-                  <div className="space-y-1">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block font-mono">Secteur</span>
-                    <select
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full px-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none text-slate-700 font-semibold cursor-pointer"
-                    >
-                      <option value="Toutes">Tous les secteurs</option>
-                      {categoriesList.map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Status filter */}
-                  <div className="space-y-1">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block font-mono">Admissibilité</span>
-                    <select
-                      value={selectedStatus}
-                      onChange={(e) => setSelectedStatus(e.target.value)}
-                      className="w-full px-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none text-slate-700 font-semibold cursor-pointer"
-                    >
-                      <option value="Tous">Tous les statuts</option>
-                      <option value="ADMIS">🟢 Admissibilité estimée</option>
-                      <option value="DIFFICILE">🔴 Non admissible (selon seuil)</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* LIST OF TARGET SCHOOLS WITH STRICT FORMATTING RULE */}
-              <div className="space-y-2">
-                {filteredSchools.length > 0 ? (
-                  filteredSchools.map((school) => {
-                    const eligibility = getSchoolEligibility(school, finalScore, bacType);
-                    return (
-                      <div
-                        key={school.id}
-                        className="bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition px-4 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
-                      >
-                        {/* School Name — Status formatting representation in elegant design */}
-                        <div className="flex-1 min-w-0 pr-2">
-                          <p className="font-bold text-slate-900">
-                            {school.name}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-slate-400 mt-0.5 font-medium">
-                            <span>{school.category}</span>
-                            <span className="text-slate-300">•</span>
-                            <span>{school.city}</span>
-                            {school.acceptedBacs.includes(bacType) ? (
-                              <>
-                                <span className="text-slate-300">•</span>
-                                <span className="text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100/80 font-mono text-[10px]">
-                                  Seuil indicatif: {school.thresholds[bacType]}/20
-                                </span>
-                              </>
-                            ) : (
-                              <>
-                                <span className="text-slate-300">•</span>
-                                <span className="text-rose-600 font-bold bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100/80 text-[10px]">
-                                  Bac non compatible
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        <div className="shrink-0 flex flex-wrap items-center gap-1.5">
-                          <span className="text-slate-400 font-light hidden sm:inline">—</span>
-                          <div className="flex flex-wrap items-center gap-1.5">
-                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${eligibility.bgColor} ${eligibility.textColor} border shrink-0`}>
-                              {eligibility.label}
-                            </span>
-                            {isConcoursSchool(school.id) && eligibility.status === 'ADMIS' && (
-                              <span className="px-2.5 py-1.5 bg-blue-50 text-blue-800 border border-blue-100 rounded-lg text-[10px] font-bold shrink-0 font-sans">
-                                🎓 ADMISSIBILITÉ ESTIMÉE AU CONCOURS
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                      <div className="shrink-0 flex items-center gap-2">
+                        <button
+                          onClick={() => setSelectedSchoolIdForModal(school.id)}
+                          className="px-3.5 py-2 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        >
+                          <Info className="w-3.5 h-3.5 text-amber-300" />
+                          <span>Voir la fiche</span>
+                        </button>
                       </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-center p-8 bg-white border border-slate-200 rounded-xl">
-                    <p className="text-xs font-semibold text-slate-600">Aucun établissement ne correspond aux filtres choisis.</p>
+                    </div>
+                  );
+                })
+              ) : (
+                /* HELPFUL EMPTY STATE WITH ZERO ADS */
+                <div className="text-center p-8 sm:p-10 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-4">
+                  <div className="w-12 h-12 mx-auto rounded-2xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600">
+                    <Search className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-sm sm:text-base text-slate-900">
+                      Aucun établissement ne correspond à votre recherche
+                    </h4>
+                    <p className="text-xs text-slate-500 max-w-md mx-auto">
+                      Aucun résultat pour « {searchQuery} ». Essayez de vérifier l'orthographe du nom ou de la ville, ou élargissez vos filtres.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
                     <button
-                      type="button"
                       onClick={() => {
                         setSelectedCategory('Toutes');
                         setSelectedStatus('Tous');
                         setSearchQuery('');
                       }}
-                      className="text-xs text-emerald-600 font-bold underline mt-1.5"
+                      className="px-4 py-2 rounded-xl bg-blue-900 text-white font-bold text-xs shadow-xs hover:bg-blue-800 transition cursor-pointer"
                     >
                       Réinitialiser les filtres
                     </button>
                   </div>
-                )}
-              </div>
-            </section>
+                  <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-1.5 text-xs text-slate-500">
+                    <span>Secteurs populaires :</span>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory('Ingénierie / Sciences');
+                        setSearchQuery('');
+                      }}
+                      className="text-blue-700 underline font-semibold cursor-pointer"
+                    >
+                      Ingénierie
+                    </button>
+                    <span>•</span>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory('Commerce / Gestion');
+                        setSearchQuery('');
+                      }}
+                      className="text-blue-700 underline font-semibold cursor-pointer"
+                    >
+                      Commerce
+                    </button>
+                    <span>•</span>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory('Santé / Paramédical');
+                        setSearchQuery('');
+                      }}
+                      className="text-blue-700 underline font-semibold cursor-pointer"
+                    >
+                      Santé &amp; Médecine
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
-        {/* CONTACT US SECTION */}
-        <section id="contact-us" className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          {/* Visual Banner illustrating the platform */}
-          <div className="w-full h-44 sm:h-52 overflow-hidden relative">
-            <img 
-              src="https://i.imgur.com/z7DyxIM.png" 
-              alt="Tawjih Avenir Assistance"
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
-          </div>
-
-          <div className="p-6 space-y-4 pt-2">
-            <div className="text-center space-y-1">
-              <h3 className="font-extrabold text-sm uppercase tracking-wider text-slate-900">
-                Contactez-nous
+        {/* 9. CALCULATOR VIEW */}
+        {activeTab === 'CALCULATOR' && (
+          <div className="space-y-8 animate-fadeIn">
+            {/* INFORMATIONAL SECTION: HOW IT WORKS */}
+            <section
+              id="how-it-works"
+              className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-sm space-y-3"
+            >
+              <h3 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <Info className="w-4 h-4 text-blue-800" />
+                Comment fonctionne la formule officielle de seuil au Maroc ?
               </h3>
-              <p className="text-xs text-slate-500">
-                Pour toute demande d’aide ou d’inscription dans une école, contactez-nous directement.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-              <a
-                href="https://wa.me/212772908456"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition duration-150 cursor-pointer"
-              >
-                <svg className="w-4 h-4 fill-current mr-1" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.966 14.113 1.01 11.49 1.01c-5.436 0-9.86 4.37-9.864 9.8 0 1.745.474 3.454 1.374 4.952l-1.002 3.66 3.75-.983zm11.215-3.56c-.27-.135-1.602-.79-1.85-.88-.25-.09-.432-.135-.615.135-.183.27-.71.88-.87 1.065-.16.185-.32.207-.59.072-.27-.135-1.143-.421-2.177-1.344-.805-.718-1.349-1.605-1.507-1.875-.16-.27-.015-.417.12-.551.123-.122.27-.315.405-.472.135-.157.18-.27.27-.45.09-.18.045-.337-.022-.472-.067-.135-.615-1.485-.84-2.03-.22-.53-.442-.457-.615-.466-.16-.007-.343-.01-.525-.01-.18 0-.473.067-.72.337-.248.27-.945.922-.945 2.25 0 1.328.967 2.61 1.102 2.79.135.18 1.902 2.904 4.61 4.07.645.278 1.148.441 1.54.566.65.206 1.24.177 1.706.108.52-.077 1.602-.656 1.83-1.258.226-.6.226-1.12.16-1.228-.067-.108-.25-.153-.52-.287z"/>
-                </svg>
-                <span>WhatsApp</span>
-              </a>
-
-              <a
-                href="https://www.instagram.com/tawjih_avenir?igsh=a2Qwem1scWE0MjZz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-pink-600 via-purple-600 to-orange-500 hover:opacity-95 text-white font-bold text-xs rounded-xl shadow-sm transition duration-150 cursor-pointer"
-              >
-                <Instagram className="w-4 h-4 text-white" />
-                <span>Instagram</span>
-              </a>
-
-              <a
-                href="https://www.tiktok.com/@jaafar_tawjih?_r=1&_t=ZS-97JYWcP76Hv"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-3 px-4 bg-slate-950 hover:bg-black text-white font-bold text-xs rounded-xl shadow-sm transition duration-150 cursor-pointer border border-white/10"
-              >
-                <svg className="w-4 h-4 fill-current mr-1 text-sky-400" viewBox="0 0 24 24">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .84.13V9.5a6.34 6.34 0 0 0-3.15-.3A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V7.82a8.16 8.16 0 0 0 4.77 1.52V5.89a4.8 4.8 0 0 1-1.04-.2z"/>
-                </svg>
-                <span>TikTok</span>
-              </a>
-
-              <a
-                href="mailto:jaafarmoustaghfir@gmail.com"
-                className="flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-sm transition duration-150 cursor-pointer"
-              >
-                <Mail className="w-4 h-4 text-emerald-400" />
-                <span>Email</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* FOUNDER & ADVISOR SECTION */}
-        <section id="founder-section" className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 rounded-2xl border border-amber-500/20 shadow-xl overflow-hidden relative group">
-          {/* Subtle luxurious light effects */}
-          <div className="absolute top-0 right-0 w-36 h-36 bg-amber-400/5 blur-3xl rounded-full"></div>
-          <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-blue-500/10 blur-3xl rounded-full"></div>
-
-          <div className="p-6 sm:p-8 space-y-6 relative z-10">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
-              <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                  Conseil d’Excellence
-                </div>
-                <h3 className="font-extrabold text-lg sm:text-xl text-white tracking-tight">
-                  Founder &amp; Educational Advisor
-                </h3>
-              </div>
-              <div className="font-serif italic text-amber-400/80 text-xs sm:text-right font-medium">
-                « Guider chaque bachelier vers l’excellence académique. »
-              </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-              {/* Premium Advisory Badge / Avatar */}
-              <div className="relative shrink-0 flex justify-center items-center">
-                <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-300 to-yellow-600 opacity-40 blur-xs"></div>
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-slate-900 border border-amber-400/30 flex flex-col justify-center items-center text-center shadow-inner overflow-hidden">
-                  <img
-                    src="https://i.imgur.com/SyoLpC7.png"
-                    alt="Jaafar Moustaghfir"
-                    className="w-full h-full object-cover rounded-full"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      const init = document.getElementById('founder-initials');
-                      if (init) init.className = "flex items-center justify-center text-amber-400 font-serif font-bold text-2xl h-full w-full";
-                    }}
-                  />
-                  <div id="founder-initials" className="hidden">JM</div>
-                </div>
-              </div>
-
-              {/* Founder Text & Credentials */}
-              <div className="space-y-4 text-center md:text-left flex-1">
-                <div>
-                  <h4 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-400 tracking-tight">
-                    Jaafar Moustaghfir
-                  </h4>
-                  <p className="text-xs text-amber-400/95 font-semibold tracking-wide uppercase mt-1">
-                    Fondateur &amp; Expert en Orientation Universitaire au Maroc
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">
+                    1
+                  </span>
+                  <p className="font-bold text-slate-800">Note Nationale (75%)</p>
+                  <p className="text-slate-500 text-[11px]">
+                    L’examen national compte pour 75% du barème de présélection de la majorité des écoles d’ingénieurs, de commerce et de médecine.
                   </p>
                 </div>
 
-                <p className="text-slate-350 text-[12px] sm:text-xs leading-relaxed max-w-2xl">
-                  Consultant d'orientation académique de confiance, <strong>Jaafar Moustaghfir</strong> œuvre au quotidien à décrypter les démarches, les barèmes et les épreuves de sélection des plus prestigieuses institutions supérieures marocaines. Grâce à une expertise pointue des systèmes de seuils d'accès aux écoles et facultés (Ingénierie, Business, Santé, Écoles Nationales), il offre aux étudiants les clés d'une orientation stratégique sécurisée et ambitieuse.
-                </p>
-
-                {/* Grid of Key Virtues */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div className="p-3 bg-white/[0.02] border border-white/[0.04] rounded-xl space-y-1 hover:bg-white/[0.04] hover:border-amber-400/10 transition duration-150 text-left">
-                    <p className="font-bold text-xs text-amber-300 flex items-center gap-2">
-                      <span>🎯</span> Orientation Analytique &amp; Réelle
-                    </p>
-                    <p className="text-[10px] text-slate-400 leading-normal">
-                      Évaluation méthodique et projection des chances d'admission selon les seuils réels calculés et observés.
-                    </p>
-                  </div>
-                  <div className="p-3 bg-white/[0.02] border border-white/[0.04] rounded-xl space-y-1 hover:bg-white/[0.04] hover:border-amber-400/10 transition duration-150 text-left">
-                    <p className="font-bold text-xs text-amber-300 flex items-center gap-2">
-                      <span>⚡</span> Préparation d'Excellence aux Concours
-                    </p>
-                    <p className="text-[10px] text-slate-400 leading-normal">
-                      Conseils d'élite et éclairages exclusifs sur les épreuves écrites et oraux pour maximiser l'intégration en Grande École.
-                    </p>
-                  </div>
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">
+                    2
+                  </span>
+                  <p className="font-bold text-slate-800">Note Régionale (25%)</p>
+                  <p className="text-slate-500 text-[11px]">
+                    L’examen régional de la 1ère année du baccalauréat compte pour 25% de la moyenne pondérée finale.
+                  </p>
                 </div>
 
-                {/* Interactive Trust Trigger Badge */}
-                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
-                  <a
-                    href="https://wa.me/212772908456?text=Bonjour%20M.%20Jaafar%20Moustaghfir"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:opacity-95 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-amber-500/10 transition duration-150 transform hover:-translate-y-0.5 cursor-pointer"
-                  >
-                    <span>💬 Consultation Privée sur WhatsApp</span>
-                  </a>
-                  <span className="text-[10px] text-slate-400 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-                    Conseiller disponible en ligne
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">
+                    3
                   </span>
+                  <p className="font-bold text-slate-800">Seuil Indicatif</p>
+                  <p className="text-slate-500 text-[11px]">
+                    Comparez votre résultat aux seuils historiques observés pour estimer vos chances de présélection aux concours.
+                  </p>
                 </div>
               </div>
-            </div>
+            </section>
+
+            {/* INPUT PANEL CARD */}
+            <section
+              id="calcule-card"
+              className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+            >
+              <div className="bg-gradient-to-r from-blue-900 to-indigo-950 px-6 py-4.5 text-white flex items-center justify-between">
+                <h2 className="font-bold text-sm uppercase tracking-wide flex items-center gap-2">
+                  <Calculator className="w-4 h-4 text-emerald-400" />
+                  Calculateur de Score Pondéré Post-Bac
+                </h2>
+                <span className="text-[10px] font-bold font-mono text-emerald-300 bg-blue-950/60 border border-blue-800/40 px-2.5 py-0.5 rounded">
+                  75% National + 25% Régional
+                </span>
+              </div>
+
+              <form onSubmit={handleVerify} className="p-6 space-y-6">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
+                    Filière de votre Baccalauréat
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                    {(Object.keys(BAC_NAMES) as BacType[]).map((type) => {
+                      const isSelected = bacType === type;
+                      return (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => setBacType(type)}
+                          className={`py-2 px-3 rounded-xl border text-center transition-all duration-150 relative ${
+                            isSelected
+                              ? 'border-blue-600 bg-blue-50/50 text-blue-900 font-bold ring-2 ring-blue-500/10'
+                              : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700 text-xs cursor-pointer'
+                          }`}
+                        >
+                          <span className="block font-bold">{type}</span>
+                          <span className="text-[9px] text-slate-450 block truncate font-normal">
+                            {BAC_NAMES[type].split(' (')[0]}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="national" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                      Note d’examen National (75%)
+                    </label>
+                    <div className="relative rounded-xl shadow-sm">
+                      <input
+                        id="national"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="20"
+                        value={nationalGrade}
+                        onChange={(e) => setNationalGrade(e.target.value)}
+                        placeholder="Ex: 15.25"
+                        className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/10 text-sm font-medium"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">/ 20</span>
+                    </div>
+                    {errors.national && <p className="text-xs text-rose-600 mt-1">{errors.national}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="regional" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                      Note d’examen Régional (25%)
+                    </label>
+                    <div className="relative rounded-xl shadow-sm">
+                      <input
+                        id="regional"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="20"
+                        value={regionalGrade}
+                        onChange={(e) => setRegionalGrade(e.target.value)}
+                        placeholder="Ex: 14.50"
+                        className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/10 text-sm font-medium"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">/ 20</span>
+                    </div>
+                    {errors.regional && <p className="text-xs text-rose-600 mt-1">{errors.regional}</p>}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-blue-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white font-bold text-sm rounded-xl transition duration-150 shadow-md uppercase tracking-wider cursor-pointer"
+                >
+                  Vérifier l’éligibilité
+                </button>
+              </form>
+            </section>
+
+            {/* RESULTS WRAPPER DISPLAY */}
+            {hasChecked && finalScore > 0 && (
+              <div className="space-y-8">
+                {/* SCORE HERO CHIP */}
+                <div
+                  id="score-hero"
+                  className="bg-gradient-to-r from-blue-800 via-indigo-900 to-purple-900 p-6 rounded-2xl text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md"
+                >
+                  <div>
+                    <span className="text-[10px] text-emerald-300 font-bold uppercase tracking-wider block">
+                      Filière Baccalauréat
+                    </span>
+                    <p className="text-lg font-bold">{BAC_NAMES[bacType]}</p>
+                  </div>
+                  <div className="bg-white/10 px-4 py-2.5 rounded-xl border border-white/20 text-center sm:text-right">
+                    <span className="text-[10px] text-blue-200 block uppercase font-mono">
+                      Note Moyenne Calculée
+                    </span>
+                    <span className="text-3xl font-extrabold font-mono text-white leading-none">
+                      {finalScore.toFixed(3)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* MANDATORY DISCLAIMER BOX */}
+                <div className="p-4 bg-amber-50/90 border border-amber-200 rounded-2xl text-xs text-amber-900 space-y-1.5 shadow-xs">
+                  <p className="font-bold text-amber-800 flex items-center gap-1.5">
+                    <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+                    ⚠️ Résultat indicatif :
+                  </p>
+                  <p className="leading-relaxed">
+                    Cette estimation ne garantit pas l'admission. Les critères, seuils et capacités d'accueil peuvent varier chaque année. Vérifiez toujours les informations auprès de l'établissement concerné.
+                  </p>
+                </div>
+
+                {/* BEST OPTIONS COMPILATION */}
+                <section
+                  id="best-options"
+                  className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
+                    <h3 className="font-bold text-sm tracking-wide uppercase">
+                      👉 Meilleures options estimées pour toi
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2">
+                    {bestOptions.length > 0 ? (
+                      bestOptions.map((school, idx) => {
+                        const eligibility = getSchoolEligibility(school, finalScore, bacType);
+                        return (
+                          <div
+                            key={school.id}
+                            className="bg-slate-800/80 border border-slate-700 px-4 py-3 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                          >
+                            <div className="flex items-center space-x-2.5">
+                              <span className="text-emerald-400 font-mono font-bold">N°{idx + 1}</span>
+                              <div>
+                                <p className="font-bold text-sm text-white">{school.name}</p>
+                                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10.5px] text-slate-400 font-medium mt-0.5">
+                                  <span>{school.category}</span>
+                                  <span className="text-slate-600">•</span>
+                                  <span>{school.city}</span>
+                                  {school.acceptedBacs.includes(bacType) && (
+                                    <>
+                                      <span className="text-slate-600">•</span>
+                                      <span className="text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-mono">
+                                        Seuil indicatif : {school.thresholds[bacType]}/20
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                              <span className="font-bold uppercase tracking-wider px-2 py-1 bg-slate-950 rounded border border-slate-800 text-[10px] text-emerald-300">
+                                {eligibility.label}
+                              </span>
+                              <button
+                                onClick={() => setSelectedSchoolIdForModal(school.id)}
+                                className="px-2 py-1 bg-blue-900 hover:bg-blue-800 rounded text-[10px] font-bold text-white cursor-pointer"
+                              >
+                                Fiche détaillée
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-xs text-slate-400 italic">Aucune école recommandée sous votre profil.</p>
+                    )}
+                  </div>
+                </section>
+              </div>
+            )}
           </div>
-        </section>
+        )}
       </main>
 
-      {/* FOOTER FOOTPRINT */}
-      <footer className="max-w-3xl mx-auto px-4 mt-12 py-8 border-t border-slate-200 text-center text-xs text-slate-500 font-medium space-y-3">
-        <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-slate-600">
-          <button
-            onClick={() => { setActiveTab('ABOUT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="hover:text-blue-900 transition cursor-pointer"
-          >
+      {/* MODAL FICHE ECOLE */}
+      {selectedSchoolIdForModal && (
+        <SchoolDetailModal
+          schoolId={selectedSchoolIdForModal}
+          onClose={() => setSelectedSchoolIdForModal(null)}
+          onPracticeQuiz={(key) => {
+            setSelectedSchoolIdForModal(null);
+            setQuizExamKey(key);
+            navigateTo('QUIZ', 'quiz');
+          }}
+        />
+      )}
+
+      {/* PERSISTENT FOOTER ACROSS ALL PUBLIC SCREENS */}
+      <footer className="max-w-5xl mx-auto px-4 mt-16 pt-8 border-t border-slate-200 text-center text-xs text-slate-500 font-medium space-y-4">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-semibold text-slate-600">
+          <button onClick={() => navigateTo('HOME', 'home')} className="hover:text-blue-900 transition cursor-pointer">
+            Accueil
+          </button>
+          <span className="text-slate-300">•</span>
+          <button onClick={() => navigateTo('CALCULATOR', 'calculator')} className="hover:text-blue-900 transition cursor-pointer">
+            Calculateur
+          </button>
+          <span className="text-slate-300">•</span>
+          <button onClick={() => navigateTo('SCHOOLS', 'schools')} className="hover:text-blue-900 transition cursor-pointer">
+            Écoles
+          </button>
+          <span className="text-slate-300">•</span>
+          <button onClick={() => navigateTo('CONCOURS', 'concours')} className="hover:text-blue-900 transition cursor-pointer">
+            Concours
+          </button>
+          <span className="text-slate-300">•</span>
+          <button onClick={() => navigateTo('GUIDES', 'guides')} className="hover:text-blue-900 transition cursor-pointer">
+            Guides
+          </button>
+          <span className="text-slate-300">•</span>
+          <button onClick={() => navigateTo('FILIERES', 'filieres')} className="hover:text-blue-900 transition cursor-pointer">
+            Filières
+          </button>
+          <span className="text-slate-300">•</span>
+          <button onClick={() => navigateTo('FAQ', 'faq')} className="hover:text-blue-900 transition cursor-pointer">
+            FAQ
+          </button>
+          <span className="text-slate-300">•</span>
+          <button onClick={() => navigateTo('ABOUT', 'about')} className="hover:text-blue-900 transition cursor-pointer">
             À propos
           </button>
           <span className="text-slate-300">•</span>
-          <button
-            onClick={() => { setActiveTab('PRIVACY'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="hover:text-blue-900 transition cursor-pointer"
-          >
-            Politique de confidentialité
+          <button onClick={() => navigateTo('PRIVACY', 'privacy')} className="hover:text-blue-900 transition cursor-pointer">
+            Confidentialité
           </button>
           <span className="text-slate-300">•</span>
-          <button
-            onClick={() => { setActiveTab('LEGAL'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="hover:text-blue-900 transition cursor-pointer"
-          >
+          <button onClick={() => navigateTo('LEGAL', 'legal')} className="hover:text-blue-900 transition cursor-pointer">
             Mentions légales
           </button>
           <span className="text-slate-300">•</span>
-          <button
-            onClick={() => { setActiveTab('CONTACT'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="hover:text-blue-900 transition cursor-pointer"
-          >
+          <button onClick={() => navigateTo('CONTACT', 'contact')} className="hover:text-blue-900 transition cursor-pointer">
             Contact
           </button>
         </div>
 
-        <p className="text-[11px] text-slate-400">
+        <p className="text-[11px] text-slate-500">
           🇲🇦 <strong>JAAFAR TAWJIH</strong> — Plateforme indépendante d’orientation universitaire et scolaire au Maroc.
         </p>
-        <p className="text-[10px] text-slate-400">
-          Les marques et dénominations citées appartiennent à leurs propriétaires respectifs. Seuil indicatif sous réserve des publications officielles.
+        <p className="text-[10.5px] text-slate-400 max-w-xl mx-auto leading-relaxed">
+          Les dénominations, logos et marques cités demeurent la propriété exclusive de leurs institutions respectives.
+          Les seuils et informations présentés sont indicatifs et soumis aux publications officielles ministérielles.
         </p>
       </footer>
-        </>
-      )}
     </div>
   );
 }

@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bg-radial" cx="50%" cy="42%" r="68%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="45%" stop-color="#0f172a" />
+      <stop offset="85%" stop-color="#050814" />
+      <stop offset="100%" stop-color="#02040a" />
+    </radialGradient>
+
+    <!-- Rich Metallic Gold Gradients -->
+    <linearGradient id="gold-rich" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="20%" stop-color="#f59e0b" />
+      <stop offset="45%" stop-color="#d97706" />
+      <stop offset="65%" stop-color="#fbbf24" />
+      <stop offset="85%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#92400e" />
+    </linearGradient>
+
+    <linearGradient id="gold-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#fef08a" />
+      <stop offset="70%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <linearGradient id="gold-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="50%" stop-color="#78350f" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+
+    <linearGradient id="gold-bevel-left" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+
+    <linearGradient id="gold-bevel-right" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="60%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+
+    <linearGradient id="blue-sheen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3" />
+      <stop offset="50%" stop-color="#2563eb" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="drop-shadow-emblem" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
+
+    <!-- Circular Text Paths -->
+    <path id="text-path-top" d="M 74,256 A 182,182 0 1,1 438,256" fill="none" />
+    <path id="text-path-bottom" d="M 88,256 A 168,168 0 0,0 424,256" fill="none" />
+  </defs>
+
+  <!-- Base Medallion Silhouette with Deep Drop Shadow -->
+  <circle cx="256" cy="256" r="250" fill="url(#bg-radial)" filter="url(#drop-shadow-emblem)" />
+
+  <!-- Outer Fine Gold Accent Ring -->
+  <circle cx="256" cy="256" r="244" fill="none" stroke="url(#gold-rich)" stroke-width="1.5" stroke-dasharray="2 4" opacity="0.5" />
+
+  <!-- Outer Heavy Beveled Gold Border -->
+  <circle cx="256" cy="256" r="236" fill="none" stroke="url(#gold-rich)" stroke-width="4" />
+
+  <!-- Mid Gold Ring (Inner border of text track) -->
+  <circle cx="256" cy="256" r="198" fill="none" stroke="url(#gold-rich)" stroke-width="2" opacity="0.85" />
+
+  <!-- Subtle Radial Sheen Overlay -->
+  <circle cx="256" cy="256" r="197" fill="url(#blue-sheen)" />
+
+  <!-- Concentric Dial Guidelines (Compass Motif) -->
+  <circle cx="256" cy="256" r="132" fill="none" stroke="url(#gold-rich)" stroke-width="1" opacity="0.2" stroke-dasharray="3 5" />
+
+  <!-- Cardinal Compass Points / Diamonds (Tawjih = Guidance / Orientation) -->
+  <g fill="url(#gold-light)">
+    <!-- North -->
+    <polygon points="256,201 259,208 256,215 253,208" />
+    <!-- South -->
+    <polygon points="256,297 259,304 256,311 253,304" />
+    <!-- West -->
+    <polygon points="201,256 208,253 215,256 208,259" />
+    <!-- East -->
+    <polygon points="297,256 304,253 311,256 304,259" />
+  </g>
+
+  <!-- Flanking 5-Point Stars Between Text -->
+  <g fill="url(#gold-light)" filter="url(#subtle-glow)">
+    <!-- Left Star -->
+    <polygon points="64,256 66.5,258 65.5,261.5 68.5,259.5 71.5,261.5 70.5,258 73,256 69.5,254.5 68.5,251 67.5,254.5" transform="translate(-8, -4)" />
+    <polygon points="64,256 66.5,258 65.5,261.5 68.5,259.5 71.5,261.5 70.5,258 73,256 69.5,254.5 68.5,251 67.5,254.5" transform="translate(382, -4)" />
+  </g>
+
+  <!-- Typography Arc: JAAFAR TAWJIH (Top) -->
+  <text fill="url(#gold-light)" font-family="'Montserrat', system-ui, -apple-system, sans-serif" font-size="23" font-weight="900" letter-spacing="5" text-anchor="middle" filter="url(#subtle-glow)">
+    <textPath href="#text-path-top" startOffset="50%">
+      JAAFAR TAWJIH
+    </textPath>
+  </text>
+
+  <!-- Typography Arc: ORIENTATION &amp; EXCELLENCE (Bottom, upright) -->
+  <text fill="url(#gold-rich)" font-family="'Montserrat', system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" letter-spacing="3.5" text-anchor="middle" opacity="0.95">
+    <textPath href="#text-path-bottom" startOffset="50%">
+      ORIENTATION &amp; EXCELLENCE
+    </textPath>
+  </text>
+
+  <!-- ============================================== -->
+  <!-- CENTRAL CORE ICON: CREST OF ORIENTATION        -->
+  <!-- ============================================== -->
+  <g id="core-crest" filter="url(#subtle-glow)">
+
+    <!-- 1. ACADEMIC GRADUATION CAP (MORTARBOARD) -->
+    <!-- Cap Left Rhombus Facet -->
+    <polygon points="256,134 172,170 256,206 256,134" fill="url(#gold-bevel-left)" stroke="#fef08a" stroke-width="1.2" />
+
+    <!-- Cap Right Rhombus Facet -->
+    <polygon points="256,134 340,170 256,206 256,134" fill="url(#gold-bevel-right)" stroke="#fef08a" stroke-width="1.2" />
+
+    <!-- Cap Diamond Center Accent -->
+    <polygon points="256,144 322,170 256,196 190,170" fill="url(#gold-light)" opacity="0.2" />
+
+    <!-- Skull Cap Base Underneath -->
+    <path d="M 202,186 L 202,212 C 202,234 310,234 310,212 L 310,186 C 290,198 222,198 202,186 Z" fill="url(#gold-dark)" stroke="url(#gold-rich)" stroke-width="1.5" />
+
+    <!-- Cap Center Golden Button -->
+    <ellipse cx="256" cy="170" rx="6" ry="3.5" fill="#ffffff" stroke="url(#gold-rich)" stroke-width="1.2" />
+
+    <!-- Flowing Tassel -->
+    <path d="M 256,170 C 224,178 198,198 184,222" fill="none" stroke="url(#gold-light)" stroke-width="2.5" stroke-linecap="round" />
+    <!-- Tassel Ring & Bell Fringe -->
+    <circle cx="184" cy="222" r="3.5" fill="#fef08a" stroke="url(#gold-dark)" stroke-width="0.8" />
+    <path d="M 184,224 L 179,246 L 189,246 Z" fill="url(#gold-rich)" />
+
+    <!-- 2. THE GUIDING COMPASS STAR (BEACON OF TAWJIH) -->
+    <g transform="translate(256, 252)">
+      <!-- Outer 4-Point Radiant Gold Star -->
+      <path d="M 0,-20 Q 0,-3 16,0 Q 0,3 0,20 Q 0,3 -16,0 Q 0,-3 0,-20 Z" fill="url(#gold-light)" />
+      <!-- Diagonal Small Rays -->
+      <path d="M -7,-7 L 0,0 L 7,-7 L 0,0 L 7,7 L 0,0 L -7,7 Z" stroke="url(#gold-light)" stroke-width="1.2" />
+      <!-- Center Diamond Core -->
+      <circle cx="0" cy="0" r="3.5" fill="#ffffff" />
+    </g>
+
+    <!-- 3. OPEN BOOK WINGS & INTEGRATED 'J' & 'T' MONOGRAM -->
+    <!-- Left Wing / Book Page (Forms the Regal Curve of 'J') -->
+    <path d="M 248,266 C 214,260 174,270 148,294 C 164,316 204,324 244,304 L 244,278 C 218,292 184,292 168,280 C 184,270 220,268 248,272 Z" fill="url(#gold-bevel-left)" />
+
+    <!-- Left Elegant 'J' Monogram Stem & Hook -->
+    <path d="M 244,248 L 244,324 C 244,346 220,356 198,346 C 188,340 182,330 184,320 C 186,310 196,306 204,312 C 212,320 226,316 226,304 L 226,256 Z" fill="url(#gold-light)" />
+
+    <!-- Right Wing / Book Page (Ascending Academic Wing) -->
+    <path d="M 264,266 C 298,260 338,270 364,294 C 348,316 308,324 268,304 L 268,278 C 294,292 328,292 344,280 C 328,270 292,268 264,272 Z" fill="url(#gold-bevel-right)" />
+
+    <!-- Right Balanced Ascending Wing Tip -->
+    <path d="M 268,248 L 268,324 C 268,340 282,348 298,342 C 306,338 314,330 318,322 C 310,320 300,324 294,320 C 286,312 286,304 286,294 L 286,256 Z" fill="url(#gold-light)" />
+
+    <!-- Central Regal Column (T-Spine of Tawjih) -->
+    <path d="M 252,274 L 260,274 L 258,358 L 254,358 Z" fill="url(#gold-rich)" />
+
+    <!-- Base Laurel / Foundation Arch -->
+    <path d="M 206,362 Q 256,378 306,362" fill="none" stroke="url(#gold-rich)" stroke-width="3" stroke-linecap="round" />
+    <circle cx="256" cy="371" r="3.5" fill="#ffffff" />
+  </g>
+</svg>

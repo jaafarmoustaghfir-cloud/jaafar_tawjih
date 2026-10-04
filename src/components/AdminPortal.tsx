@@ -144,6 +144,28 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
   const [selectedSessionForModal, setSelectedSessionForModal] = useState<SessionQcmDoc | null>(null);
   const [rulesNotice, setRulesNotice] = useState<string | null>(null);
 
+  // Prevent search engine indexation of admin authentication and dashboard screens
+  useEffect(() => {
+    let meta = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
+    let created = false;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'robots';
+      document.head.appendChild(meta);
+      created = true;
+    }
+    const previousContent = meta.content;
+    meta.content = 'noindex, nofollow';
+
+    return () => {
+      if (created) {
+        meta.remove();
+      } else {
+        meta.content = previousContent || 'index, follow';
+      }
+    };
+  }, []);
+
   // Load Firestore data when authenticated with real-time listener on sessions_qcm
   useEffect(() => {
     if (!isAuthenticated) return;

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" width="560" height="140">
+  <defs>
+    <radialGradient id="h-bg-radial" cx="50%" cy="42%" r="68%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#030712" />
+    </radialGradient>
+    <linearGradient id="h-gold-rich" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="30%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="h-gold-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="h-subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Left Icon Seal (Scale 0.25, Center at 70, 70) -->
+  <g transform="translate(8, 8) scale(0.242)">
+    <circle cx="256" cy="256" r="250" fill="url(#h-bg-radial)" />
+    <circle cx="256" cy="256" r="236" fill="none" stroke="url(#h-gold-rich)" stroke-width="6" />
+    <circle cx="256" cy="256" r="206" fill="none" stroke="url(#h-gold-rich)" stroke-width="3" opacity="0.8" />
+
+    <!-- Cap -->
+    <polygon points="256,134 172,170 256,206 256,134" fill="url(#h-gold-rich)" />
+    <polygon points="256,134 340,170 256,206 256,134" fill="url(#h-gold-light)" />
+    <path d="M 202,186 L 202,212 C 202,234 310,234 310,212 L 310,186 C 290,198 222,198 202,186 Z" fill="#78350f" stroke="url(#h-gold-rich)" stroke-width="2" />
+    <ellipse cx="256" cy="170" rx="6" ry="3.5" fill="#ffffff" />
+    <path d="M 256,170 C 224,178 198,198 184,222" fill="none" stroke="#fef08a" stroke-width="4" stroke-linecap="round" />
+    <path d="M 184,224 L 179,246 L 189,246 Z" fill="url(#h-gold-rich)" />
+
+    <!-- Star -->
+    <g transform="translate(256, 252)">
+      <path d="M 0,-20 Q 0,-3 16,0 Q 0,3 0,20 Q 0,3 -16,0 Q 0,-3 0,-20 Z" fill="url(#h-gold-light)" />
+      <circle cx="0" cy="0" r="3.5" fill="#ffffff" />
+    </g>
+
+    <!-- Book & J/T Monogram Wings -->
+    <path d="M 248,266 C 214,260 174,270 148,294 C 164,316 204,324 244,304 L 244,278 C 218,292 184,292 168,280 C 184,270 220,268 248,272 Z" fill="url(#h-gold-rich)" />
+    <path d="M 244,248 L 244,324 C 244,346 220,356 198,346 C 188,340 182,330 184,320 C 186,310 196,306 204,312 C 212,320 226,316 226,304 L 226,256 Z" fill="url(#h-gold-light)" />
+    <path d="M 264,266 C 298,260 338,270 364,294 C 348,316 308,324 268,304 L 268,278 C 294,292 328,292 344,280 C 328,270 292,268 264,272 Z" fill="url(#h-gold-rich)" />
+    <path d="M 268,248 L 268,324 C 268,340 282,348 298,342 C 306,338 314,330 318,322 C 310,320 300,324 294,320 C 286,312 286,304 286,294 L 286,256 Z" fill="url(#h-gold-light)" />
+  </g>
+
+  <!-- Vertical Divider -->
+  <line x1="150" y1="30" x2="150" y2="110" stroke="url(#h-gold-rich)" stroke-width="1.5" opacity="0.4" />
+
+  <!-- Typography Right Side -->
+  <g transform="translate(170, 0)">
+    <!-- Brand Title -->
+    <text x="0" y="64" fill="url(#h-gold-light)" font-family="'Montserrat', system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" letter-spacing="4">
+      JAAFAR TAWJIH
+    </text>
+
+    <!-- Subtitle / Category -->
+    <text x="0" y="88" fill="#94a3b8" font-family="'Montserrat', system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="2.8">
+      ORIENTATION &amp; EXCELLENCE ACADÉMIQUE
+    </text>
+
+    <!-- Highlight Tag -->
+    <text x="0" y="108" fill="url(#h-gold-rich)" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.5">
+      Grandes Écoles • Concours ENSA &amp; Médecine • Maroc
+    </text>
+  </g>
+</svg>

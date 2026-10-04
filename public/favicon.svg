@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <radialGradient id="fav-bg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#030712" />
+    </radialGradient>
+    <linearGradient id="fav-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="fav-gold-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <circle cx="64" cy="64" r="62" fill="url(#fav-bg)" />
+  <!-- Gold Border -->
+  <circle cx="64" cy="64" r="59" fill="none" stroke="url(#fav-gold)" stroke-width="4" />
+  <circle cx="64" cy="64" r="53" fill="none" stroke="url(#fav-gold)" stroke-width="1.5" opacity="0.6" />
+
+  <!-- Graduation Cap -->
+  <polygon points="64,26 98,42 64,58 30,42" fill="url(#fav-gold-light)" stroke="#ffffff" stroke-width="1" />
+  <path d="M 42,48 L 42,60 C 42,70 86,70 86,60 L 86,48 C 76,54 52,54 42,48 Z" fill="url(#fav-gold)" />
+  <ellipse cx="64" cy="42" rx="3.5" ry="2" fill="#ffffff" />
+  <!-- Tassel -->
+  <path d="M 64,42 Q 46,46 36,60" fill="none" stroke="#fef08a" stroke-width="2" stroke-linecap="round" />
+  <circle cx="36" cy="60" r="2.5" fill="#ffffff" />
+
+  <!-- Guiding Star -->
+  <g transform="translate(64, 76)">
+    <path d="M 0,-14 Q 0,-2 10,0 Q 0,2 0,14 Q 0,2 -10,0 Q 0,-2 0,-14 Z" fill="url(#fav-gold-light)" />
+    <circle cx="0" cy="0" r="2.5" fill="#ffffff" />
+  </g>
+
+  <!-- Open Wings / Chevrons (J & T) -->
+  <path d="M 60,86 C 42,80 24,88 18,98 C 30,108 52,108 60,94 Z" fill="url(#fav-gold)" />
+  <path d="M 68,86 C 86,80 104,88 110,98 C 98,108 76,108 68,94 Z" fill="url(#fav-gold)" />
+  <path d="M 58,80 L 58,110 C 58,118 48,122 40,118 L 40,112 C 46,114 52,112 52,106 L 52,82 Z" fill="url(#fav-gold-light)" />
+  <path d="M 70,80 L 70,110 C 70,118 80,122 88,118 L 88,112 C 82,114 76,112 76,106 L 76,82 Z" fill="url(#fav-gold-light)" />
+</svg>
