@@ -374,12 +374,12 @@ export default function App() {
 
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-amber-400/40 bg-white flex items-center justify-center shadow-inner">
                 <img
-                  src="/logo.svg"
-                  alt="Jaafar Tawjih Logo"
-                  className="w-full h-full object-contain p-0.5 transition-transform duration-700 ease-out group-hover:scale-105"
+                  src="/assets/aistudio/Gemini_Generated_Image_5t8dk85t8dk85t8d_211e6919.jpeg"
+                  alt="Jaafar Tawjih - Orientation & Excellence Maroc"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   onError={(e) => {
                     const target = e.currentTarget;
-                    if (target.src.endsWith('/logo.svg')) {
+                    if (!target.src.endsWith('/logo.png')) {
                       target.src = '/logo.png';
                     } else {
                       target.style.display = 'none';
