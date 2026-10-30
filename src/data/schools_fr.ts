@@ -18,6 +18,8 @@ export interface SchoolFr {
   category: SchoolCategory;
   thresholds: Record<BacType, number>;
   acceptedBacs: BacType[];
+  hasConcours?: boolean;
+  directThresholds?: Partial<Record<BacType, number>>;
 }
 
 export const BAC_NAMES: Record<BacType, string> = {
@@ -28,6 +30,28 @@ export const BAC_NAMES: Record<BacType, string> = {
   Tech: 'Sciences et Technologies (Tech)',
   Lettres: 'Lettres & Sciences Humaines (Lettres)'
 };
+
+export const SCHOOLS_SANS_CONCOURS = new Set<string>([
+  'fst',
+  'est',
+  'cpge',
+  'bts',
+  'fsjes',
+  'flsh',
+  'ofppt',
+  'ifmeree',
+  'est_dut',
+  'mundiapolis',
+  'ims',
+  'fse',
+]);
+
+export function isSchoolWithConcours(school: SchoolFr): boolean {
+  if (typeof school.hasConcours === 'boolean') {
+    return school.hasConcours;
+  }
+  return !SCHOOLS_SANS_CONCOURS.has(school.id);
+}
 
 export const SCHOOLS_FR: SchoolFr[] = [
   // --- INGENIERIE / SCIENCES / TECH ---

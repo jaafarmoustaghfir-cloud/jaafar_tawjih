@@ -1,5 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { SchoolFr, BAC_NAMES, SCHOOLS_FR, BacType, SchoolCategory } from './data/schools_fr';
+import {
+  SchoolFr,
+  BAC_NAMES,
+  SCHOOLS_FR,
+  BacType,
+  SchoolCategory,
+  isSchoolWithConcours,
+} from './data/schools_fr';
 import MedecineQuizApp from './components/MedecineQuizApp';
 import HomeOverview from './components/HomeOverview';
 import SchoolDetailModal from './components/SchoolDetailModal';
@@ -37,7 +44,148 @@ import {
   ExternalLink,
   CheckCircle2,
   ChevronRight,
+  XCircle,
+  AlertCircle,
+  Filter,
 } from 'lucide-react';
+
+export type EvaluatedStatus = 'ADMIS' | 'CONCOURS' | 'NON_ADMIS';
+
+export interface EvaluatedSchool {
+  school: SchoolFr;
+  hasConcours: boolean;
+  status: EvaluatedStatus;
+  statusLabel: string;
+  isAvailable: boolean;
+  concoursThreshold: number | null;
+  directThreshold: number | null;
+  referenceThreshold: number | null;
+  delta: number | null;
+}
+
+export function evaluateSchool(
+  school: SchoolFr,
+  userScore: number,
+  type: BacType
+): EvaluatedSchool {
+  const hasConcours = isSchoolWithConcours(school);
+  const rawThreshold = school.thresholds?.[type];
+  const isAccepted = school.acceptedBacs.includes(type);
+  const isAvailable =
+    isAccepted &&
+    typeof rawThreshold === 'number' &&
+    rawThreshold > 0 &&
+    rawThreshold < 90;
+
+  if (!isAvailable) {
+    return {
+      school,
+      hasConcours,
+      status: 'NON_ADMIS',
+      statusLabel: 'Seuil non disponible',
+      isAvailable: false,
+      concoursThreshold: null,
+      directThreshold: null,
+      referenceThreshold: null,
+      delta: null,
+    };
+  }
+
+  if (hasConcours) {
+    const concoursThreshold = rawThreshold;
+    const directThreshold =
+      school.directThresholds?.[type] ??
+      Math.min(19.5, Number((concoursThreshold + (concoursThreshold >= 16 ? 1.5 : 2.5)).toFixed(2)));
+
+    if (userScore >= directThreshold) {
+      return {
+        school,
+        hasConcours: true,
+        status: 'ADMIS',
+        statusLabel: 'Admis',
+        isAvailable: true,
+        concoursThreshold,
+        directThreshold,
+        referenceThreshold: directThreshold,
+        delta: Number((userScore - directThreshold).toFixed(2)),
+      };
+    } else if (userScore >= concoursThreshold) {
+      return {
+        school,
+        hasConcours: true,
+        status: 'CONCOURS',
+        statusLabel: 'Admis au concours',
+        isAvailable: true,
+        concoursThreshold,
+        directThreshold,
+        referenceThreshold: concoursThreshold,
+        delta: Number((userScore - concoursThreshold).toFixed(2)),
+      };
+    } else {
+      return {
+        school,
+        hasConcours: true,
+        status: 'NON_ADMIS',
+        statusLabel: 'Non admis',
+        isAvailable: true,
+        concoursThreshold,
+        directThreshold,
+        referenceThreshold: concoursThreshold,
+        delta: Number((userScore - concoursThreshold).toFixed(2)),
+      };
+    }
+  } else {
+    // School without concours: strictly "Admis" or "Non admis"
+    const directThreshold = school.directThresholds?.[type] ?? rawThreshold;
+    if (userScore >= directThreshold) {
+      return {
+        school,
+        hasConcours: false,
+        status: 'ADMIS',
+        statusLabel: 'Admis',
+        isAvailable: true,
+        concoursThreshold: null,
+        directThreshold,
+        referenceThreshold: directThreshold,
+        delta: Number((userScore - directThreshold).toFixed(2)),
+      };
+    } else {
+      return {
+        school,
+        hasConcours: false,
+        status: 'NON_ADMIS',
+        statusLabel: 'Non admis',
+        isAvailable: true,
+        concoursThreshold: null,
+        directThreshold,
+        referenceThreshold: directThreshold,
+        delta: Number((userScore - directThreshold).toFixed(2)),
+      };
+    }
+  }
+}
+
+export function formatDelta(delta: number | null): { text: string; badgeClass: string } {
+  if (delta === null) {
+    return { text: '—', badgeClass: 'text-slate-400 bg-slate-100 border border-slate-200' };
+  }
+  if (delta > 0) {
+    return {
+      text: `+${delta.toFixed(2).replace('.', ',')} pts`,
+      badgeClass: 'text-emerald-800 bg-emerald-50 border border-emerald-300 font-bold',
+    };
+  }
+  if (delta < 0) {
+    return {
+      text: `-${Math.abs(delta).toFixed(2).replace('.', ',')} pts`,
+      badgeClass: 'text-rose-800 bg-rose-50 border border-rose-300 font-bold',
+    };
+  }
+  return {
+    text: '0,00 pts',
+    badgeClass: 'text-slate-700 bg-slate-100 border border-slate-300 font-bold',
+  };
+}
 
 const isConcoursSchool = (schoolId: string) => {
   const normalized = schoolId.toLowerCase();
@@ -233,60 +381,104 @@ export default function App() {
   };
 
   const getSchoolEligibility = (school: SchoolFr, score: number, type: BacType) => {
-    const isAccepted = school.acceptedBacs.includes(type);
-    if (!isAccepted) {
+    const evalResult = evaluateSchool(school, score, type);
+    if (!evalResult.isAvailable) {
       return {
         status: 'NON_ELIGIBLE' as const,
-        label: 'Bac non compatible',
+        label: 'Seuil non disponible',
         bgColor: 'bg-slate-100 border-slate-200',
         textColor: 'text-slate-500',
+        delta: null,
       };
     }
-
-    const threshold = school.thresholds[type];
-    if (score >= threshold) {
+    if (evalResult.status === 'ADMIS') {
       return {
         status: 'ADMIS' as const,
-        label: '🟢 ADMISSIBILITÉ ESTIMÉE',
+        label: '🟢 ADMIS (SUR DOSSIER)',
         bgColor: 'bg-emerald-50 border-emerald-100',
         textColor: 'text-emerald-800',
-      };
-    } else {
-      return {
-        status: 'DIFFICILE' as const,
-        label: '🔴 NON ADMISSIBLE (SOUS LE SEUIL)',
-        bgColor: 'bg-slate-50 border-slate-200',
-        textColor: 'text-rose-700 font-bold',
+        delta: evalResult.delta,
       };
     }
+    if (evalResult.status === 'CONCOURS') {
+      return {
+        status: 'CONCOURS' as const,
+        label: '🔵 ADMIS AU CONCOURS',
+        bgColor: 'bg-blue-50 border-blue-100',
+        textColor: 'text-blue-800',
+        delta: evalResult.delta,
+      };
+    }
+    return {
+      status: 'DIFFICILE' as const,
+      label: '🔴 NON ADMIS (SOUS LE SEUIL)',
+      bgColor: 'bg-slate-50 border-slate-200',
+      textColor: 'text-rose-700 font-bold',
+      delta: evalResult.delta,
+    };
   };
 
-  const bestOptions = useMemo(() => {
+  // Calculator optional filter & search states
+  const [calcFilter, setCalcFilter] = useState<'TOUS' | 'ADMIS' | 'CONCOURS' | 'NON_ADMIS'>('TOUS');
+  const [calcSearch, setCalcSearch] = useState<string>('');
+
+  // 1. Evaluate ALL schools without filtering any out using .map()
+  const allEvaluatedSchools = useMemo(() => {
     if (finalScore <= 0) return [];
+    return liveSchools.map((school) => evaluateSchool(school, finalScore, bacType));
+  }, [liveSchools, finalScore, bacType]);
 
-    const scoredSchools = liveSchools.map((school) => {
-      const isAccepted = school.acceptedBacs.includes(bacType);
-      const threshold = isAccepted ? school.thresholds[bacType] : 99;
-      const eligibility = getSchoolEligibility(school, finalScore, bacType);
-      return {
-        school,
-        threshold,
-        eligibility,
-      };
+  // 2. Sort by:
+  // First "Admis", then "Admis au concours", then "Non admis"
+  // Inside each group: from highest threshold to lowest!
+  const sortedEvaluatedSchools = useMemo(() => {
+    const statusRank: Record<EvaluatedStatus, number> = {
+      ADMIS: 1,
+      CONCOURS: 2,
+      NON_ADMIS: 3,
+    };
+
+    return [...allEvaluatedSchools].sort((a, b) => {
+      if (statusRank[a.status] !== statusRank[b.status]) {
+        return statusRank[a.status] - statusRank[b.status];
+      }
+      const threshA = a.referenceThreshold ?? -1;
+      const threshB = b.referenceThreshold ?? -1;
+      if (threshA !== threshB) {
+        return threshB - threshA; // du seuil le plus élevé au plus bas
+      }
+      return a.school.name.localeCompare(b.school.name);
     });
+  }, [allEvaluatedSchools]);
 
-    return scoredSchools
-      .filter((item) => item.school.acceptedBacs.includes(bacType))
-      .sort((a, b) => {
-        const order = { ADMIS: 0, POSSIBLE: 1, DIFFICILE: 2, NON_ELIGIBLE: 3 };
-        if (order[a.eligibility.status] !== order[b.eligibility.status]) {
-          return order[a.eligibility.status] - order[b.eligibility.status];
-        }
-        return b.threshold - a.threshold;
-      })
-      .slice(0, 3)
-      .map((item) => item.school);
-  }, [finalScore, bacType, liveSchools]);
+  // 3. Status counters for the filter buttons
+  const calcCounts = useMemo(() => {
+    return {
+      TOUS: sortedEvaluatedSchools.length,
+      ADMIS: sortedEvaluatedSchools.filter((s) => s.status === 'ADMIS').length,
+      CONCOURS: sortedEvaluatedSchools.filter((s) => s.status === 'CONCOURS').length,
+      NON_ADMIS: sortedEvaluatedSchools.filter((s) => s.status === 'NON_ADMIS').length,
+    };
+  }, [sortedEvaluatedSchools]);
+
+  // 4. Displayed schools based on optional filters
+  const displayedCalcSchools = useMemo(() => {
+    return sortedEvaluatedSchools.filter((item) => {
+      if (calcFilter === 'ADMIS' && item.status !== 'ADMIS') return false;
+      if (calcFilter === 'CONCOURS' && item.status !== 'CONCOURS') return false;
+      if (calcFilter === 'NON_ADMIS' && item.status !== 'NON_ADMIS') return false;
+
+      if (calcSearch.trim()) {
+        const q = calcSearch.toLowerCase();
+        const match =
+          item.school.name.toLowerCase().includes(q) ||
+          item.school.city.toLowerCase().includes(q) ||
+          item.school.category.toLowerCase().includes(q);
+        if (!match) return false;
+      }
+      return true;
+    });
+  }, [sortedEvaluatedSchools, calcFilter, calcSearch]);
 
   const filteredSchools = useMemo(() => {
     return liveSchools.filter((school) => {
@@ -976,25 +1168,29 @@ export default function App() {
 
             {/* RESULTS WRAPPER DISPLAY */}
             {hasChecked && finalScore > 0 && (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {/* SCORE HERO CHIP */}
                 <div
                   id="score-hero"
-                  className="bg-gradient-to-r from-blue-800 via-indigo-900 to-purple-900 p-6 rounded-2xl text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md"
+                  className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 p-6 rounded-2xl text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg border border-amber-500/20"
                 >
-                  <div>
-                    <span className="text-[10px] text-emerald-300 font-bold uppercase tracking-wider block">
-                      Filière Baccalauréat
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-amber-300 font-bold uppercase tracking-wider block">
+                      Filière du Baccalauréat
                     </span>
-                    <p className="text-lg font-bold">{BAC_NAMES[bacType]}</p>
+                    <p className="text-lg font-extrabold text-white">{BAC_NAMES[bacType]}</p>
+                    <p className="text-xs text-blue-200">
+                      Formule officielle : ({nationalGrade} × 75%) + ({regionalGrade} × 25%)
+                    </p>
                   </div>
-                  <div className="bg-white/10 px-4 py-2.5 rounded-xl border border-white/20 text-center sm:text-right">
-                    <span className="text-[10px] text-blue-200 block uppercase font-mono">
-                      Note Moyenne Calculée
+                  <div className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-2xl border border-white/20 text-center sm:text-right shrink-0">
+                    <span className="text-[10px] text-amber-200 block uppercase font-mono font-bold tracking-wide">
+                      Moyenne Pondérée
                     </span>
-                    <span className="text-3xl font-extrabold font-mono text-white leading-none">
+                    <span className="text-3xl sm:text-4xl font-extrabold font-mono text-white leading-none">
                       {finalScore.toFixed(3)}
                     </span>
+                    <span className="text-xs text-blue-200 block mt-1 font-mono">/ 20</span>
                   </div>
                 </div>
 
@@ -1005,66 +1201,296 @@ export default function App() {
                     ⚠️ Résultat indicatif :
                   </p>
                   <p className="leading-relaxed">
-                    Cette estimation ne garantit pas l'admission. Les critères, seuils et capacités d'accueil peuvent varier chaque année. Vérifiez toujours les informations auprès de l'établissement concerné.
+                    Cette estimation est calculée à partir des seuils historiques observés. Elle ne garantit pas l'admission définitive. Les critères et capacités d'accueil peuvent varier chaque année.
                   </p>
                 </div>
 
-                {/* BEST OPTIONS COMPILATION */}
+                {/* ALL EVALUATED SCHOOLS LIST */}
                 <section
-                  id="best-options"
-                  className="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4"
+                  id="all-evaluated-schools"
+                  className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-sm space-y-5"
                 >
-                  <div className="flex items-center space-x-2">
-                    <Sparkles className="w-4 h-4 text-emerald-400" />
-                    <h3 className="font-bold text-sm tracking-wide uppercase">
-                      👉 Meilleures options estimées pour toi
-                    </h3>
+                  {/* HEADER & SEARCH */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                      <h3 className="font-black text-base text-slate-900 flex items-center gap-2">
+                        <Building2 className="w-5 h-5 text-blue-900" />
+                        Liste complète des établissements ({calcCounts.TOUS})
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Statut calculé selon vos notes, trié par admissibilité puis par niveau de seuil.
+                      </p>
+                    </div>
+
+                    {/* SEARCH INPUT */}
+                    <div className="relative w-full sm:w-72">
+                      <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="text"
+                        value={calcSearch}
+                        onChange={(e) => setCalcSearch(e.target.value)}
+                        placeholder="Filtrer par nom, ville ou filière..."
+                        className="w-full pl-9 pr-8 py-2 bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                      />
+                      {calcSearch && (
+                        <button
+                          type="button"
+                          onClick={() => setCalcSearch('')}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-2">
-                    {bestOptions.length > 0 ? (
-                      bestOptions.map((school, idx) => {
-                        const eligibility = getSchoolEligibility(school, finalScore, bacType);
+                  {/* FILTER TABS WITH COUNTERS (TOUS / ADMIS / CONCOURS / NON ADMIS) */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCalcFilter('TOUS')}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+                        calcFilter === 'TOUS'
+                          ? 'bg-slate-900 text-white shadow-sm'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      }`}
+                    >
+                      <span>Tous</span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                          calcFilter === 'TOUS' ? 'bg-slate-800 text-amber-300' : 'bg-slate-200 text-slate-800'
+                        }`}
+                      >
+                        {calcCounts.TOUS}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setCalcFilter('ADMIS')}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+                        calcFilter === 'ADMIS'
+                          ? 'bg-emerald-700 text-white shadow-sm'
+                          : 'bg-emerald-50 text-emerald-900 hover:bg-emerald-100 border border-emerald-200'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                      <span>Admis</span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                          calcFilter === 'ADMIS' ? 'bg-emerald-800 text-white' : 'bg-emerald-200 text-emerald-900'
+                        }`}
+                      >
+                        {calcCounts.ADMIS}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setCalcFilter('CONCOURS')}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+                        calcFilter === 'CONCOURS'
+                          ? 'bg-blue-700 text-white shadow-sm'
+                          : 'bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                      <span>Admis au concours</span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                          calcFilter === 'CONCOURS' ? 'bg-blue-800 text-white' : 'bg-blue-200 text-blue-900'
+                        }`}
+                      >
+                        {calcCounts.CONCOURS}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setCalcFilter('NON_ADMIS')}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+                        calcFilter === 'NON_ADMIS'
+                          ? 'bg-rose-700 text-white shadow-sm'
+                          : 'bg-rose-50 text-rose-900 hover:bg-rose-100 border border-rose-200'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-rose-400"></span>
+                      <span>Non admis</span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                          calcFilter === 'NON_ADMIS' ? 'bg-rose-800 text-white' : 'bg-rose-200 text-rose-900'
+                        }`}
+                      >
+                        {calcCounts.NON_ADMIS}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* CARDS LIST OF ALL SCHOOLS */}
+                  <div className="space-y-3 pt-1">
+                    {displayedCalcSchools.length > 0 ? (
+                      displayedCalcSchools.map((item, idx) => {
+                        const deltaInfo = formatDelta(item.delta);
                         return (
                           <div
-                            key={school.id}
-                            className="bg-slate-800/80 border border-slate-700 px-4 py-3 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                            key={item.school.id}
+                            className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                              item.status === 'ADMIS'
+                                ? 'bg-gradient-to-r from-emerald-50/40 via-white to-white border-emerald-300/80 hover:border-emerald-400'
+                                : item.status === 'CONCOURS'
+                                ? 'bg-gradient-to-r from-blue-50/40 via-white to-white border-blue-300/80 hover:border-blue-400'
+                                : item.isAvailable
+                                ? 'bg-gradient-to-r from-rose-50/20 via-white to-white border-rose-200/70 hover:border-rose-300'
+                                : 'bg-slate-50/80 border-slate-200/80 text-slate-600'
+                            }`}
                           >
-                            <div className="flex items-center space-x-2.5">
-                              <span className="text-emerald-400 font-mono font-bold">N°{idx + 1}</span>
-                              <div>
-                                <p className="font-bold text-sm text-white">{school.name}</p>
-                                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10.5px] text-slate-400 font-medium mt-0.5">
-                                  <span>{school.category}</span>
-                                  <span className="text-slate-600">•</span>
-                                  <span>{school.city}</span>
-                                  {school.acceptedBacs.includes(bacType) && (
+                            {/* LEFT: RANK, NAME, META, THRESHOLDS */}
+                            <div className="flex items-start gap-3 flex-1 min-w-0">
+                              <span
+                                className={`w-8 h-8 rounded-xl font-mono text-xs font-bold shrink-0 flex items-center justify-center shadow-xs ${
+                                  item.status === 'ADMIS'
+                                    ? 'bg-emerald-600 text-white'
+                                    : item.status === 'CONCOURS'
+                                    ? 'bg-blue-600 text-white'
+                                    : item.isAvailable
+                                    ? 'bg-slate-700 text-white'
+                                    : 'bg-slate-300 text-slate-700'
+                                }`}
+                              >
+                                #{idx + 1}
+                              </span>
+
+                              <div className="space-y-1.5 flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-[10px] font-bold text-slate-600 font-mono">
+                                    {item.school.category}
+                                  </span>
+                                  {item.hasConcours ? (
+                                    <span className="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 text-[10px] font-bold">
+                                      Concours écrit
+                                    </span>
+                                  ) : (
+                                    <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-800 text-[10px] font-bold">
+                                      Sur dossier (sans concours)
+                                    </span>
+                                  )}
+                                </div>
+
+                                <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-snug">
+                                  {item.school.name}
+                                </h4>
+
+                                <p className="text-xs text-slate-500 font-medium">
+                                  📍 {item.school.city}
+                                </p>
+
+                                {/* THRESHOLDS BREAKDOWN & DELTA */}
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs pt-1">
+                                  {!item.isAvailable ? (
+                                    <span className="text-slate-500 italic text-[11px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                                      ℹ️ Seuil non disponible pour cette filière
+                                    </span>
+                                  ) : item.hasConcours ? (
                                     <>
-                                      <span className="text-slate-600">•</span>
-                                      <span className="text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-mono">
-                                        Seuil indicatif : {school.thresholds[bacType]}/20
+                                      <span className="text-slate-600 font-medium text-[11.5px]">
+                                        Seuil présélection concours :{' '}
+                                        <strong className="text-slate-900 font-mono">
+                                          {item.concoursThreshold?.toFixed(2)}/20
+                                        </strong>
+                                      </span>
+                                      <span className="text-slate-300 hidden sm:inline">•</span>
+                                      <span className="text-slate-600 font-medium text-[11.5px]">
+                                        Admission directe :{' '}
+                                        <strong className="text-slate-900 font-mono">
+                                          {item.directThreshold?.toFixed(2)}/20
+                                        </strong>
                                       </span>
                                     </>
+                                  ) : (
+                                    <span className="text-slate-600 font-medium text-[11.5px]">
+                                      Seuil d’admission dossier :{' '}
+                                      <strong className="text-slate-900 font-mono">
+                                        {item.directThreshold?.toFixed(2)}/20
+                                      </strong>
+                                    </span>
+                                  )}
+
+                                  {/* ECART AVEC LE SEUIL */}
+                                  {item.isAvailable && (
+                                    <span className="inline-flex items-center gap-1 font-medium text-[11.5px]">
+                                      <span className="text-slate-500">Écart :</span>
+                                      <span className={`px-2 py-0.5 rounded font-mono text-[11px] ${deltaInfo.badgeClass}`}>
+                                        {deltaInfo.text}
+                                      </span>
+                                    </span>
                                   )}
                                 </div>
                               </div>
                             </div>
-                            <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-                              <span className="font-bold uppercase tracking-wider px-2 py-1 bg-slate-950 rounded border border-slate-800 text-[10px] text-emerald-300">
-                                {eligibility.label}
-                              </span>
+
+                            {/* RIGHT: BADGE + ACTION BUTTON */}
+                            <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                              {/* BADGES WITH THE EXACT 3 STATUTS */}
+                              {item.status === 'ADMIS' && (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-extrabold shadow-2xs">
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                                  <span>Admis</span>
+                                </span>
+                              )}
+
+                              {item.status === 'CONCOURS' && (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-100 text-blue-900 border border-blue-300 text-xs font-extrabold shadow-2xs">
+                                  <Award className="w-4 h-4 text-blue-700" />
+                                  <span>Admis au concours</span>
+                                </span>
+                              )}
+
+                              {item.status === 'NON_ADMIS' && item.isAvailable && (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-100 text-rose-900 border border-rose-300 text-xs font-extrabold shadow-2xs">
+                                  <XCircle className="w-4 h-4 text-rose-700" />
+                                  <span>Non admis</span>
+                                </span>
+                              )}
+
+                              {item.status === 'NON_ADMIS' && !item.isAvailable && (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200 text-slate-700 border border-slate-300 text-xs font-semibold">
+                                  <Info className="w-4 h-4 text-slate-500" />
+                                  <span>Seuil non disponible</span>
+                                </span>
+                              )}
+
                               <button
-                                onClick={() => setSelectedSchoolIdForModal(school.id)}
-                                className="px-2 py-1 bg-blue-900 hover:bg-blue-800 rounded text-[10px] font-bold text-white cursor-pointer"
+                                type="button"
+                                onClick={() => setSelectedSchoolIdForModal(item.school.id)}
+                                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-blue-900 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-xs"
                               >
-                                Fiche détaillée
+                                <span>Fiche détaillée</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
                               </button>
                             </div>
                           </div>
                         );
                       })
                     ) : (
-                      <p className="text-xs text-slate-400 italic">Aucune école recommandée sous votre profil.</p>
+                      <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200 space-y-2">
+                        <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
+                        <p className="text-sm font-bold text-slate-700">
+                          Aucun établissement ne correspond au filtre sélectionné
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          Essayez de sélectionner « Tous » ou de modifier votre terme de recherche.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCalcFilter('TOUS');
+                            setCalcSearch('');
+                          }}
+                          className="mt-2 px-3 py-1.5 bg-blue-900 text-white rounded-xl text-xs font-bold cursor-pointer"
+                        >
+                          Réinitialiser les filtres
+                        </button>
+                      </div>
                     )}
                   </div>
                 </section>
