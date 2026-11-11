@@ -20,6 +20,8 @@ export interface School {
   acceptedBacs: BacType[];
   // URL or info mention
   notes?: string;
+  // Official application / inscription portal URL
+  inscriptionUrl?: string;
 }
 
 export interface StudentData {

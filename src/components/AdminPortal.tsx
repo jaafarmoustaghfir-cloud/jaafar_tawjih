@@ -42,10 +42,14 @@ import {
 interface EcoleDoc {
   id?: string;
   nom: string;
-  filiere_requise: string;
+  name?: string;
+  city?: string;
+  filiere_requise?: string;
   seuil_preselection: number;
-  annee: string;
-  formule: string;
+  annee?: string;
+  formule?: string;
+  registrationUrl?: string;
+  registrationPlatform?: string;
 }
 
 interface QuestionSessionItem {
@@ -972,10 +976,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onNavigateHome }) => {
                     <tbody className="divide-y divide-slate-800/80 text-slate-300">
                       {ecoles.map((ec) => (
                         <tr key={ec.id} className="hover:bg-slate-800/40 transition">
-                          <td className="p-3 font-bold text-white">{ec.nom}</td>
-                          <td className="p-3 text-slate-400">{ec.filiere_requise}</td>
+                          <td className="p-3 font-bold text-white">{ec.nom || ec.name}</td>
+                          <td className="p-3 text-slate-400">{ec.filiere_requise || ec.city || 'Toutes branches'}</td>
                           <td className="p-3 text-emerald-400 font-mono font-bold">{ec.seuil_preselection}/20</td>
-                          <td className="p-3 font-mono">{ec.annee}</td>
+                          <td className="p-3 font-mono">{ec.annee || '2024-2025'}</td>
                           <td className="p-3 text-center space-x-2">
                             <button
                               onClick={() => handleEditEcole(ec)}

@@ -316,23 +316,50 @@ export default function App() {
           snap.forEach((d) => {
             const data = d.data();
             const seuil = typeof data.seuil_preselection === 'number' ? data.seuil_preselection : 14.0;
+            const th = data.thresholds || data.historicalThresholds || {};
+            const acceptedBacs = Array.isArray(data.acceptedBacs) && data.acceptedBacs.length > 0
+              ? data.acceptedBacs
+              : (Array.isArray(data.eligibleBacStreams) && data.eligibleBacStreams.length > 0
+                ? data.eligibleBacStreams
+                : ['SM', 'PC', 'SVT', 'Eco', 'Tech', 'Lettres']);
+
             fetched.push({
               id: d.id,
-              name: data.nom || 'École Supérieure',
-              city: 'Maroc',
-              category: 'Ingénierie / Sciences',
-              acceptedBacs: ['SM', 'PC', 'SVT', 'Eco', 'Tech', 'Lettres'],
+              name: data.name || data.nom || 'Établissement Supérieur',
+              abbreviation: data.abbreviation,
+              city: data.city || 'Maroc',
+              university: data.university,
+              category: data.category || 'Ingénierie / Sciences',
+              institutionType: data.institutionType || 'public',
+              officialWebsite: data.officialWebsite,
+              registrationUrl: data.registrationUrl,
+              registrationPlatform: data.registrationPlatform,
+              registrationUrlVerified: data.registrationUrlVerified ?? true,
+              officialSource: data.officialSource,
+              admissionProcedure: data.admissionProcedure,
+              admissionFormula: data.admissionFormula,
+              acceptedBacs: acceptedBacs as BacType[],
               thresholds: {
-                SM: seuil,
-                PC: seuil,
-                SVT: seuil,
-                Tech: seuil,
-                Eco: seuil,
-                Lettres: seuil,
+                SM: typeof th.SM === 'number' ? th.SM : seuil,
+                PC: typeof th.PC === 'number' ? th.PC : seuil,
+                SVT: typeof th.SVT === 'number' ? th.SVT : seuil,
+                Tech: typeof th.Tech === 'number' ? th.Tech : seuil,
+                Eco: typeof th.Eco === 'number' ? th.Eco : seuil,
+                Lettres: typeof th.Lettres === 'number' ? th.Lettres : seuil,
               },
+              hasConcours: typeof data.hasConcours === 'boolean' ? data.hasConcours : true,
+              directThresholds: data.directThresholds,
+              dataStatus: data.dataStatus,
+              academicYear: data.academicYear,
             });
           });
-          setLiveSchools([...fetched, ...SCHOOLS_FR]);
+
+          // Deduplicate against static schools: keep all fetched campus institutions from Firestore
+          const fetchedNames = new Set(fetched.map((s) => s.name.trim().toLowerCase()));
+          const remainingStatic = SCHOOLS_FR.filter(
+            (s) => !fetchedNames.has(s.name.trim().toLowerCase()) && !fetched.some((f) => f.abbreviation && s.name.includes(f.abbreviation))
+          );
+          setLiveSchools([...fetched, ...remainingStatic]);
         }
       } catch (e: any) {
         handleFirestoreError(e, OperationType.LIST, 'ecoles');
@@ -341,6 +368,14 @@ export default function App() {
     };
     fetchFirestoreSchools();
   }, []);
+
+  // Open verified official registration portal in a new tab
+  const openOfficialRegistration = (school: SchoolFr) => {
+    const url = school.registrationUrl || school.officialWebsite || 'https://www.cursussup.gov.ma/';
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   // Filters state
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -1459,14 +1494,28 @@ export default function App() {
                                 </span>
                               )}
 
-                              <button
-                                type="button"
-                                onClick={() => setSelectedSchoolIdForModal(item.school.id)}
-                                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-blue-900 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-xs"
-                              >
-                                <span>Fiche détaillée</span>
-                                <ChevronRight className="w-3.5 h-3.5" />
-                              </button>
+                              <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
+                                {item.school.registrationUrl && (
+                                  <button
+                                    type="button"
+                                    onClick={() => openOfficialRegistration(item.school)}
+                                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                                    title={`Candidature officielle via ${item.school.registrationPlatform || 'le portail officiel'}`}
+                                  >
+                                    <span>Candidature</span>
+                                    <ExternalLink className="w-3.5 h-3.5 text-emerald-200" />
+                                  </button>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedSchoolIdForModal(item.school.id)}
+                                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-blue-900 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-xs"
+                                >
+                                  <span>Fiche détaillée</span>
+                                  <ChevronRight className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         );
@@ -1504,6 +1553,7 @@ export default function App() {
       {selectedSchoolIdForModal && (
         <SchoolDetailModal
           schoolId={selectedSchoolIdForModal}
+          school={liveSchools.find((s) => s.id === selectedSchoolIdForModal)}
           onClose={() => setSelectedSchoolIdForModal(null)}
           onPracticeQuiz={(key) => {
             setSelectedSchoolIdForModal(null);

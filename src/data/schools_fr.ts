@@ -20,6 +20,18 @@ export interface SchoolFr {
   acceptedBacs: BacType[];
   hasConcours?: boolean;
   directThresholds?: Partial<Record<BacType, number>>;
+  abbreviation?: string;
+  university?: string;
+  institutionType?: 'public' | 'private';
+  officialWebsite?: string;
+  registrationUrl?: string;
+  registrationPlatform?: string;
+  registrationUrlVerified?: boolean;
+  officialSource?: string;
+  admissionProcedure?: string;
+  admissionFormula?: string;
+  dataStatus?: string;
+  academicYear?: string;
 }
 
 export const BAC_NAMES: Record<BacType, string> = {
