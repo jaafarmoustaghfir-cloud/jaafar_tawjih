@@ -76,7 +76,7 @@ export const ContactView: React.FC = () => {
 
           {/* Instagram Card */}
           <a
-            href="https://www.instagram.com/tawjih_avenir?igsh=a2Qwem1scWE0MjZz"
+            href="https://www.instagram.com/jaafar_tawjih?jplx=amJnNHEzcmVleDd1"
             target="_blank"
             rel="noopener noreferrer"
             className="p-5 rounded-2xl border border-pink-200 bg-pink-50/50 hover:bg-pink-50 hover:border-pink-300 transition duration-150 flex flex-col justify-between space-y-3 group"
@@ -86,7 +86,7 @@ export const ContactView: React.FC = () => {
                 <Instagram className="w-5 h-5" />
               </div>
               <span className="text-[11px] font-bold text-pink-700 font-mono bg-pink-100 px-2 py-0.5 rounded">
-                @tawjih_avenir
+                @jaafar_tawjih
               </span>
             </div>
             <div>

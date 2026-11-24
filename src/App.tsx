@@ -659,13 +659,13 @@ export default function App() {
                 <span>💬 WhatsApp : 07 72 90 84 56</span>
               </a>
               <a
-                href="https://www.instagram.com/tawjih_avenir?igsh=a2Qwem1scWE0MjZz"
+                href="https://www.instagram.com/jaafar_tawjih?jplx=amJnNHEzcmVleDd1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-50 hover:bg-pink-100 text-pink-800 text-[11px] font-bold border border-pink-200 transition"
               >
                 <Instagram className="w-3 h-3 text-pink-600" />
-                <span>Instagram : @tawjih_avenir</span>
+                <span>Instagram : @jaafar_tawjih</span>
               </a>
             </div>
           </div>
